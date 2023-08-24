@@ -1,0 +1,28 @@
+---
+title: Computation of the Equilibrium
+---
+
+# Computation 
+
+## Parametrization
+
+- $\{x_1,\ldots,x_{N_x}\}\subset[0,1]$ is a discretization of the continuum of worker types.
+	- $N_x=21$ as in the paper.  
+- Distribution of $x$-types is $\text{Beta}(2.15, 12.0)$. 
+	- Parameters for the distribution are estimated by the authors.
+- $\{y_1,\ldots,y_{N_y}\}\subset[0,1]$ is a discretization of the continuum of firm types.
+	- $N_x=21$ as in the paper.  
+- Assume the productivity shock follows the following $\text{AR}(1)$ process:$$\log{z_{t}} = \rho \log{z_{t+1}}+\varepsilon_t \qquad \varepsilon_t \sim \mathcal{N}(0,\sigma^2(1-\rho^2))$$
+	- I discretize this process into a Markov with values $\{z_1,\ldots,z_{N_z}\}$ and transition matrix $\pi(z\mid z')$  using Tauchen's method.
+	- $N_z=51$ as in the paper.
+	- $\rho=0.999$ and $\sigma = 0.071$ as in the paper.
+- I set $\beta=0.95$ consistent with a $5\%$ discount rate as in the paper.
+- Value added at the match level takes the functional form$$f(x,y,z_t) = z_t\times(p_1 + p_2 x + p_3y + p_4 x^2+ p_5 y^2 + p_6 xy)$$
+	- With $(p_1, p_2, p_3, p_4, p_5, p_6) = (0.03, 2.053, -0.140, 8.035, -1.907, 6.596)$ as estimated by the authors.
+- Denote $y^*(x,z)$ the firm type that maximizes the surplus of worker $x$ When the aggregate state is $z$.
+- Home production is characterized as $$b(x) = b_{share} f(x,y^*(x,1),1)$$
+	- $b_{share} = 0.7$ the same that the authors use (they take it from [@hallEmploymentFluctuationsEquilibrium2005])
+- The matching function is $$M(L_t, V_t) = \min\{\alpha L_t^{\omega}V_t^{1-\omega}, L_t, V_t\}$$
+	- The authors estimate $\alpha = 0.497$ and $\omega=0.5$.
+- The cost of creating a $v$ vacancies are $$c(v) = \frac{c_0 v^{1-c_1}}{1 - c_1}$$
+	- The authors estimate $c_0 = 0.028$ and $c_1 = 0.084$. 

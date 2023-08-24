@@ -1,0 +1,35 @@
+# Derivation of Unemployed Bellman Equation {#sec-appendix_bellman_unemp}
+
+
+The Bellman of a unemployed worker is (omitting time and worker types):
+$$U^{j} = b + \beta\max_{\phi}\left\{\sum_{j'\in \mathcal{J}} \left(\phi(j')\mathbb{E}_t\left[U^{j'} \right]\right) -c(\phi) \right\}$$
+Where the optimal strategy we obtained in @sec-appendix_search_unemp
+$$\phi(j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}$${#eq-optimal-search-unemp}
+and the cost of a search policy (strategy) is:
+$$c(\phi) = c_{1} \sum_{j\in \mathcal{J}}\phi(j')\log(J \phi(j'))$$
+We want to plug the best policy and obtain the Bellman. The continuation value takes the form:
+
+```{=latex}
+\begin{align*}
+& \sum_{j'\in \mathcal{J}} \left[ \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\mathbb{E}_t\left[U^{j'} \right]
+- c_1\left( \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\right)\log{\left(J \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\right)} \right]\\
+\implies \quad & \sum_{j'\in \mathcal{J}} \left\{\frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} \left[\mathbb{E}_t\left[U^{j'} \right]
+- c_1\log{\left(J \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\right)} \right]\right\}\\
+  \implies \quad & 
+\sum_{j'\in \mathcal{J}} \left\{\frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} \left[{\mathbb{E}_t\left[U^{j'} \right]}
+- c_1\left(\log{\left(J\right)} + {\log{\left(e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}\right)}} - \log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)}\right)\right]\right\}\\   \implies\quad&
+c_1\sum_{j'\in \mathcal{J}}\left\{ \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} \left[
+\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right]\right\}\\
+\implies\quad&c_1\left[
+\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right] {\frac{1}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} }{\sum_{j'\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}} 
+\end{align*}
+```
+
+Thus we obtain:
+
+```{=latex}
+\begin{align*}
+U^{j} &= b + \beta c_1\left[
+\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right]
+\end{align*}
+```

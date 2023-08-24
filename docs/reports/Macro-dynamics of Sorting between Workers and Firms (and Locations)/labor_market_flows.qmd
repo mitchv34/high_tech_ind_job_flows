@@ -1,0 +1,31 @@
+---
+title: Labor Market Flows
+---
+
+Now we characterize the flows of workers in-to and out-of unemployment at each location :
+
+- Let $$\eta^{j' \to j}(x,y) = \mathbb{1}_{\{S_{t}^{j' \to j}(x,y)>0\}}$$ and $$\eta^{j' \to j}(x,y'\to y) = \mathbb{1}_{\{S^{j' \to j}_{t}(x,y) > S^{j' \to j'}_{t}(x,y')\}}$$ 
+- And $\hat{\phi}^j_u(x,j')$ the probability that a type $x$ unemployed worker from location $j$ search in location $j'$ (this the optimal search policy in @eq-optimal-search-unemployed). 
+
+
+Then the law of motion of the unemployment rate is:
+
+\begin{align}
+u^{j}_{t+1}(x) &= \underbrace{u^j_{t+}(x)\left(\sum_{j'\in \mathcal{J}}\hat{\phi}^{j}_{u}(x,j')\right)}_{\text{mass of workers leaving location }j} +\ldots\\
+&\hspace{3cm} \ldots+ \underbrace{u_{t+}^j(x)\int\left(p^j_t\frac{v^j_t(y)}{V^j_t}\hat{\phi}_u^j(x,j)\eta^{j\to j}(x,y)\right)}_{\text{staying workers that got a suitable job offer}} +\ldots \\
+&\hspace{3cm} \ldots+ \underbrace{\sum_{j\in \mathcal{J}}\left\{\left(1 - \hat{\phi}^{j'}_{u}(x,j)\int\left(\frac{v^j_{t}(y)}{V^j_t}\eta^{j\to j'}(x,y)dy \right)u^{j'}_{t+}(x) \right) \right\}}_{\text{arriving workers from other locations that dont get a job offer}}
+\end{align}
+
+and of the distribution of employment
+
+\begin{align}
+h^{j}_{t+1}(x,y) &= \underbrace{h_{t+}(x,y)}_{\text{employed at interim }} \times \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}_t\frac{v^{j'}_t(y')}{V^{j'}_t} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poeached by any firm in location }j'} \right]}^{\text{probability of not being poached}}+\ldots
+\\&\\
+&\hspace{6cm} \ldots+\sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h^{j'}_{t+}(x,y')sp^j_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right) \\ \\
+&\hspace{6cm}\ldots +  \underbrace{\sum_{j'\in \mathcal{J}}\left( u^{j'}_{t+}(x)\hat{\phi}_{u}^{j'}(x, j)p_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j' \to j}(x,y) \right)}_{\text{mass of workers hired from unemployment}}
+\end{align}
+
+We can compute the distribution of skill in each location as:
+$$\ell^j_{t+1}(x) = u^j_{t+}(x) + \int h^j_{t+}(x,y)dy$$
+and the total population in each location as:
+$$\mu^j_{t+1} = \int \ell^j_{t+}(x)dx$$

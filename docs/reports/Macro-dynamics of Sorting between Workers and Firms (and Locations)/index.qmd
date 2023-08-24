@@ -1,0 +1,34 @@
+---
+title: Introduction
+---
+
+# Introduction
+
+*Notes*:
+
+- I adopt the framework from [@liseMacrodynamicsSortingWorkers2017].
+- Introducing a fixed amount of locations and population distribution of workers should be an equilibrium outcome.
+- Workers can "partially" direct their search to each location.
+  - In practice workers randomize over locations paying a cost.
+  - Cost of random search is zero.
+  - Cost increases unboundedly as the worker directs their search to a particular location.
+- Productivity depends on the quality of match and aggregate state as in the original paper. I want to introduce a third component which is location productivity. 
+  - I intend to use idea exchange as the driver of location productivity.
+  - I plan to draw on a framework similar to [@davisSpatialKnowledgeEconomy2019] to model the value added to production by idea exchange.
+
+**TODO**:
+
+- [x] Dynamic programing problem changed to keep track of value of moving across locations.
+- [x] **Important and easy** Change notation so that total number of locations $J$ is not the same letter as value of match $J^j(x,y)$
+- [ ] Read [@simsImplicationsRationalInattention2003]
+- [x] Add references to literature using similar cost structure for mixed strategies.
+- [ ] Compute the distribution of skill in each location.
+- [ ] Check the ratios of vacancies of each type of firm in each location when computing the law of motion of the unemployment rate. <span style="color:red">**Important: I think I have it wrong now.**</span>
+- [ ] Check that the unemployment value function is a contraction.
+- [ ] Make location productivity a result of the distribution of skill in each location. 
+- [ ] Add cost of living to the model.
+- [x] **Less Important** Fix Appendix.
+- [ ] Think about distribution of firms across and within locations.
+- [ ] Solve a modified version of the model where there is no aggregate state.
+- [ ] Solve a two location version of the model to gain intuition.
+- [ ] Think if I could include the cost of moving to a different location in the cost of the mixed strategy.

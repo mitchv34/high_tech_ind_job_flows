@@ -1,0 +1,64 @@
+Time is discrete and agents live forever.
+
+# Demographics
+- There is a discrete and finite set of locations $\mathcal{J}=\{1,\dots,|\mathcal{J}|\}$ locations indexed by $j\in\mathcal{J}$.
+- Continuum of workers indexed by their ability $x\in \mathcal{X}$.
+  - The total measure is normalized to $1$.
+  - Exogenous distribution $\ell(x)$
+  - Endogenous distribution in each location $\ell^{j}(x)$
+  - Denote $\mu_j$ the total population in location $j$.
+- Continuum of firms indexed by technology $y\in \mathcal{Y}$.
+  - Total measure is normalized to $1$.
+  - Uniformly distributed.
+- The exogenous cost of posting $v$ job opportunities in location $j$ is $$c_{j}(v)\geq0$$ assume it is increasing, convex, and independent of the firm type $y$ (but *potentially* dependent on location).
+-  The aggregate state of the economy is indexed by $z_t$ .
+	- Changes from $z$ to $z'$ according to the Markov transition probability $\pi(z, z')$.
+- Workers and firms discount the future at the rate $\beta$.
+- Workers can move across locations:
+  - Workers choose a mixed strategy to search:
+  $$
+  \phi^i_j(x) = \{\phi^i_j(x, j')\}_{j'\in \mathcal{J}}
+  $$ 
+  where $\phi^i_j(x, j')$ is the probability that a type $x$ worker from location $j$ search in location $j'$ and $i\in \{u,e\}$ refers to the employment status of the worker. 
+  - Each strategy has an asociated cost $c_s(\phi^i_j(x))$:  ^[The cost is proportional to the Kullback–Leibler divergence between the selected distribution and a uniform. Note that if the worker selects random search (i.e. uniform distribution) the asociated cost is $0$ and the cost grows unboundedly large as the strategy gets closer to perfect directed search to a particular location. More information on the Kullback–Leibler divergence  [here](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)] works that use this cost structure are [@wuPartiallyDirectedSearch] and [@cheremukhinTargetedSearchMatching2020].
+    - [@wuPartiallyDirectedSearch] mentions that this cost structure can be derived from rational inantention as in [@simsImplicationsRationalInattention2003] I should read that paper.
+  $$
+    c_s(\phi^i_j(x)) = c_1 \left(\sum_{j'\in \mathcal{J}}\phi^i_j(x, j')\log{(J\phi^i_j(x, j'))}\right)
+  $$
+
+  - When a worker move they must pay a cost $F^{j \to j'}\geq 0$ with $F^{j\to j} = 0$.
+
+# Technology
+
+- Unemployed workers instant utility in each location is $b(x,z,j)$.^[In [@liseMacrodynamicsSortingWorkers2017] $b(x)$ stands for unemploymet benefits, I want to be more general to be able to include differerences in cost of living across locations] 
+- Firms have access to a production technology, defined at the match level and depending on the location and the aggregate state of the economy $f(x, y, j, z)$.
+
+# Job Search
+
+The timing is as follows:
+At time $(t)$:
+
+1. Distributions of employed and unemployed workers are inherited from $t-1$.
+   - $u^j_t(x)$ is the measure of type-$x$ Unemployed workers at the location $j$.
+   - $h^j_t(x,y)$ is the measure of type-$x$ workers employed at the firm $y$ at the location $j$.
+   - Note that on each location: $$u^j_t(x) + \int h^j_t(x,y) dy = \ell^j(x)$$
+2. Aggregate state changes $z_{t-1} \to z_{t}$. 
+3. At time $(t+)$ Separations occur:
+   - $u^j_{t+}(x)$ is the measure of the type $x$ Unemployed workers in the location $j$ after the shock.
+   - $h^j_{t+}(x,y)$ is the measure of type $x$ workers that remain employed at firm $y$ in location $j$.
+4. Unemployed and employed workers draw new offers.
+
+Both unemployed and employed workers search, denote $s$ the search intensity of an employed worker and $1$ is the (normalized) search intensity of an unemployed worker. The total search intensity in location $j$ is 
+$$
+  L^j_t = \sum_{j'\in\mathcal{J}}\left[\int u^{j'}_{t+}(x) dx + s\int\int h^{j'}_{t+}(x,y)dx dy\right]
+$$
+
+Let $v^j_t(y)$ be the number of job opportunities posted by a firm $y$ at time $t$ in the location $j$.
+
+- $V^j_t = \int v^j_t(y) dy$ is the total number of job opportunities posted at the time $t$  in the location $j$.
+
+Let $M^j_t = M(L^j_t, V^j_t)$ The number of job matches  in the location $j$ then:
+
+- The probability that an unemployed worker contacts a vacancy in the location $j$  is $$p^j_t = \frac{M^j_t}{L^j_t}$$
+  - $sp^j_t$ is the probability that an employed worker contacts a vacancy.
+- The probability that a ﬁrm contacts any searching worker $$q^j_t = \frac{M^j_t}{V^j_t}$$

@@ -1,0 +1,60 @@
+project:
+  type: book
+
+book:
+  sidebar:
+      style: "docked"
+      search: false
+      collapse-level: 3
+      
+  title: "Macro-dynamics of Sorting between Workers and Firms (and Locations)"
+  downloads: "pdf"
+  author:
+  - name: Mitchell Valdes-Bobes
+    affiliation: University of Wisconsin-Madison
+  abstract: |
+    Lorem ipsum dolor sit amet.
+  date: last-modified
+  date-format: long
+  
+  chapters:
+    - index.qmd
+    - model.qmd
+    - endogenizing_location_productivity.qmd
+    - computation.qmd
+
+  appendices: 
+    - appendix_search_unemp.qmd
+    - appendix_bellman_unemp.qmd
+    - appendix_surplus.qmd
+
+
+
+format:
+
+  html:
+    reference-section-title: "References"
+    theme: # 
+      dark: darkly
+      light: flatly
+    render-on-save: true
+    latex-auto-mk : true
+    link-citations: true
+    number-sections: true
+    code-fold: true
+    toc : true
+    toc-location: left
+  pdf:
+    reference-section-title: "References"
+    render-on-save: true
+    latex-auto-mk : true
+    link-citations: true
+    number-sections: true
+    keep-tex: true
+    crossref:
+      appendix-title: "Appendix"
+      appendix-delim: ":"
+bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
+
+
+    
