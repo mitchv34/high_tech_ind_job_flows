@@ -338,6 +338,16 @@
       margin-right: 0; 
     }
   </style>
+  <style>
+  .center-xy {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateY(-50%), translateX(-50%);
+  transform: translateY(-50%), translateX(-50%);
+  }
+  </style>
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -617,28 +627,111 @@ B^j_t(y) &amp;= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\
 <section>
 <section id="labor-market-flows" class="title-slide slide level1 smaller center">
 <h1>Labor Market Flows</h1>
-<p>Now we characterize the flows of workers in-to and out-of unemployment at each location :</p>
+<p>Now we characterize the flows of workers in-to and out-of unemployment at each location:</p>
 <ul>
 <li>Let <span class="math display">\[\eta^{j' \to j}(x,y) = \mathbb{1}_{\{S_{t}^{j' \to j}(x,y)&gt;0\}}\]</span> and <span class="math display">\[\eta^{j' \to j}(x,y'\to y) = \mathbb{1}_{\{S^{j' \to j}_{t}(x,y) &gt; S^{j' \to j'}_{t}(x,y')\}}\]</span></li>
-<li>And <span class="math inline">\(\hat{\phi}^j_u(x,j')\)</span> the probability that a type <span class="math inline">\(x\)</span> unemployed worker from location <span class="math inline">\(j\)</span> search in location <span class="math inline">\(j'\)</span>.</li>
 </ul>
 </section>
-<section id="new-unemployment" class="slide level2 smaller">
-<h2>New Unemployment</h2>
+<section id="labor-market-flows-1" class="slide level2 smaller">
+<h2>Labor Market Flows</h2>
 <ul>
 <li>The law of motion of the unemployment rate is:</li>
 </ul>
 <span class="math display">\[\begin{equation}
-u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}} \phi_u^{j'}(x,j)u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)
+u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}}\underbrace{\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
 \end{equation}\]</span>
+<ul>
+<li>For ease of exposition we write the mass of employed workers as the sum of the following three terms:</li>
+</ul>
+<span class="math display">\[\begin{align}
+h^j(x,y) &amp;=  h^j_{u, t+1}(x,y) + h^j_{p, t+1}(x,y) + h^j_{r,t+1}(x,y)
+\end{align}\]</span>
+</section>
+<section id="labor-market-flows-2" class="slide level2 smaller">
+<h2>Labor Market Flows</h2>
+<ul>
+<li>The mass of workers hired from unemployment:</li>
+</ul>
+<span class="math display">\[\begin{equation}
+h^j_{u, t+1}(x,y) = \sum_{j'\in \mathcal{J}}\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}
+\end{equation}\]</span>
+</section>
+<section id="labor-market-flows-3" class="slide level2 smaller">
+<h2>Labor Market Flows</h2>
+<ul>
+<li>The mass of workers that are succesfully poached from other firms:</li>
+</ul>
+<span class="math display">\[\begin{equation}
+h^j_{p, t+1} = \sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h^{j'}_{t+}(x,y')sp^j_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right)
+\end{equation}\]</span>
+</section>
+<section id="labor-market-flows-4" class="slide level2 smaller">
+<h2>Labor Market Flows</h2>
+<ul>
+<li>The mass of workers that the firm is able to retain:</li>
+</ul>
+<span class="math display">\[\begin{equation}
+h^j_{r,t+1} = \underbrace{h_{t+}(x,y)  \times }_{\text{employed at interim }} \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}_t\frac{v^{j'}_t(y')}{V^{j'}_t} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poeached by any firm in location }j'} \right]}^{\text{probability of not being poached}}
+\end{equation}\]</span>
+</section></section>
+<section>
+<section id="endgogenizing-location-productivity" class="title-slide slide level1 smaller center">
+<h1>Endgogenizing Location Productivity</h1>
+<ul>
+<li>This section focuses on the endogenous determination of location productivity.</li>
+<li>The key idea is that the productivity of a location depends on the skill distribution of workers in that location.</li>
+<li><span class="citation" data-cites="davisSpatialKnowledgeEconomy2019">(<a href="#/references" role="doc-biblioref" onclick="">Davis and Dingel 2019</a>)</span> in assuming that the productivity of workers in a location <span class="math inline">\(j\)</span> is a result of idea exchange process within each location.</li>
+</ul>
+</section>
+<section id="worker-productivity" class="slide level2 smaller">
+<h2>Worker Productivity</h2>
+<ul>
+<li><p>Assume that a type <span class="math inline">\(x\)</span> worker in location <span class="math inline">\(j\)</span> has a <span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> where <span class="math inline">\(\overline{X}^j\)</span> is the value of idea exchange in location <span class="math inline">\(j\)</span>. Thus: <span class="math display">\[f(x,y,j,z_t) = f\left(\Omega(x, \overline{X}^j), y, z_t\right)\]</span></p></li>
+<li><p>Assume that the value of idea exchange in location <span class="math inline">\(j\)</span> is a function of the distribution of skills in location <span class="math inline">\(j\)</span>:</p>
+<p><span class="math display">\[ \overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right) \]</span></p></li>
+</ul>
+</section>
+<section id="asumptions" class="slide level2 smaller">
+<h2>Asumptions</h2>
+<ul>
+<li><strong>Assumption 1</strong>: <span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> should be increasing in <span class="math inline">\(x\)</span> and <span class="math inline">\(\overline{X}^j\)</span> and in the absence of idea exchange, worker productivity is just their type: <span class="math inline">\(\Omega(x, 0) = x\)</span>.</li>
+<li><strong>Assumption 2</strong>: Worker type <span class="math inline">\(x\)</span> and idea exchange environment are complements i.e.&nbsp;<span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> supermodular in (<span class="math inline">\(x\)</span> , <span class="math inline">\(\overline{X}^j\)</span>).</li>
+<li><strong>Assumption 3</strong>: The value of idea exchange in location <span class="math inline">\(j\)</span> is increasing in the number of potential exchange partners <span class="math inline">\(\mu^j\)</span> and on the distribution of skills in location <span class="math inline">\(j\)</span> <span class="math inline">\(\ell^j(x)\)</span>.
+<ul>
+<li>With the <em>FOSD</em> order of distributions.</li>
+</ul></li>
+</ul>
+</section>
+<section id="functional-forms" class="slide level2 smaller">
+<h2>Functional Forms</h2>
+<ul>
+<li>I will focus on the following functional forms for <span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> and <span class="math inline">\(\overline{X}^j\)</span>: <span class="math display">\[\Omega(x, \overline{X}^j) = x(1 + A \overline{X}^j x)\]</span> where <span class="math inline">\(A\)</span> is a parameter that captures the scope of gains from idea exchange.</li>
+</ul>
+<p><span class="math display">\[\overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j\]</span></p>
+<ul>
+<li>The average ability of the individuals you encounter in these exchanges is denoted as <span class="math inline">\(\hat{x}^j\)</span>: <span class="math display">\[\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}\]</span></li>
+</ul>
+</section>
+<section id="cost-of-living" class="slide level2 smaller">
+<h2>Cost of Living</h2>
+<ul>
+<li>As in <span class="citation" data-cites="davisSpatialKnowledgeEconomy2019">(<a href="#/references" role="doc-biblioref" onclick="">Davis and Dingel 2019</a>)</span> and <span class="citation" data-cites="behrensProductiveCitiesSorting2014a">(<a href="#/references" role="doc-biblioref" onclick="">Behrens, Duranton, and Robert-Nicoud 2014</a>)</span> every individual in location <span class="math inline">\(j\)</span> pays the congestion cost :</li>
+</ul>
+<p><span class="math display">\[\theta\mu_j^{\gamma}\]</span></p>
 </section></section>
 <section id="references" class="title-slide slide level1 smaller scrollable">
 <h1>References</h1>
 
 <img src="https://www.nicepng.com/png/detail/502-5025232_more-info-university-of-wisconsin-logo.png" class="slide-logo r-stretch"><div class="footer footer-default">
-<p>UW-Madison</p>
+
 </div>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-behrensProductiveCitiesSorting2014a" class="csl-entry" role="listitem">
+Behrens, Kristian, Gilles Duranton, and Frédéric Robert-Nicoud. 2014. <span>“Productive <span>Cities</span>: <span>Sorting</span>, <span>Selection</span>, and <span>Agglomeration</span>.”</span> <em>Journal of Political Economy</em> 122 (3): 507–53. <a href="https://doi.org/10.1086/675534">https://doi.org/10.1086/675534</a>.
+</div>
+<div id="ref-davisSpatialKnowledgeEconomy2019" class="csl-entry" role="listitem">
+Davis, Donald R., and Jonathan I. Dingel. 2019. <span>“A <span>Spatial Knowledge Economy</span>.”</span> <em>American Economic Review</em> 109 (1): 153–70. <a href="https://doi.org/10.1257/aer.20130249">https://doi.org/10.1257/aer.20130249</a>.
+</div>
 <div id="ref-liseMacrodynamicsSortingWorkers2017" class="csl-entry" role="listitem">
 Lise, Jeremy, and Jean-Marc Robin. 2017. <span>“The <span>Macrodynamics</span> of <span>Sorting</span> Between <span>Workers</span> and <span>Firms</span>.”</span> <em>American Economic Review</em> 107 (4): 1104–35. <a href="https://doi.org/10.1257/aer.20131118">https://doi.org/10.1257/aer.20131118</a>.
 </div>

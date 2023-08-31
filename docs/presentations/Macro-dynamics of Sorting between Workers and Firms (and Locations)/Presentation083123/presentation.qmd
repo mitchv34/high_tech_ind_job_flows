@@ -4,11 +4,23 @@ author: "Mitchell Valdes-Bobes"
 engine: knitr
 format:
     revealjs:
-        footer: "UW-Madison"
+        # footer: "UW-Madison"
         logo : https://www.nicepng.com/png/detail/502-5025232_more-info-university-of-wisconsin-logo.png
         navigation-mode : vertical
-        theme: simple
+        # theme: simple
         html-math-method: mathjax
+        include-in-header: 
+            text: |
+                <style>
+                .center-xy {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -ms-transform: translateY(-50%), translateX(-50%);
+                transform: translateY(-50%), translateX(-50%);
+                }
+                </style>
     ipynb: default
     pdf : default
 bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
@@ -255,19 +267,88 @@ Using the value of $B^j_t$ any particular cost and matching function can be used
 
 # Labor Market Flows {.smaller}
 
-Now we characterize the flows of workers in-to and out-of unemployment at each location :
+Now we characterize the flows of workers in-to and out-of unemployment at each location:
 
 -   Let $$\eta^{j' \to j}(x,y) = \mathbb{1}_{\{S_{t}^{j' \to j}(x,y)>0\}}$$ and $$\eta^{j' \to j}(x,y'\to y) = \mathbb{1}_{\{S^{j' \to j}_{t}(x,y) > S^{j' \to j'}_{t}(x,y')\}}$$
--   And $\hat{\phi}^j_u(x,j')$ the probability that a type $x$ unemployed worker from location $j$ search in location $j'$.
 
-## New Unemployment {.smaller}
+## Labor Market Flows {.smaller}
 
 - The law of motion of the unemployment rate is:
-
 ```{=tex}
 \begin{equation}
-u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}} \phi_u^{j'}(x,j)u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)
+u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}}\underbrace{\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
 \end{equation}
 ```
+- For ease of exposition we write the mass of employed workers as the sum of the following three terms:
+```{=tex}
+\begin{align}
+h^j(x,y) &=  h^j_{u, t+1}(x,y) + h^j_{p, t+1}(x,y) + h^j_{r,t+1}(x,y) 
+\end{align}
+```
+
+## Labor Market Flows {.smaller}
+- The mass of workers hired from unemployment:
+```{=tex}
+\begin{equation}
+h^j_{u, t+1}(x,y) = \sum_{j'\in \mathcal{J}}\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}
+\end{equation}
+```
+
+## Labor Market Flows {.smaller}
+- The mass of workers that are succesfully poached from other firms:
+```{=tex}
+\begin{equation}
+h^j_{p, t+1} = \sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h^{j'}_{t+}(x,y')sp^j_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right)
+\end{equation}
+```
+
+## Labor Market Flows {.smaller}
+- The mass of workers that the firm is able to retain:
+```{=tex}
+\begin{equation}
+h^j_{r,t+1} = \underbrace{h_{t+}(x,y)  \times }_{\text{employed at interim }} \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}_t\frac{v^{j'}_t(y')}{V^{j'}_t} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poeached by any firm in location }j'} \right]}^{\text{probability of not being poached}}
+\end{equation}
+```
+
+# Endgogenizing Location Productivity {.smaller}
+
+- This section focuses on the endogenous determination of location productivity.
+- The key idea is that the productivity of a location depends on the skill distribution of workers in that location.
+- [@davisSpatialKnowledgeEconomy2019] in assuming that the productivity of workers in a location $j$ is a result of idea exchange process within each location.
+
+## Worker Productivity {.smaller}
+
+
+-   Assume that a type $x$ worker in location $j$ has a $\Omega(x, \overline{X}^j)$ where $\overline{X}^j$ is the value of idea exchange in location $j$. Thus: $$f(x,y,j,z_t) = f\left(\Omega(x, \overline{X}^j), y, z_t\right)$$
+
+-   Assume that the value of idea exchange in location $j$ is a function of the distribution of skills in location $j$:
+
+    $$ \overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right) $$
+
+## Asumptions {.smaller}
+
+-   **Assumption 1**: $\Omega(x, \overline{X}^j)$ should be increasing in $x$ and $\overline{X}^j$ and in the absence of idea exchange, worker productivity is just their type: $\Omega(x, 0) = x$.
+-   **Assumption 2**: Worker type $x$ and idea exchange environment are complements i.e. $\Omega(x, \overline{X}^j)$ supermodular in ($x$ , $\overline{X}^j$).
+-   **Assumption 3**: The value of idea exchange in location $j$ is increasing in the number of potential exchange partners $\mu^j$ and on the distribution of skills in location $j$ $\ell^j(x)$.
+    -   With the *FOSD* order of distributions.
+
+## Functional Forms {.smaller}
+
+- I will focus on the following functional forms for $\Omega(x, \overline{X}^j)$ and $\overline{X}^j$:
+$$\Omega(x, \overline{X}^j) = x(1 + A \overline{X}^j x)$$
+where $A$ is a parameter that captures the scope of gains from idea exchange.
+
+$$\overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j$$
+
+- The average ability of the individuals you encounter in these exchanges is denoted as $\hat{x}^j$: $$\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}$$ 
+
+## Cost of Living {.smaller}
+
+
+-   As in [@davisSpatialKnowledgeEconomy2019] and [@behrensProductiveCitiesSorting2014a] every individual in location $j$ pays the congestion cost :
+
+$$\theta\mu_j^{\gamma}$$
+
+
 
 # References {.smaller}

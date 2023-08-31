@@ -2,8 +2,6 @@
 title: Computation of the Equilibrium
 ---
 
-# Computation
-
 ```{python}
 #| echo : false
 #| output : false

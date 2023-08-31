@@ -2,8 +2,6 @@
 title: Model
 ---
 
-# Model
-
 ## Model Setup
 
 ### Demographics
@@ -166,7 +164,7 @@ When the aggregate state changes from $z_{t-1} \to z_t$ the surplus function det
 
 ```{=tex}
 \begin{align}
-B^j_t(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u^{j'}_{t+}(x)}{L^{j'}_t}}_{\text{likelihhod of match}}\times\overbrace{  S_t^{j'\to j}(x,y)^{+} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} + \\
+B^j_t(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u^{j'}_{t+}(x)}{L^{j'}_t}}_{\text{likelihhod of match}}\times\overbrace{  S_t^{j'\to j}(x,y)^{+} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} + \nonumber \\
 & +\underbrace{\sum_{j'\in \mathcal{J}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,j)\frac{h^{j'}_{t+}(x,y)}{L^{j'}_t}}_{\text{likelihood of match}}\times \overbrace{ [S^{j' \to j}_t(x,y)-S^{j' \to j'}_{t}(x,y')]^{+}}^{\text{poaching is succesfull}}dx\right)dy\right)}_{\text{expected value added from poaching other firms employees}}
 \end{align}
 ```
@@ -187,23 +185,38 @@ Now we characterize the flows of workers in-to and out-of unemployment at each l
 -   Let $$\eta^{j' \to j}(x,y) = \mathbb{1}_{\{S_{t}^{j' \to j}(x,y)>0\}} \qquad \eta^{j' \to j}(x,y'\to y) = \mathbb{1}_{\{S^{j' \to j}_{t}(x,y) > S^{j' \to j'}_{t}(x,y')\}}$$
 -   And $\hat{\phi}^j_u(x,j')$ the probability that a type $x$ unemployed worker from location $j$ search in location $j'$ (this the optimal search policy in @eq-optimal-search-unemployed).
 
-Then the law of motion of the unemployment rate is:
+Then the law of motion of the unemployment and emplyment are:
 
 ```{=tex}
 \begin{equation}
-u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}} \underbrace{\phi_u^{j'}(x,j)}u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)
+u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}}\underbrace{\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
 \end{equation}
 ```
+To copute the mass of employed workers in the next period define:
 
-
-and of the distribution of employment
-
+- The mass of workers hired from unemployment:
+```{=tex}
+\begin{equation}
+h^j_{u, t+1}(x,y) = \sum_{j'\in \mathcal{J}}\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}
+\end{equation}
+```
+- The mass of workers that are succesfully poached from other firms:
+```{=tex}
+\begin{equation}
+h^j_{p, t+1} = \sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h^{j'}_{t+}(x,y')sp^j_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right)
+\end{equation}
+```
+- The mass of workers that the firm is able to retain:
+```{=tex}
+\begin{equation}
+h^j_{r,t+1} = \underbrace{h_{t+}(x,y)  \times }_{\text{employed at interim }} \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}_t\frac{v^{j'}_t(y')}{V^{j'}_t} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poeached by any firm in location }j'} \right]}^{\text{probability of not being poached}}
+\end{equation}
+```
+Finally the mass of employed workers in the next period is:
 ```{=tex}
 \begin{align}
-h^{j}_{t+1}(x,y) &= \underbrace{h_{t+}(x,y)}_{\text{employed at interim }} \times \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}_t\frac{v^{j'}_t(y')}{V^{j'}_t} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poeached by any firm in location }j'} \right]}^{\text{probability of not being poached}}+\nonumber
-\\
-&\hspace{6cm} +\sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h^{j'}_{t+}(x,y')sp^j_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right) \nonumber \\
-&\hspace{6cm} +  \underbrace{\sum_{j'\in \mathcal{J}}\left( u^{j'}_{t+}(x)\hat{\phi}_{u}^{j'}(x, j)p_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j' \to j}(x,y) \right)}_{\text{mass of workers hired from unemployment}}
+h^j(x,y) &=  h^j_{u, t+1}(x,y) + h^j_{p, t+1}(x,y) + h^j_{r,t+1}(x,y) 
 \end{align}
 ```
-We can compute the distribution of skill in each location as: $$\ell^j_{t+1}(x) = u^j_{t+}(x) + \int h^j_{t+}(x,y)dy$$ and the total population in each location as: $$\mu^j_{t+1} = \int \ell^j_{t+}(x)dx$$
+
+Then I can compute the distribution of skill in each location as: $$\ell^j_{t+1}(x) = u^j_{t+}(x) + \int h^j_{t+}(x,y)dy$$ and the total population in each location as: $$\mu^j_{t+1} = \int \ell^j_{t+}(x)dx$$

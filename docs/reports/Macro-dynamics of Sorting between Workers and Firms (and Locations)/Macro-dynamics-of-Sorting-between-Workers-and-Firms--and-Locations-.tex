@@ -182,7 +182,7 @@ Locations)}
 \begin{abstract}
 Lorem ipsum dolor sit amet.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, interior hidden, breakable, frame hidden, sharp corners, enhanced]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, frame hidden, enhanced, breakable, sharp corners]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -194,11 +194,6 @@ Lorem ipsum dolor sit amet.
 
 \hypertarget{introduction}{%
 \chapter{Introduction}\label{introduction}}
-
-\bookmarksetup{startatroot}
-
-\hypertarget{introduction-1}{%
-\chapter{Introduction}\label{introduction-1}}
 
 \emph{Notes}:
 
@@ -246,34 +241,12 @@ Lorem ipsum dolor sit amet.
 
 \begin{itemize}
 \tightlist
-\item[$\boxtimes$]
-  Dynamic programing problem changed to keep track of value of moving
-  across locations.
-\item[$\boxtimes$]
-  \textbf{Important and easy} Change notation so that total number of
-  locations \(J\) is not the same letter as value of match \(J^j(x,y)\)
 \item[$\square$]
   Read
   (\protect\hyperlink{ref-simsImplicationsRationalInattention2003}{Sims
   2003})
-\item[$\boxtimes$]
-  Add references to literature using similar cost structure for mixed
-  strategies.
-\item[$\square$]
-  Compute the distribution of skill in each location.
-\item[$\square$]
-  Check the ratios of vacancies of each type of firm in each location
-  when computing the law of motion of the unemployment rate.
-  {\textbf{Important: I think I have it wrong now.}}
 \item[$\square$]
   Check that the unemployment value function is a contraction.
-\item[$\square$]
-  Make location productivity a result of the distribution of skill in
-  each location.
-\item[$\square$]
-  Add cost of living to the model.
-\item[$\boxtimes$]
-  \textbf{Less Important} Fix Appendix.
 \item[$\square$]
   Think about distribution of firms across and within locations.
 \item[$\square$]
@@ -284,17 +257,17 @@ Lorem ipsum dolor sit amet.
 \item[$\square$]
   Think if I could include the cost of moving to a different location in
   the cost of the mixed strategy.
+\item[$\square$]
+  For now the cost of posting only depends on the number of vacancies,
+  should I introduce a location component? I think It will be important
+  to have only high productive firms posting a lot of vacancies in high
+  productivity locations.
 \end{itemize}
 
 \bookmarksetup{startatroot}
 
 \hypertarget{model}{%
 \chapter{Model}\label{model}}
-
-\bookmarksetup{startatroot}
-
-\hypertarget{model-1}{%
-\chapter{Model}\label{model-1}}
 
 \hypertarget{model-setup}{%
 \section{Model Setup}\label{model-setup}}
@@ -705,7 +678,7 @@ and
 \end{itemize}
 
 \begin{align}
-B^j_t(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u^{j'}_{t+}(x)}{L^{j'}_t}}_{\text{likelihhod of match}}\times\overbrace{  S_t^{j'\to j}(x,y)^{+} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} + \\
+B^j_t(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u^{j'}_{t+}(x)}{L^{j'}_t}}_{\text{likelihhod of match}}\times\overbrace{  S_t^{j'\to j}(x,y)^{+} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} + \nonumber \\
 & +\underbrace{\sum_{j'\in \mathcal{J}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,j)\frac{h^{j'}_{t+}(x,y)}{L^{j'}_t}}_{\text{likelihood of match}}\times \overbrace{ [S^{j' \to j}_t(x,y)-S^{j' \to j'}_{t}(x,y')]^{+}}^{\text{poaching is succesfull}}dx\right)dy\right)}_{\text{expected value added from poaching other firms employees}}
 \end{align}
 
@@ -756,22 +729,51 @@ at each location :
   Equation~\ref{eq-optimal-search-unemployed}).
 \end{itemize}
 
-Then the law of motion of the unemployment rate is:
+Then the law of motion of the unemployment and emplyment are:
 
 \begin{equation}
-u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}} \underbrace{\phi_u^{j'}(x,j)}u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)
+u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}}\underbrace{\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
 \end{equation}
 
-and of the distribution of employment
+To copute the mass of employed workers in the next period define:
+
+\begin{itemize}
+\tightlist
+\item
+  The mass of workers hired from unemployment:
+\end{itemize}
+
+\begin{equation}
+h^j_{u, t+1}(x,y) = \sum_{j'\in \mathcal{J}}\phi_u^{j'}(x,j) u^{j'}_{t+}(x)\eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}
+\end{equation}
+
+\begin{itemize}
+\tightlist
+\item
+  The mass of workers that are succesfully poached from other firms:
+\end{itemize}
+
+\begin{equation}
+h^j_{p, t+1} = \sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h^{j'}_{t+}(x,y')sp^j_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right)
+\end{equation}
+
+\begin{itemize}
+\tightlist
+\item
+  The mass of workers that the firm is able to retain:
+\end{itemize}
+
+\begin{equation}
+h^j_{r,t+1} = \underbrace{h_{t+}(x,y)  \times }_{\text{employed at interim }} \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}_t\frac{v^{j'}_t(y')}{V^{j'}_t} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poeached by any firm in location }j'} \right]}^{\text{probability of not being poached}}
+\end{equation}
+
+Finally the mass of employed workers in the next period is:
 
 \begin{align}
-h^{j}_{t+1}(x,y) &= \underbrace{h_{t+}(x,y)}_{\text{employed at interim }} \times \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}_t\frac{v^{j'}_t(y')}{V^{j'}_t} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poeached by any firm in location }j'} \right]}^{\text{probability of not being poached}}+\nonumber
-\\
-&\hspace{6cm} +\sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h^{j'}_{t+}(x,y')sp^j_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right) \nonumber \\
-&\hspace{6cm} +  \underbrace{\sum_{j'\in \mathcal{J}}\left( u^{j'}_{t+}(x)\hat{\phi}_{u}^{j'}(x, j)p_t\frac{v^{j}_t(y)}{V^{j}_t}\eta^{j' \to j}(x,y) \right)}_{\text{mass of workers hired from unemployment}}
+h^j(x,y) &=  h^j_{u, t+1}(x,y) + h^j_{p, t+1}(x,y) + h^j_{r,t+1}(x,y) 
 \end{align}
 
-We can compute the distribution of skill in each location as:
+Then I can compute the distribution of skill in each location as:
 \[\ell^j_{t+1}(x) = u^j_{t+}(x) + \int h^j_{t+}(x,y)dy\] and the total
 population in each location as: \[\mu^j_{t+1} = \int \ell^j_{t+}(x)dx\]
 
@@ -781,15 +783,9 @@ population in each location as: \[\mu^j_{t+1} = \int \ell^j_{t+}(x)dx\]
 \chapter{Endogenizing Location Productivity and Cost of
 Living}\label{endogenizing-location-productivity-and-cost-of-living}}
 
-\bookmarksetup{startatroot}
-
-\hypertarget{edogenizing-location-productivity-and-cost-of-living}{%
-\chapter{Edogenizing Location Productivity and Cost of
-Living}\label{edogenizing-location-productivity-and-cost-of-living}}
-
 This section focus on how the distribution of workers (skils) affect
 both the productivity of matches \(f(x,y,j,z)\) and the instant utility
-of workers \(b(x,j,z)\).
+of unemployed workers \(b(x,j,z)\).
 
 \textbf{Location Productivity}
 
@@ -801,9 +797,9 @@ Dingel 2019}) in assuming that the productivity of workers in a location
 \begin{itemize}
 \item
   Assume that a type \(x\) worker in location \(j\) has a
-  \(B(x, \overline{X}^j)\) where \(\overline{X}^j\) is the value of idea
-  exchange in location \(j\). Thus:
-  \[f(x,y,j,z_t) = f\left(B(x, \overline{X}^j), y, z_t\right)\]
+  \(\Omega(x, \overline{X}^j)\) where \(\overline{X}^j\) is the value of
+  idea exchange in location \(j\). Thus:
+  \[f(x,y,j,z_t) = f\left(\Omega(x, \overline{X}^j), y, z_t\right)\]
 \item
   Assume that the value of idea exchange in location \(j\) is a function
   of the distribution of skills in location \(j\):
@@ -817,27 +813,30 @@ It's natural to make the following assumptions on
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Assumption 1}: \(B(x, \overline{X}^j)\) should be increasing
-  in \(x\) and \(\overline{X}^j\) and in the absence of idea exchange,
-  worker productivity is just their type: \(B(x, 0) = x\).
+  \textbf{Assumption 1}: \(\Omega(x, \overline{X}^j)\) should be
+  increasing in \(x\) and \(\overline{X}^j\) and in the absence of idea
+  exchange, worker productivity is just their type: \(B(x, 0) = x\).
 \item
   \textbf{Assumption 2}: Worker type \(x\) and idea exchange environment
-  are complements i.e.~\(B(x, \overline{X}^j)\) supermodular in (\(x\) ,
-  \(\overline{X}^j\)).
+  are complements i.e.~\(\Omega(x, \overline{X}^j)\) supermodular in
+  (\(x\) , \(\overline{X}^j\)).
 \item
-  \textbf{Assumption 3}: {\textbf{{[}TO DO{]}}} Idea exchange
-  environment is ``increasing'' in the distribution of skills in
-  location \(j\). Probable need First Order Stocastic Dominance (FOSD)
-  to define ``increasing'' in this context.
+  \textbf{Assumption 3}: The value of idea exchange in location \(j\) is
+  increasing in the number of potential exchange partners \(\mu^j\) and
+  on the distribution of skills in location \(j\) \(\ell^j(x)\).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    With the \emph{FOSD} order of distributions.
+  \end{itemize}
 \end{itemize}
 
 I will focus on the following functional forms for
-\(B(x, \overline{X}^j)\) and \(\overline{X}^j\):
+\(\Omega(x, \overline{X}^j)\) and \(\overline{X}^j\):
 
-\[
- B(x, \overline{X}^j) = x(1 + A \overline{X}^j x)
-\]where \(A\) is a parameter that captures the scope of gains from idea
-exchange.
+\[\Omega(x, \overline{X}^j) = x(1 + A \overline{X}^j x)\] where \(A\) is
+a parameter that captures the scope of gains from idea exchange.
 
 \[
     \overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j
@@ -859,7 +858,7 @@ Finally I assume that the production function is a Cobb-Duglas with the
 state of the economy \(z_t\) being a Hicks neutral modifier
 
 \begin{equation}\protect\hypertarget{eq-prod_funct}{}{
-f(x,y,j,z_t) = z_t B(x,\overline{X}^j)^\alpha y^{1-\alpha}
+f(x,y,j,z_t) = z_t \Omega(x,\overline{X}^j)^\alpha y^{1-\alpha}
 }\label{eq-prod_funct}\end{equation}
 
 Let \(y^*(x,1, j)\) be the firm type that maximizes production for a
@@ -890,11 +889,6 @@ form I'm considering \(y^{*}(x,1,j) = \max{\mathcal{Y}}=y^{*}\) for all
 \hypertarget{computation-of-the-equilibrium}{%
 \chapter{Computation of the
 Equilibrium}\label{computation-of-the-equilibrium}}
-
-\bookmarksetup{startatroot}
-
-\hypertarget{computation}{%
-\chapter{Computation}\label{computation}}
 
 \hypertarget{parametrization}{%
 \section{Parametrization}\label{parametrization}}
@@ -951,7 +945,6 @@ Equilibrium}\label{computation-of-the-equilibrium}}
   As in
   (\protect\hyperlink{ref-liseMacrodynamicsSortingWorkers2017}{Lise and
   Robin 2017}) value added at the match level takes the functional form:
-
   \[f(x,y,z_t) = z_t\times(p_1 + p_2 x + p_3y + p_4 x^2+ p_5 y^2 + p_6 xy)\]
 
   \begin{itemize}
