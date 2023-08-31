@@ -44,6 +44,9 @@ format:
     code-fold: true
     toc : true
     toc-location: left
+    crossref:
+      appendix-title: "Appendix"
+      appendix-delim: ":"
   pdf:
     reference-section-title: "References"
     render-on-save: true
@@ -54,6 +57,7 @@ format:
     crossref:
       appendix-title: "Appendix"
       appendix-delim: ":"
+
 bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
 
 

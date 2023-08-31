@@ -4,7 +4,6 @@ Author: Mitchell Valdes-Bobes @mitchv34
 Date: 2023-08-26
 Description: 
 ==========================================================================================#
-# TODO: Add type of returns to each function (that needs it)
 #==========================================================================================
 # * Packages 
 ==========================================================================================#
@@ -30,8 +29,9 @@ using Distributions
     θ           ::Float64          #
     γ           ::Float64          #
     # Production
+    output      ::Function         # Poduction function
     A           ::Float64          #
-    α           ::Float64          #
+    # α           ::Float64          #
     ν           ::Float64          #
     b_hat       ::Float64          #
     # Vacancy creation cost function
@@ -135,6 +135,23 @@ function read_primitives(path_to_params::AbstractString)::Primitives
     # Create j_grid
     j_grid = range(1, data["grids"]["n_j"], length=data["grids"]["n_j"])
 
+    # Create production function
+    params = data["primitives"]["function"]["params"] # Get parameters of the function
+    functional = data["primitives"]["function"]["functional_form"] # Get functional in string form 
+
+    # function fcnFromString(s) # Create function from string
+    #     f = eval(Meta.parse("(x, y) -> " * s))
+    #     return (x, y) -> Base.invokelatest(f, x, y)
+    # end
+
+    # f = fcnFromString(functional) # Create function from string
+
+    # TODO: Figure out how to create a function from a string
+    # ! I'm manually creating the function for now
+    f = (x,y) -> x.^params[1] .* y'.^(1-params[1])
+    # f = (x,y) -> (params[1] .+ params[2] .* x .+ params[3] .* y' .+ params[4] .* x.^2 + params[5] .* (y').^2 .+ params[6] .* x .* y') # Functional form of production function 
+
+
     # Create Primitives struct
     Primitives(
         β = data["primitives"]["beta"],
@@ -143,8 +160,8 @@ function read_primitives(path_to_params::AbstractString)::Primitives
         s = data["primitives"]["s"],
         θ = data["primitives"]["theta"],
         γ = data["primitives"]["gamma"],
+        output = f,
         A = data["primitives"]["A"],
-        α = data["primitives"]["alpha"],
         ν = data["primitives"]["nu"],
         b_hat = data["primitives"]["b_hat"],
         c₀ = data["primitives"]["c_0"],
@@ -185,11 +202,11 @@ function idea_exchange(prim::Primitives, dist::DistributionsModel)
     # Unpack DistributionsModel
     @unpack ℓ = dist
     # Unpack primitives
-    @unpack x_grid, ν = prim
+    @unpack x_grid, ν, n_j = prim
     # Compute each location's share of the population (μⱼ)
     μ = sum(ℓ, dims=2)
-    # Compute the average skill level in each location
-    x̄ = sum(ℓ .* x_grid', dims=2) ./ μ
+    # Compute the average skill level in each location 
+    x̄ = [(μ[j] > 0) ? sum(ℓ[j, :] .* x_grid) ./ μ[j] : 0.0 for j ∈ 1:n_j]
     # Compute the value of idea exchange in each location
     X = (1  .- exp.(-ν .* μ)) .* x̄
     return X
@@ -212,7 +229,8 @@ end # end of worker_productivity
 ==========================================================================================#
 function output(prim::Primitives, dist::DistributionsModel)
     # Unpack primitives
-    @unpack  n_j,n_x, n_y, x_grid, y_grid, α = prim
+    @unpack  n_j,n_x, n_y, x_grid, y_grid = prim
+    output_funct = prim.output
     # Get productivity of each type of worker in each location
     B = worker_productivity(prim, dist)
     # Pre-allocate output
@@ -221,7 +239,7 @@ function output(prim::Primitives, dist::DistributionsModel)
     for j in 1:n_j # Loop over locations
         x_j = B[j, :] # Get productivity of workers in location j
         # Compute output
-        Y[j, :, :] = z .* (x_j).^α .* y_grid' .^(1 - α)
+        Y[j, :, :] = z .* output_funct(B[j, :],  y_grid)
     end # end of loop over locations
     return Y
 end # end of output
@@ -248,8 +266,8 @@ function congestion_cost(prim::Primitives, dist::DistributionsModel)
     μ = sum(ℓ, dims=2)
     # Compute the cost of living in each location
     C = θ .* (μ .^ γ)
-    return C
-    # return zeros(size(C)) # For now I'm setting the cost of living to zero
+    # return C
+    return zeros(size(C)) # For now I'm setting the cost of living to zero
 end # end of congestion_cost
 #==========================================================================================
 # instant_surplus: Compute instant surplus of each move between locations for each
@@ -594,6 +612,10 @@ function update_distrutions!(prim::Primitives, res::Results, dist::Distributions
     # Check that the mass of workers employed at interim stage is the same as the mass of workers that are retained or poached
     @assert sum(dist.h_plus) ≈ sum(h_poached) + sum(h_retained) @bold @red "Error!: hₜ₊ ≂̸ hₜ₊₁ + hₚ + hᵣ where hₚ is the mass of workers poached and hᵣ is the mass of workers retained"
     
+    # Update the distribution of unemployed and employed workers
     dist.u = u_next
     dist.h = h_retained + h_poached + h_hired;
+    # Update the distribution of workers across locations
+    dist.ℓ = dist.u  + dropdims(sum(dist.h, dims=3), dims=3)
 end # End of function update_distrutions!
+

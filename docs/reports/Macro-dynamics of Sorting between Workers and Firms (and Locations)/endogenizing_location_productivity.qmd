@@ -6,12 +6,15 @@ title: Endogenizing Location Productivity and Cost of Living
 
 This section focus on how the distribution of workers (skils) affect both the productivity of matches $f(x,y,j,z)$ and the instant utility of workers $b(x,j,z)$.
 
-## Location Productivity
+**Location Productivity**
 
 I borrow from [@davisSpatialKnowledgeEconomy2019] in assuming that the productivity of workers in a location $j$ is a result of idea exchange process within each location.
 
--   Assume that a type $x$ worker in location $j$ has a $B(x, \overline{X}^j)$ where $\overline{X}^j$ is the value of idea exchange in location $j$. Thus: $$f(x,y,j,z) = f\left(B(x, \overline{X}^j), y, z\right)$$
--   Assume that the value of idea exchange in location $j$ is a function of the distribution of skills in location $j$: $\overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right)$
+-   Assume that a type $x$ worker in location $j$ has a $B(x, \overline{X}^j)$ where $\overline{X}^j$ is the value of idea exchange in location $j$. Thus: $$f(x,y,j,z_t) = f\left(B(x, \overline{X}^j), y, z_t\right)$$
+
+-   Assume that the value of idea exchange in location $j$ is a function of the distribution of skills in location $j$:
+
+    $$ \overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right) $$
 
 It's natural to make the following assumptions on $B(x, \overline{X}^j)$ and $\overline{X}^j$:
 
@@ -21,18 +24,32 @@ It's natural to make the following assumptions on $B(x, \overline{X}^j)$ and $\o
 
 I will focus on the following functional forms for $B(x, \overline{X}^j)$ and $\overline{X}^j$:
 
-```{=latex}
-\begin{equation}
-    B(x, \overline{X}^j) = x(1 + A \overline{X}^j x)
-\end{equation}
-```
-where $A$ is a parameter that captures the scope of gains from idea exchange.
+$$
+ B(x, \overline{X}^j) = x(1 + A \overline{X}^j x)
+$$where $A$ is a parameter that captures the scope of gains from idea exchange.
 
-```{=latex}
-\begin{equation}
+$$
     \overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j
-\end{equation}
-```
+$$
+
 The probability of encountering someone during each moment of time seeking is given by $1 - \exp(-ν \mu^j)$, note that as the number of potential exchange partners ($\mu^j$) increases, the probability of encountering someone also increases, which makes intuitive sense.
 
 The average ability of the individuals you encounter in these exchanges is denoted as $\hat{x}^j$. This is a weighted average of the abilities of the people you meet $$\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}=\frac{\mathbb{E}^j[x]}{\mu^j}$$ where $\mathbb{E}^j[x]$ is the average ability of workers in location $j$.
+
+Finally I assume that the production function is a Cobb-Duglas with the state of the economy $z_t$ being a Hicks neutral modifier
+
+$$
+f(x,y,j,z_t) = z_t B(x,\overline{X}^j)^\alpha y^{1-\alpha}
+$$ {#eq-prod_funct}
+
+Let $y^*(x,1, j)$ be the firm type that maximizes production for a worker of type $x$ in location $j$ when the aggregate shock is equal to $1$ and $\hat{b}$ an adjustment factor, then, home production is characterized as:  
+$$
+b(x, j) = \hat{b} f(x,y^*(x,1),1, j)$$
+Note that with the functional form I'm considering $y^{*}(x,1,j) = \max{\mathcal{Y}}=y^{*}$ for all $x$ and $j$, thus:
+$$b(x, j) = \hat{b} f(x,y^*,1, j)$$
+
+**Cost of living**
+
+-   As in [@davisSpatialKnowledgeEconomy2019] and [@behrensProductiveCitiesSorting2014a] every individual in location $j$ pays the congestion cost :
+
+$$\theta\mu_j^{\gamma}$$

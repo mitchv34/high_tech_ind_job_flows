@@ -2,12 +2,12 @@ Time is discrete and agents live forever.
 
 # Demographics
 - There is a discrete and finite set of locations $\mathcal{J}=\{1,\dots,|\mathcal{J}|\}$ locations indexed by $j\in\mathcal{J}$.
-- Continuum of workers indexed by their ability $x\in \mathcal{X}$.
+- Continuum of workers indexed by their ability $x\in \mathcal{X}$ with $\mathcal{X}$ compact.
   - The total measure is normalized to $1$.
   - Exogenous distribution $\ell(x)$
   - Endogenous distribution in each location $\ell^{j}(x)$
   - Denote $\mu_j$ the total population in location $j$.
-- Continuum of firms indexed by technology $y\in \mathcal{Y}$.
+- Continuum of firms indexed by technology $y\in \mathcal{Y}$ with $\mathcal{Y}$ compact.
   - Total measure is normalized to $1$.
   - Uniformly distributed.
 - The exogenous cost of posting $v$ job opportunities in location $j$ is $$c_{j}(v)\geq0$$ assume it is increasing, convex, and independent of the firm type $y$ (but *potentially* dependent on location).

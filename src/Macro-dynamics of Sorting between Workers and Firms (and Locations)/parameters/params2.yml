@@ -8,10 +8,10 @@ primitives:
   gamma : 0.1       # Curvature of cost of living function
   # Production function parameters
   function:
-    params : [0.9]  # Parameters of production function (Worker's share of output)
-    functional_form : "x.^params[1] .* y'.^(1-params[1])" # Functional form of production function  
+    params : [0.03, 2.053, -0.140, 8.035, -1.907, 6.596]  # Parameters of production function (Worker's share of output)
+    functional_form : "(params[1] .+ params[2] .* x .+ params[3] .* y' .+ params[4] .* x.^2 + params[5] .* (y').^2 .+ params[6] .* x .* y')" # Functional form of production function  
   A     : 10         # Gains from idea exchange
-  nu    : 50        # Idea exchange parameter
+  nu    : 10        # Idea exchange parameter
   b_hat : 0.7       # Home production parameter
   # Vacancy creation cost function
   c_0   : 0.028     # 

@@ -1,0 +1,273 @@
+---
+title: "A model of Sorting bewteen Workers and Firms (now in Space!)"
+author: "Mitchell Valdes-Bobes"
+engine: knitr
+format:
+    revealjs:
+        footer: "UW-Madison"
+        logo : https://www.nicepng.com/png/detail/502-5025232_more-info-university-of-wisconsin-logo.png
+        navigation-mode : vertical
+        theme: simple
+        html-math-method: mathjax
+    ipynb: default
+    pdf : default
+bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
+---
+
+# Model {.smaller}
+
+- I adopt the framework from [@liseMacrodynamicsSortingWorkers2017].
+- Introducing a fixed amount of locations and population distribution of workers should be an equilibrium outcome.
+- Workers can "partially" direct their search to each location.
+- Productivity depends on the quality of match and aggregate state as in the original paper. I want to introduce a third component which is location productivity.
+  - Which in turn depends on the skill distribution of workers in each location.
+
+# Model Setup 
+
+## Demographics {.smaller}
+
+-   There is a discrete and finite set of locations $\mathcal{J}=\{1,\dots,|\mathcal{J}|\}$ locations indexed by $j\in\mathcal{J}$.
+-   Continuum of workers indexed by their ability $x\in \mathcal{X}$.
+    -   The total measure is normalized to $1$.
+    -   Exogenous distribution $\ell(x)$
+    -   Endogenous distribution in each location $\ell^{j}(x)$
+    -   Denote $\mu_j$ the total population in location $j$.
+
+
+## Demographics {.smaller}
+
+-   Continuum of firms indexed by technology $y\in \mathcal{Y}$.
+    -   Total measure is normalized to $1$.
+    -   Uniformly distributed.
+
+## Technology {.smaller}
+
+-   There is andexogenous cost of posting $v$ job opportunities in location $j$ is $$c_{j}(v)\geq0$$ assume it is increasing, convex, and independent of the firm type $y$ (but *potentially* dependent on location).
+-   The aggregate state of the economy is indexed by $z_t$ .
+    -   Changes from $z$ to $z'$ according to the transition probability $\pi(z, z')$.
+-   Workers and firms discount the future at the rate $\beta$.
+
+## Technology {.smaller}
+
+-   Workers can move across locations, they *"partially direct"* their search using a mixed strategy:$$\phi^i_j(x) = \{\phi^i_j(x, j')\}_{j'\in \mathcal{J}}
+        $$ $\phi^i_j(x, j')$ is the probability that $x$ worker from $j$ search in $j'$ and $i\in \{u,s\}$.
+-   Each strategy has an asociated cost $c_s(\phi_i^j(x))$:
+$$c_s(\phi^i_j(x)) = c_1 \left(\sum_{j'\in \mathcal{J}}\phi^i_j(x, j')\log{(J\phi^i_j(x, j'))}\right)$$
+-   When a worker move they must pay a cost $F^{j \to j'}\geq 0$ with $F^{j\to j} = 0$.
+
+
+## Technology {.smaller}
+
+-   Unemployed workers instant utility in each location is $b(x,z,j)$.[^model-2]
+-   Firms have access to a production technology, defined at the match level and depending on the location and the aggregate state of the economy $f(x, y, j, z)$.
+
+[^model-2]: In [@liseMacrodynamicsSortingWorkers2017] $b(x)$ stands for unemploymet benefits, I want to be more general to be able to include differerences in cost of living across locations
+
+# Job Search
+
+## Timing of the model {.smaller}
+The timing is as follows: 
+
+1. At time $(t)$, distributions of employed and unemployed workers are inherited from $t-1$.
+    -   $u^j_t(x)$ is the measure of type-$x$ Unemployed workers at the location $j$.
+    -   $h^j_t(x,y)$ is the measure of type-$x$ workers employed at the firm $y$ at the location $j$.
+    -   Note that on each location: $$u^j_t(x) + \int h^j_t(x,y) dy = \ell^j(x)$$
+
+## Timing of the model {.smaller}
+
+2.  Aggregate state changes $z_{t-1} \to z_{t}$.
+3.  At time $(t+)$ Separations occur:
+    -   $u^j_{t+}(x)$ is the measure of the type $x$ Unemployed workers in the location $j$ after the shock.
+    -   $h^j_{t+}(x,y)$ is the measure of type $x$ workers that remain employed at firm $y$ in location $j$.
+3.  Unemployed and employed workers draw new offers.
+
+## Search Intensity and Vacancies {.smaller}
+
+**Search Intensity**
+
+Both unemployed and employed workers search.
+- $s$ is the search intensity of an employed worker 
+- Search intensity of an unemployed worker is normalized to 1.
+-  The total search intensity in location $j$ is:
+$$L^j_t = \sum_{j'\in\mathcal{J}}\left[\int \phi_u^{j'}(x,j)u^{j'}_{t+}(x) dx + s\int\int \phi_s^{j'}(x,j)h^{j'}_{t+}(x,y)dx dy\right]$$
+
+**Vacancies**
+
+- Let $v^j_t(y)$ be the number of job opportunities posted by a firm $y$ at time $t$ in  location $j$.
+
+-  The total number of job opportunities posted at the time $t$ in the location $j$ is: $$V^j_t = \int v^j_t(y) dy$$
+
+## Matching {.smaller}
+
+Let $M^j_t = M(L^j_t, V^j_t)$ be the number of job matches in the location $j$ then:
+
+-   The probability that an unemployed worker contacts a vacancy in the location $j$ is $$p^j_t = \frac{M^j_t}{L^j_t}$$
+    -   $sp^j_t$ is the probability that an employed worker contacts a vacancy.
+-   The probability that a ﬁrm contacts any searching worker $$q^j_t = \frac{M^j_t}{V^j_t}$$
+-   Let $\theta_t^j = V^j_t / L^j_t$ be the market tightness in location $j$.
+
+# Dynamic Programming {.smaller}
+
+-   $U^{j}_t(x)$ the value for an unemployed worker of type $x$ at time $t$ at location $j$.
+-   The value of getting an offer depends on whether the worker is employed or not:
+    -   $W^{j'\to j}_{0, t}(x,y)$ is the value of a type-$x$ unemployed worker at location $j'$ who is hired by a ﬁrm of type $y$ at a location $j$.
+    -   $W^{j'\to j}_{1, t}(x,y,y')$ is the value offered at the time $t$ by type $y$ firm at location $j$ to a type $x$ worker employment at a type $y'$ firm in location $j'$.
+-   $J^j_t(x,y)$ is the value of a match between a type $x$ worker and a type $y$ firm at time $t$ in location $j$.
+
+## Unemployed Worker {.smaller}
+
+
+Unemployed worker's value function is:
+
+```{=latex}
+\begin{align*}
+U^{j}_{t}(x) = b(x,j,z_t)+ &\beta\max_{\phi^j_u(x)}\left\{-c(\phi^j_u(x)) \right.  + \\
+& \mathbb{E}_{t}\sum_{j'\in \mathcal{J}} \phi^j_u(x, j')\left[ (1-p^{j'}_{t+1})U^{j}_{t+1}(x) \right.  \\
+& \left. \left. \hspace{0cm} + p^{j'}_{t+1} \int \max\left\{U^{j'}_{t+1}(x),W^{j\to j'}_{0, t+1}(x,y)\right\}\frac{v^{j'}_{t+1}(y)}{V^{j'}_{t+1}}dy - F^{j \to j'}\right] \right\} 
+\end{align*}
+```
+
+- Workers don't have bargaining power: they are offered their reservation value $U^{j'}_t(x)- F^{j \to j'}=W^{j\to j'}_{0, t+1}(x,y)- F^{j \to j'}$.
+
+- Define the value of unemployment for a type $x$ worker that moves from $j$ to $j'$ as: $$U^{j \to j'}_{t+1}(x) = (1 - p_{t+1}^{j'})U^{j}_{t+1}(x) + p_{t+1}^{j'}U^{j'}_{t+1}(x) - F^{j \to j'}$$
+
+## Unemployed Worker {.smaller}
+
+- We can rewrite the value function as:
+  $$U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right]\right) -c(\phi^j_u(x)) \right\} $$
+- And solve for the optimal search strategy and plug into the Bellman:
+$$ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}$$ 
+
+ $$U^{j}_{t}(x)=b(x,j,z)+\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}$$ {#eq-bellman-unemployed}
+Where $\text{lse}(x\in \mathbb{R}^n)$ is the **log-sum-exp** function.
+
+## Joint Value of a Match {.smaller}
+
+-   If a match is destroyed the firm will get $0$ and the worker gets their unemployment value $U^j_t(x)$.
+-   Matches are destroyed for two reasons:
+    -   *Exogenous destruction* with probability $\delta$
+    -   *Endogenous destruction*, if and only if $J^j_t(x,y) < U^j_t(x)$.
+        -   Denote $\lambda^j_{t}(x,y) = \mathbb{1}_{\{J^j_{t}(x,y)>U^j_{t}(x,y)\}}$
+
+## Joint Value of a Match {.smaller}
+
+We can write the Bellman equation of a match value as:
+
+```{=tex}
+\begin{align*}
+J^j_t(x,y) = \underbrace{f(x,y,j,z_t)}_{\text{match value added}} &+ \beta\max_{\phi^j_s(x)}\left\{\mathbb{E}_t\left[  \overbrace{ (1-(1-\delta)\lambda^j_{t+1}(x,y)) }^{\text{match is destroyed}}\underbrace{U^j_{t+1}(x)}_{\text{worker gets unemployment value}} \right. \right. + \\
+ + & \underbrace{(1-\delta)\lambda^j_t(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'}_t)}^{\text{no new offers}} \underbrace{J^j_{t+1}(x,y)}_{\text{stays with same firm}} \right. \right. +\\
+& +sp^{j'}_t \left.\left. \underbrace{\int\max\{J^{j}_{t+1}(x,y),W^{j\to j'}_{1,t+1}(x,y',y)-F^{j\to j'}\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right] \right\}
+\end{align*}
+```
+
+## Joint Value of a Match {.smaller}
+
+**Poaching:**
+
+- When worker receives an offer from a type $y'$ in city $j'$ then there is a sequential auction like in [@postel-vinayEquilibriumWageDispersion2002].
+-  More productive firms can offer higher values. 
+-  The key difference with [@postel-vinayEquilibriumWageDispersion2002] is that location plays a role: the poaching firm must cover the cost of moving, this leads to two possible outcomes:
+
+    -   $J^{j'}_{t+1}(x,y')>J^j_{t+1}(x,y)+F^{j\to j'}$ the worker moves from $(j,y) \to (j',y')$ and receives $W^{j\to j'}_{1,t+1}(x,y',y)$
+    -   $J^j_{t+1}(x,y)>J^{j'}_{t+1}(x,y')-F^{j\to j'}$ the worker stays at $(j,y)$ and receives $W^{j}_{1,t+1}(x,y,y')$
+
+- To able to poach, the firm must be at least $F^{j\to j'}$ more productive.
+
+## Joint Value of a Match {.smaller}
+
+As in [@postel-vinayEquilibriumWageDispersion2002] if the worker is hired by the poaching firm the worker receives the incumbent firm reservation value plus the cost of changing jobs, i.e.
+
+$$J^{j'}_{t+1}(x,y')>J^{j}_{t+1}(x,y)+F^{j\to j'}  \: \implies \: W^{j\to j'}_{1,t+1}(x,y',y) = J^{j}_{t+1}(x,y)+F^{j\to j'}$$
+
+therefore
+
+```{=tex}
+\begin{align*}
+    J^j_{t}(x,y)=f(x,y,j,z_t)+\beta\max_{\phi^j_s(x)}\left\{\mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^j_{t+1}(x) \right.\right. \\ \left.\left. + (1-\delta) \lambda^j_t(x,y)\sum_{j'\in\mathcal{J}}\phi_s^j(x,j')J^j_{t+1}(x,y)\right] - c(\phi^j_s(x))\right\}
+\end{align*}
+```
+
+## Joint Value of a Match {.smaller}
+
+Note that the optimal strategy for employed workers is to engage in random search i.e.: $$\phi_{s}^{j}(x, j') = \frac{1}{\mid\mathcal{J}\mid} \qquad \forall\:x \text{ and }j,j'\in\mathcal{J}$$
+
+Finally we can write the Bellman equation for the joint value of a match as:
+
+```{=tex}
+\begin{align}
+J^j_{t}(x,y) &= f(x,y,j,z_t)+\beta\mathbb{E}_t\left[ \right.\\
+&\left.(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^j_{t+1}(x) + (1-\delta) \lambda^j_t(x,y)J^j_{t+1}(x,y)\right]
+\end{align}
+```
+
+## Match Surplus {.smaller}
+
+Define the surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as: $$S^{j\to j'}_{t}(x,y) = J^{j'}_{t}(x,y) - [U^{j}_t(x) - F^{j\to j'}]$$
+
+After some algebra we obtain the following expression for the surplus of a match:
+```{=tex}
+\begin{align}
+S_{t}^{j\to j'}(x,y) = s(x,y,j \to j',z_t) &- \Lambda^{j'}(x) - F^{j \to j'} \\ 
+&+ \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j'\to j'}_{t+1}(x,y)\right\}\right]
+\end{align}
+```
+
+- $\Lambda^{j'}(x)$ is a function of the expected value of the difference of the instantaneous utility of a type $x$ worker in $j'$ and every other location.
+
+## Match Surplus {.smaller}
+
+Match surplus encodes all the necessary and sufficient conditions for a firm $y'$ in location $j'$ to poach a worker from a firm $y$ in location $j$:
+```{=latex}
+\begin{align*}
+  S_t^{j\to j'}(x,y') - S^{j \to j}_t(x,y') &= J^{j'}_{t}(x,y') - [U^{j}_t(x) - F^{j\to j'}] - \left(J^{j}_{t}(x,y) - [U^{j}_t(x) - F^{j\to j}]\right) \\ 
+  &=  J^{j'}_{t}(x,y') - [ J^{j}_{t}(x,y) + F^{j\to j'}]
+\end{align*}
+```
+- Worker $x$ is poached by firm $y'$ in location $j'$ from firm $y$ in location $j$ if and only if the surplus obtained from moving to $j'$ and matching with $y'$ is higher than the surplus of staying at $j$ matched with $y'$.
+
+## Interim Distributions {.smaller}
+
+- The surplus function determines how does the stock of unemployed and employed workers change when $z_{t-1} \to z_t$: 
+  $$u^{j}_{t+}(x) = \underbrace{u^j_t(x)}_{\text{inherited from }t} + \overbrace{\int \Big(\underbrace{\mathbb{1}_{S^{j \to j}_t(x,y)<0}}_{\text{endogenous destruction}} + \underbrace{\delta\mathbb{1}_{S^{j \to j}_t(x,y)\geq0}}_{\text{exogenous destruction}}\Big)h^j_t(x,y)dy}^{\text{new unemployment created by shock}}$$ and $$h^{j}_{t+}(x,y) = (1-\delta)\mathbb{1}_{\left\{S^{j \to j}(x,y)\geq 0\right\}}h^j_t(x,y)$$
+
+## Vacancy Creation {.smaller}
+
+-   $B^j_t(y)$ is the expected value of a type $y$ vacancy making contact with a worker in location $j$. 
+-   Vacancies are posted in the interim period and meet unemployed and employed type-$x$ workers at a rates $$\frac{u^j_{t+}(x)}{L^j_t} \qquad \text{and} \qquad s\frac{h^j_{t+}(x,y)}{L^j_t}$$ 
+-   The expected value of posting a vacancy is therefore, the surplus that the posting firm expects to add, potential matches with negative surplus are immediately destroyed therefore those add no surplus. 
+
+## Vacancy Creation {.smaller}
+In terms of the Bellman equation we can write:
+```{=tex}
+\begin{align}
+B^j_t(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u^{j'}_{t+}(x)}{L^{j'}_t}}_{\text{likelihhod of match}}\times\overbrace{  S_t^{j'\to j}(x,y)^{+} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} + \\
+& +\underbrace{\sum_{j'\in \mathcal{J}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,j)\frac{h^{j'}_{t+}(x,y)}{L^{j'}_t}}_{\text{likelihood of match}}\times \overbrace{ [S^{j' \to j}_t(x,y)-S^{j' \to j'}_{t}(x,y')]^{+}}^{\text{poaching is succesfull}}dx\right)dy\right)}_{\text{expected value added from poaching other firms employees}}
+\end{align}
+```
+For simplicity we use the notation $x^+ = \max\{0,x\}$.
+
+## Vacancy Creation {.smaller}
+
+Firms will post vacancies such that the marginal cost of the vacancies and the marginal expected benefit $B^j_t$ are equal: $$c_{j}'(v^{j}_t(y))=q^{j}_{t}B^{j}_{t}(y)$$ 
+
+Using the value of $B^j_t$ any particular cost and matching function can be used to pin down the number of vacancies posted by each firm in each location.
+
+# Labor Market Flows {.smaller}
+
+Now we characterize the flows of workers in-to and out-of unemployment at each location :
+
+-   Let $$\eta^{j' \to j}(x,y) = \mathbb{1}_{\{S_{t}^{j' \to j}(x,y)>0\}}$$ and $$\eta^{j' \to j}(x,y'\to y) = \mathbb{1}_{\{S^{j' \to j}_{t}(x,y) > S^{j' \to j'}_{t}(x,y')\}}$$
+-   And $\hat{\phi}^j_u(x,j')$ the probability that a type $x$ unemployed worker from location $j$ search in location $j'$.
+
+## New Unemployment {.smaller}
+
+- The law of motion of the unemployment rate is:
+
+```{=tex}
+\begin{equation}
+u^{j}_{t+1}(x) = \sum_{j'\in \mathcal{J}} \phi_u^{j'}(x,j)u^{j'}_{t+}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)
+\end{equation}
+```
+
+# References {.smaller}
