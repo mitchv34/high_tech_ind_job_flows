@@ -3,36 +3,46 @@
 Unemployed agents solve the following maximization problem:
 ```{=latex}
 \begin{align*}
-    \max_{\phi^j_u(x)}&\left\{ \sum_{j'\in\mathcal{J}}\phi^j_u(x, j')\mathbb{E}_t\Big[U^{j'}_{t+1}(x)  \Big] -c(\phi^j_u(x)) \right\} \\ \\
+    \max_{\phi^j_u(x)}&\left\{ \sum_{j'\in\mathcal{J}}\phi^j_u(x, j')\mathbb{E}_t\Big[U^{j \to j'}_{t+1}(x)  \Big] -c(\phi^j_u(x)) \right\} \\ \\
     \text{subject to: } & \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') = 1 \\
     & \hspace{1.1 cm} \phi^j_u(x, j') \geq 0 \qquad \forall j'\in \mathcal{J}
 \end{align*}
 ```
 
 I'll ignore the non-negativity constraints and write the Lagrangean of the problem:
-$$\mathcal{L}(\phi^j_u(x), \lambda) =  \sum_{j'\in\mathcal{J}} \phi^j_u(x, j')\mathbb{E}_t\Big[U^{j'}_{t+1}(x)  \Big] -c(\phi^j_u(x)) - \lambda \left(\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') - 1\right)$$
+$$\mathcal{L}(\phi^j_u(x), \lambda) =  \sum_{j'\in\mathcal{J}} \phi^j_u(x, j')\mathbb{E}_t\Big[U^{j \to j'}_{t+1}(x)  \Big] -c(\phi^j_u(x)) - \lambda \left(\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') - 1\right)$$
 
 First order conditions of the problem give us:
 ```{=latex}
 \begin{align*}
-  [\phi^j_u(x, j')] &:\quad \mathbb{E}_t\Big[U^{j'}_{t+1}(x)  \Big] - c_1 - c_1 \log[J \phi^j_u(x, j')] = \lambda \\
+  [\phi^j_u(x, j')] &:\quad \mathbb{E}_t\Big[U^{j \to j'}_{t+1}(x)  \Big] - c_1 - c_1 \log[J \phi^j_u(x, j')] = \lambda \\
   [\lambda] &: \quad \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') = 1
 \end{align*}
 ```
 
 Take any two $j_1$, $j_2$ we have that 
-$$\mathbb{E}_t\left[U^{j_1}_{t+1}(x)  \right] - c_1 \log[J \phi^j_u(x, j_1)] = \mathbb{E}_t\left[U^{j_2}_{t+1}(x)  \right] - c_1 \log[J \phi^j_u(x, j_2)]$$
+$$\mathbb{E}_t\left[U^{j \to j_1}_{t+1}(x)  \right] - c_1 \log[J \phi^j_u(x, j_1)] = \mathbb{E}_t\left[U^{j \to j_2}_{t+1}(x)  \right] - c_1 \log[J \phi^j_u(x, j_2)]$$
 
 thus 
-$$\frac{\mathbb{E}_t\left[U^{j_1}_{t+1}(x)\right] - \mathbb{E}_t\left[U^{j_2}_{t+1}(x)\right]}{c_1} = \log\left(\frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)}\right) \quad \implies \quad \frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)} = \frac{e^{\left(\mathbb{E}_t\left[U^{j_1}_{t+1}(x)\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{j_2}_{t+1}(x)\right] /c_1\right)}}$$
+$$\frac{\mathbb{E}_t\left[U^{j \to j_1}_{t+1}(x)\right] - \mathbb{E}_t\left[U^{j \to j_2}_{t+1}(x)\right]}{c_1} = \log\left(\frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)}\right) \quad \implies \quad \frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)} = \frac{e^{\left(\mathbb{E}_t\left[U^{j \to j_1}_{t+1}(x)\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{j \to j_2}_{t+1}(x)\right] /c_1\right)}}$$
 
 Fix any $\hat{j}$, then we can write any other $j'\in\mathcal{J}$ in therms of $\hat{j}$ and plug into the constraint to get:
 
-$$\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') =\sum_{j'\in \mathcal{J}}\frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x)\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{\hat{j}}_{t+1}(x)\right] /c_1\right)}} \phi^j_u(x, \hat{j}) = \frac{\phi^j_u(x, \hat{j})}{e^{\left(\mathbb{E}_t\left[U^{j_2}_{t+1}(x)\right] /c_1\right)}} \sum_{j\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x)\right] /c_1\right)} = 1$$
+$$\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') =\sum_{j'\in \mathcal{J}}\frac{e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{j \to \hat{j}}_{t+1}(x)\right] /c_1\right)}} \phi^j_u(x, \hat{j}) = \frac{\phi^j_u(x, \hat{j})}{e^{\left(\mathbb{E}_t\left[U^{j \to \hat{j}}_{t+1}(x)\right] /c_1\right)}} \sum_{j\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)} = 1$$
 
 Which we can solve to obtain
 
-$$\boxed{
-  \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x)\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}_{t+1}(x)\right] /c_1\right)}}}$$
+$$
+  \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}$${#eq-phi-u-almost-final}
 
 Note that the non-negativity constraints are satisfied because the exponential function is always positive.
+
+To further symplify the expression in [@eq-phi-u-almost-final] we can write
+
+
+$$\mathbb{E}_{t}\left[U_{t+1}^{j \to j'}\right] = \mathbb{E}_{t + 1}\left[U_{t+1}^{j}\right] + \mathbb{E}_{t + 1}\left[p_{t+1}^{j'}\left(U_{t+1}^{j'} - U_{t+1}^{j}\right) - F^{j\to j'}\right]$$  
+
+and and taking $\exp{\left\{ \mathbb{E}_{t + 1}\left[U_{t+1}^{j}\right] /c_1 \right\}}$ as a common factor in both the numerator and denominator of [@eq-phi-u-almost-final] we get:  
+
+$$
+\phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_{t + 1}\left[p_{t+1}^{j'}\left(U_{t+1}^{j'} - U_{t+1}^{j}\right) - F^{j\to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_{t + 1}\left[p_{t+1}^{\tilde{j}}\left(U_{t+1}^{\tilde{j}} - U_{t+1}^{j}\right) - F^{j\to \tilde{j}}\right] /c_1\right)}}$${#eq-phi_u_final}
