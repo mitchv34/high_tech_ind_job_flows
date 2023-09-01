@@ -84,17 +84,17 @@ Unemployed workers receive instant utility from living in location $j$, $b(x,j, 
 ```{=latex}
 \begin{align*}
 U^{j}_{t}(x) = \underbrace{b(x,j,z_t)}_{\text{instant utility}} + &\beta\max_{\phi^j_u(x)}\left\{ \underbrace{-c(\phi^j_u(x))}_{\text{cost of search strategy}} \right.  + \\
-& \mathbb{E}_{t}\sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'}_{t+1})U^{j}_{t+1}(x)}^{\text{no offer from} j' \text{, stays unemployed in} j} \right.  \\
+& \mathbb{E}_{t}\sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'}_{t+1})U^{j'}_{t+1}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
 & \left. \left. \hspace{0cm} + p^{j'}_{t+1} \underbrace{\int \max\left\{U^{j'}_{t+1}(x),W^{j\to j'}_{0, t+1}(x,y)\right\}\frac{v^{j'}_{t+1}(y)}{V^{j'}_{t+1}}dy - F^{j \to j'}}_{\text{if offer, pays cost,moves to } j \text{ and then is matched randomly with some firm}} \right] \right\} 
 \end{align*}
 ```
-Assume that workers don't have bargaining power, therefore they are offered their reservation value $U^{j'}_t(x)- F^{j \to j'}=W^{j\to j'}_{0, t+1}(x,y)- F^{j \to j'}$ by firms: $$U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[\underbrace{(1 - p_{t+1}^{j'})U^{j}_{t+1}(x) + p_{t+1}^{j'}U^{j'}_{t+1}(x) - F^{j \to j'}}_{U^{j \to j'}_{t+1}(x)}\right]\right) -c(\phi^j_u(x)) \right\} $$
+Assume that workers don't have bargaining power, therefore they are offered their reservation value $U^{j'}_t(x)=W^{j\to j'}_{0, t+1}(x,y)$ by firms: $$U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right]\right) -c(\phi^j_u(x)) \right\} $$
 
-This means that the optimal search policy for each worker is $$ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}$$ {#eq-optimal-search-unemployed}
+This means that the optimal search policy for each worker is $$ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}$$ {#eq-optimal-search-unemployed}
 
 derivation is in [Appendix -@sec-appendix_search_unemp].
 
-Substituting the optimal strategy into the Bellman Equation of the unemployed worker we get (derivation in [Appendix -@sec-appendix_bellman_unemp]): $$U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j \to j'}(x)]/c_1\right)}-\log{(J)}\right)}$$ or simply $$U^{j}_{t}(x)=b(x,j,z)+\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j\to j'}_{t+1}(x)]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}$$ {#eq-bellman-unemployed}
+Substituting the optimal strategy into the Bellman Equation of the unemployed worker we get (derivation in [Appendix -@sec-appendix_bellman_unemp]): $$U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)}$$ or simply $$U^{j}_{t}(x)=b(x,j,z)+\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)-F^{j\to j'}]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}$$ {#eq-bellman-unemployed}
 
 Where $\text{lse}(x\in \mathbb{R}^n)$ is the **log-sum-exp** function.
 

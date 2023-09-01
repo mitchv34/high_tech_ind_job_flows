@@ -182,7 +182,7 @@ Locations)}
 \begin{abstract}
 Lorem ipsum dolor sit amet.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, interior hidden, enhanced, breakable, borderline west={3pt}{0pt}{shadecolor}, frame hidden, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[enhanced, breakable, interior hidden, frame hidden, sharp corners, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -513,27 +513,26 @@ unemployment:
 
 \begin{align*}
 U^{j}_{t}(x) = \underbrace{b(x,j,z_t)}_{\text{instant utility}} + &\beta\max_{\phi^j_u(x)}\left\{ \underbrace{-c(\phi^j_u(x))}_{\text{cost of search strategy}} \right.  + \\
-& \mathbb{E}_{t}\sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'}_{t+1})U^{j}_{t+1}(x)}^{\text{no offer from} j' \text{, stays unemployed in} j} \right.  \\
+& \mathbb{E}_{t}\sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'}_{t+1})U^{j'}_{t+1}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
 & \left. \left. \hspace{0cm} + p^{j'}_{t+1} \underbrace{\int \max\left\{U^{j'}_{t+1}(x),W^{j\to j'}_{0, t+1}(x,y)\right\}\frac{v^{j'}_{t+1}(y)}{V^{j'}_{t+1}}dy - F^{j \to j'}}_{\text{if offer, pays cost,moves to } j \text{ and then is matched randomly with some firm}} \right] \right\} 
 \end{align*}
 
 Assume that workers don't have bargaining power, therefore they are
 offered their reservation value
-\(U^{j'}_t(x)- F^{j \to j'}=W^{j\to j'}_{0, t+1}(x,y)- F^{j \to j'}\) by
-firms:
-\[U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[\underbrace{(1 - p_{t+1}^{j'})U^{j}_{t+1}(x) + p_{t+1}^{j'}U^{j'}_{t+1}(x) - F^{j \to j'}}_{U^{j \to j'}_{t+1}(x)}\right]\right) -c(\phi^j_u(x)) \right\} \]
+\(U^{j'}_t(x)=W^{j\to j'}_{0, t+1}(x,y)\) by firms:
+\[U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right]\right) -c(\phi^j_u(x)) \right\} \]
 
 This means that the optimal search policy for each worker is
-\begin{equation}\protect\hypertarget{eq-optimal-search-unemployed}{}{ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}}\label{eq-optimal-search-unemployed}\end{equation}
+\begin{equation}\protect\hypertarget{eq-optimal-search-unemployed}{}{ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}}\label{eq-optimal-search-unemployed}\end{equation}
 
 derivation is in Appendix~\ref{sec-appendix_search_unemp}.
 
 Substituting the optimal strategy into the Bellman Equation of the
 unemployed worker we get (derivation in
 Appendix~\ref{sec-appendix_bellman_unemp}):
-\[U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j \to j'}(x)]/c_1\right)}-\log{(J)}\right)}\]
+\[U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)}\]
 or simply
-\begin{equation}\protect\hypertarget{eq-bellman-unemployed}{}{U^{j}_{t}(x)=b(x,j,z)+\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j\to j'}_{t+1}(x)]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}}\label{eq-bellman-unemployed}\end{equation}
+\begin{equation}\protect\hypertarget{eq-bellman-unemployed}{}{U^{j}_{t}(x)=b(x,j,z)+\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)-F^{j\to j'}]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}}\label{eq-bellman-unemployed}\end{equation}
 
 Where \(\text{lse}(x\in \mathbb{R}^n)\) is the \textbf{log-sum-exp}
 function.
@@ -999,87 +998,89 @@ Workers}\label{sec-appendix_search_unemp}}
 Unemployed agents solve the following maximization problem:
 
 \begin{align*}
-    \max_{\phi^j_u(x)}&\left\{ \sum_{j'\in\mathcal{J}}\phi^j_u(x, j')\mathbb{E}_t\Big[U^{j \to j'}_{t+1}(x)  \Big] -c(\phi^j_u(x)) \right\} \\ \\
+    \max_{\phi^j_u(x)}&\left\{ \sum_{j'\in\mathcal{J}}\phi^j_u(x, j')\mathbb{E}_t\Big[U^{j'}_{t+1}(x) - F^{j \to j'}  \Big] -c(\phi^j_u(x)) \right\} \\ \\
     \text{subject to: } & \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') = 1 \\
     & \hspace{1.1 cm} \phi^j_u(x, j') \geq 0 \qquad \forall j'\in \mathcal{J}
 \end{align*}
 
 I'll ignore the non-negativity constraints and write the Lagrangean of
 the problem:
-\[\mathcal{L}(\phi^j_u(x), \lambda) =  \sum_{j'\in\mathcal{J}} \phi^j_u(x, j')\mathbb{E}_t\Big[U^{j \to j'}_{t+1}(x)  \Big] -c(\phi^j_u(x)) - \lambda \left(\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') - 1\right)\]
+\[\mathcal{L}(\phi^j_u(x), \lambda) =  \sum_{j'\in\mathcal{J}} \phi^j_u(x, j')\mathbb{E}_t\Big[U^{j'}_{t+1}(x) - F^{j \to j'}  \Big] -c(\phi^j_u(x)) - \lambda \left(\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') - 1\right)\]
 
 First order conditions of the problem give us:
 
 \begin{align*}
-  [\phi^j_u(x, j')] &:\quad \mathbb{E}_t\Big[U^{j \to j'}_{t+1}(x)  \Big] - c_1 - c_1 \log[J \phi^j_u(x, j')] = \lambda \\
+  [\phi^j_u(x, j')] &:\quad \mathbb{E}_t\Big[U^{j'}_{t+1}(x) - F^{j \to j'}  \Big] - c_1 - c_1 \log[J \phi^j_u(x, j')] = \lambda \\
   [\lambda] &: \quad \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') = 1
 \end{align*}
 
 Take any two \(j_1\), \(j_2\) we have that
-\[\mathbb{E}_t\left[U^{j \to j_1}_{t+1}(x)  \right] - c_1 \log[J \phi^j_u(x, j_1)] = \mathbb{E}_t\left[U^{j \to j_2}_{t+1}(x)  \right] - c_1 \log[J \phi^j_u(x, j_2)]\]
+\[\mathbb{E}_t\left[U^{j_1}_{t+1}(x) - F^{j \to j_1}  \right] - c_1 \log[J \phi^j_u(x, j_1)] = \mathbb{E}_t\left[U^{j_2}_{t+1}(x) - F^{j \to j_2}  \right] - c_1 \log[J \phi^j_u(x, j_2)]\]
 
 thus
-\[\frac{\mathbb{E}_t\left[U^{j \to j_1}_{t+1}(x)\right] - \mathbb{E}_t\left[U^{j \to j_2}_{t+1}(x)\right]}{c_1} = \log\left(\frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)}\right) \quad \implies \quad \frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)} = \frac{e^{\left(\mathbb{E}_t\left[U^{j \to j_1}_{t+1}(x)\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{j \to j_2}_{t+1}(x)\right] /c_1\right)}}\]
+
+\begin{align*}
+  \frac{\mathbb{E}_t\left[U^{j_1}_{t+1}(x) - F^{j \to j_1}\right] - \mathbb{E}_t\left[U^{j_2}_{t+1}(x) - F^{j \to j_2}\right]}{c_1} &= \log\left(\frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)}\right) \\ 
+  &\implies \quad \frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)} = \frac{e^{\left(\mathbb{E}_t\left[U^{j_1}_{t+1}(x) - F^{j \to j_1}\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{j_2}_{t+1}(x) - F^{j \to j_2}\right] /c_1\right)}}
+\end{align*}
 
 Fix any \(\hat{j}\), then we can write any other \(j'\in\mathcal{J}\) in
 therms of \(\hat{j}\) and plug into the constraint to get:
 
-\[\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') =\sum_{j'\in \mathcal{J}}\frac{e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{j \to \hat{j}}_{t+1}(x)\right] /c_1\right)}} \phi^j_u(x, \hat{j}) = \frac{\phi^j_u(x, \hat{j})}{e^{\left(\mathbb{E}_t\left[U^{j \to \hat{j}}_{t+1}(x)\right] /c_1\right)}} \sum_{j\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)} = 1\]
+\begin{align*}
+  \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') &= \sum_{j'\in \mathcal{J}}\frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{ \hat{j}}_{t+1}(x) - F^{j \to \hat{j}}\right] /c_1\right)}} \phi^j_u(x, \hat{j})\\  &= \frac{\phi^j_u(x, \hat{j})}{e^{\left(\mathbb{E}_t\left[U^{ \hat{j}}_{t+1}(x) - F^{j \to \hat{j}}\right] /c_1\right)}} \sum_{j\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)} = 1
+\end{align*}
 
 Which we can solve to obtain
 
 \begin{equation}\protect\hypertarget{eq-phi-u-almost-final}{}{
-  \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j \to j'}_{t+1}(x)\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}}\label{eq-phi-u-almost-final}\end{equation}
+  \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}}\label{eq-phi-u-almost-final}\end{equation}
 
 Note that the non-negativity constraints are satisfied because the
 exponential function is always positive.
-
-To further symplify the expression in
-Equation~\ref{eq-phi-u-almost-final} we can write
-
-\[\mathbb{E}_{t}\left[U_{t+1}^{j \to j'}\right] = \mathbb{E}_{t + 1}\left[U_{t+1}^{j}\right] + \mathbb{E}_{t + 1}\left[p_{t+1}^{j'}\left(U_{t+1}^{j'} - U_{t+1}^{j}\right) - F^{j\to j'}\right]\]
-
-and and taking
-\(\exp{\left\{ \mathbb{E}_{t + 1}\left[U_{t+1}^{j}\right] /c_1 \right\}}\)
-as a common factor in both the numerator and denominator of
-Equation~\ref{eq-phi-u-almost-final} we get:
-
-\begin{equation}\protect\hypertarget{eq-phi_u_final}{}{
-\phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_{t + 1}\left[p_{t+1}^{j'}\left(U_{t+1}^{j'} - U_{t+1}^{j}\right) - F^{j\to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_{t + 1}\left[p_{t+1}^{\tilde{j}}\left(U_{t+1}^{\tilde{j}} - U_{t+1}^{j}\right) - F^{j\to \tilde{j}}\right] /c_1\right)}}}\label{eq-phi_u_final}\end{equation}
 
 \hypertarget{sec-appendix_bellman_unemp}{%
 \chapter{Derivation of Unemployed Bellman
 Equation}\label{sec-appendix_bellman_unemp}}
 
 The Bellman of a unemployed worker is (omitting time and worker types):
-\[U^{j} = b + \beta\max_{\phi}\left\{\sum_{j'\in \mathcal{J}} \left(\phi(j')\mathbb{E}_t\left[U^{j'} \right]\right) -c(\phi) \right\}\]
+\[U^{j} = b + \beta\max_{\phi}\left\{\sum_{j'\in \mathcal{J}} \left(\phi(j')\mathbb{E}_t\left[U^{j'} - F^{j \to j'} \right]\right) -c(\phi) \right\}\]
 Where the optimal strategy we obtained in
 Appendix~\ref{sec-appendix_search_unemp}
-\begin{equation}\protect\hypertarget{eq-optimal-search-unemp}{}{\phi(j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}}\label{eq-optimal-search-unemp}\end{equation}
+\begin{equation}\protect\hypertarget{eq-optimal-search-unemp}{}{\phi(j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}}}\label{eq-optimal-search-unemp}\end{equation}
 and the cost of a search policy (strategy) is:
 \[c(\phi) = c_{1} \sum_{j\in \mathcal{J}}\phi(j')\log(J \phi(j'))\] We
 want to plug the best policy and obtain the Bellman. The continuation
 value takes the form:
 
 \begin{align*}
-& \sum_{j'\in \mathcal{J}} \left[ \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\mathbb{E}_t\left[U^{j'} \right]
-- c_1\left( \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\right)\log{\left(J \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\right)} \right]\\
-\implies \quad & \sum_{j'\in \mathcal{J}} \left\{\frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} \left[\mathbb{E}_t\left[U^{j'} \right]
-- c_1\log{\left(J \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}}\right)} \right]\right\}\\
+& \sum_{j'\in \mathcal{J}} \left[ \frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}}\mathbb{E}_t\left[U^{j'} - F^{j \to j'} \right]
+- c_1\left( \frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}}\right) \right. \\
+& \left. \hspace{11cm}\log{\left(J \frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}}\right)} \right]\\
+\implies \quad & \sum_{j'\in \mathcal{J}} \left\{\frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}} \left[\mathbb{E}_t\left[U^{j'} - F^{j \to j'} \right]
+- c_1\log{\left(J \frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}}\right)} \right]\right\}\\
   \implies \quad & 
-\sum_{j'\in \mathcal{J}} \left\{\frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} \left[{\mathbb{E}_t\left[U^{j'} \right]}
-- c_1\left(\log{\left(J\right)} + {\log{\left(e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}\right)}} - \log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)}\right)\right]\right\}\\   \implies\quad&
-c_1\sum_{j'\in \mathcal{J}}\left\{ \frac{e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} \left[
-\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right]\right\}\\
+\sum_{j'\in \mathcal{J}} \left\{\frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}} \left[{\mathbb{E}_t\left[U^{j'} - F^{j \to j'} \right]}
+- c_1\left(\log{\left(J\right)} + {\log{\left(e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}\right)}}- \right.\right.\right. \\
+&\left.\left.\left. \hspace{11cm}   \log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}\right)}\right)\right]\right\}\\   \implies\quad&
+c_1\sum_{j'\in \mathcal{J}}\left\{ \frac{e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}} \left[
+\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right]\right\}\\
 \implies\quad&c_1\left[
-\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right] {\frac{1}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}} }{\sum_{j'\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j'}\right] /c_1\right)}} 
+\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right] {\frac{1}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}} }{\sum_{j'\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j'} - F^{j \to j'}\right] /c_1\right)}} 
 \end{align*}
 
 Thus we obtain:
 
 \begin{align*}
 U^{j} &= b + \beta c_1\left[
-\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right]
+\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}} - F^{j \to \tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right]
+\end{align*}
+
+Denote \(U^{j \to j'} = U^{j} - F^{j \to j'}\) then
+
+\begin{align*}
+U^{j \to j' } &= b + \beta c_1\left[
+\log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right] - F^{j \to j'}
 \end{align*}
 
 \hypertarget{sec-appendix_surplus}{%
