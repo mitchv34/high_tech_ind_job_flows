@@ -74,7 +74,7 @@ Denote:
 -   $U^{j}_t(x)$ the value for an unemployed worker of type $x$ at time $t$ at location $j$.
 -   The value of getting an offer depends on whether the worker is employed or not:
     -   $W^{j'\to j}_{0, t}(x,y)$ is the value of a type-$x$ unemployed worker at location $j'$ who is hired by a ﬁrm of type $y$ at a location $j$.
-    -   $W^{j'\to j}_{1, t}(x,y,y')$ is the value offered at the time $t$ by type $y$ firm at location $j$ to a type $x$ worker employment at a type $y'$ firm in location $j'$.
+    -   $W^{j'\to j}_{1, t}(x,y' \to y')$ is the value offered at the time $t$ by type $y$ firm at location $j$ to a type $x$ worker employed at a type $y'$ firm in location $j'$.
 -   $J^j_t(x,y)$ is the value of a match between a type $x$ worker and a type $y$ firm at time $t$ in location $j$.
 
 ### Unemployed Worker
@@ -90,71 +90,107 @@ U^{j}_{t}(x) = \underbrace{b(x,j,z_t)}_{\text{instant utility}} + &\beta\max_{\p
 ```
 Assume that workers don't have bargaining power, therefore they are offered their reservation value $U^{j'}_t(x)=W^{j\to j'}_{0, t+1}(x,y)$ by firms: $$U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right]\right) -c(\phi^j_u(x)) \right\} $$
 
-This means that the optimal search policy for each worker is $$ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}$$ {#eq-optimal-search-unemployed}
+This means that the optimal search policy for each worker is $$ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{f}}_{t+1}(x) - F^{j \to \tilde{j}}\right] /c_1\right)}}$$ {#eq-optimal-search-unemployed}
 
 derivation is in [Appendix -@sec-appendix_search_unemp].
 
-Substituting the optimal strategy into the Bellman Equation of the unemployed worker we get (derivation in [Appendix -@sec-appendix_bellman_unemp]): $$U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)}$$ or simply $$U^{j}_{t}(x)=b(x,j,z)+\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)-F^{j\to j'}]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}$$ {#eq-bellman-unemployed}
+Substituting the optimal strategy into the Bellman Equation of the unemployed worker we get (derivation in [Appendix -@sec-appendix_bellman_unemp]): $$U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)}$$ 
 
-Where $\text{lse}(x\in \mathbb{R}^n)$ is the **log-sum-exp** function.
+Denote $U^{j \to j'}_{t}(x) = U^{j}_{t}(x) - F^{j \to j'}$ notice that $U^{j}(x) \equiv U^{j \to j}(x)$ for all $j' \in \mathcal{J}$ therefore we can write: 
+
+$$U^{j \to j'}_{t}(x)=b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j \to j'}(x)]/c_1\right)}-\log{(J)}\right)} - F^{j \to j'}$$  {#eq-bellman-unemployed} 
+
+
 
 ### Joint Value of a Match 
 
--   If a match between a worker and a firm in location $j$ is destroyed the firm will get $0$ and the worker gets their unemployment value in that location $U^j_t(x)$.
+-   If a match between a worker and a firm in location $j$ is destroyed the firm will get $0$ and the worker gets their unemployment value in that location $U^{j\to j}_t(x)$.
 -   Matches are destroyed for two reasons:
     -   *Exogenous destruction* with probability $\delta$
     -   *Endogenous destruction*, if and only if $J^j_t(x,y) < U^j_t(x)$.
-        -   Denote $\lambda^j_{t}(x,y) = \mathbb{1}_{\{J^j_{t}(x,y)>U^j_{t}(x,y)\}}$
+        -   Denote $\lambda^j_{t}(x,y) = \mathbb{1}_{\{J^j_{t}(x,y)>U^{j\to j}_{t}(x,y)\}}$
 
 We can write the Bellman equation of a match value as:
 
-```{=tex}
+```{=latex}
 \begin{align*}
-J^j_t(x,y) = \underbrace{f(x,y,j,z_t)}_{\text{match value added}} &+ \beta\max_{\phi^j_s(x)}\left\{\mathbb{E}_t\left[  \overbrace{ (1-(1-\delta)\lambda^j_{t+1}(x,y)) }^{\text{match is destroyed}}\underbrace{U^j_{t+1}(x)}_{\text{worker gets unemployment value}} \right. \right. + \\
+J^j_t(x,y) = \underbrace{f(x,y,j,z_t)}_{\text{match value added}} &+ \beta\mathbb{E}_t\left[  \overbrace{ (1-(1-\delta)\lambda^j_{t+1}(x,y)) }^{\text{match is destroyed}}\underbrace{U^{j\to j}_{t+1}(x)}_{\text{worker gets unemployment value}} \right. + \\
  + & \underbrace{(1-\delta)\lambda^j_t(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'}_t)}^{\text{no new offers}} \underbrace{J^j_{t+1}(x,y)}_{\text{stays with same firm}} \right. \right. +\\
-& +sp^{j'}_t \left.\left. \underbrace{\int\max\{J^{j}_{t+1}(x,y),W^{j\to j'}_{1,t+1}(x,y',y)-F^{j\to j'}\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right] \right\}
+& +sp^{j'}_t \left. \underbrace{\int\max\{J^{j}_{t+1}(x,y),W^{j\to j'}_{1,t+1}(x,y',y)-F^{j\to j'}\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right]
 \end{align*}
 ```
 When a type $x$ worker employed at a type $y$ firm in city $j$ receives an offer from a type $y'$ in city $j'$ then there is a sequential auction like in [@postel-vinayEquilibriumWageDispersion2002]. More productive firms can offer higher values. The key difference with [@postel-vinayEquilibriumWageDispersion2002] is that location plays a role: if a firm is located in a different location than the worker's current employer then the poaching firm must cover the cost of moving, this leads to two possible outcomes:
 
--   $J^{j'}_{t+1}(x,y')>J^j_{t+1}(x,y)+F^{j\to j'}$ the worker moves from $(j,y) \to (j',y')$ and receives $W^{j\to j'}_{1,t+1}(x,y',y)$
--   $J^j_{t+1}(x,y)>J^{j'}_{t+1}(x,y')-F^{j\to j'}$ the worker stays at $(j,y)$ and receives $W^{j}_{1,t+1}(x,y,y')$
+-   $J^{j'}_{t+1}(x,y')>J^j_{t+1}(x,y)+F^{j\to j'}$ the worker moves from $(j,y) \to (j',y')$ and receives $W^{j\to j'}_{1,t+1}(x,y \to y')$
+-   $J^j_{t+1}(x,y)>J^{j'}_{t+1}(x,y')-F^{j\to j'}$ the worker stays at $(j,y)$.
 
-to able to poach from different locations the firm must be at least $F^{j\to j'}$ more productive.
+To able to poach from different locations the firm must be at least $F^{j\to j'}$ more productive. UIf the worker is hired by the poaching firm they receive the incumbent firm reservation value plus the cost of changing jobs, i.e.
 
-As in [@postel-vinayEquilibriumWageDispersion2002] if the worker is hired by the poaching firm the worker receives the incumbent firm reservation value plus the cost of changing jobs, i.e.
-
-$$J^{j'}_{t+1}(x,y')>J^{j}_{t+1}(x,y)+F^{j\to j'}  \qquad \implies \qquad W^{j\to j'}_{1,t+1}(x,y',y) = J^{j}_{t+1}(x,y)+F^{j\to j'}$$
+$$J^{j'}_{t+1}(x,y')>J^{j}_{t+1}(x,y)+F^{j\to j'}  \qquad \implies \qquad W^{j\to j'}_{1,t+1}(x,y\to y') = J^{j}_{t+1}(x,y)+F^{j\to j'}$$
 
 therefore
 
 ```{=tex}
 \begin{align*}
-    J^j_{t}(x,y)=f(x,y,j,z_t)+\beta\max_{\phi^j_s(x)}\left\{\mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^j_{t+1}(x) \right.\right. \\ \left.\left. \qquad + (1-\delta) \lambda^j_t(x,y)\sum_{j'\in\mathcal{J}}\phi_s^j(x,j')J^j_{t+1}(x,y)\right] - c(\phi^j_s(x))\right\}
+    J^j_{t}(x,y)&=f(x,y,j,z_t)+\beta \mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^{j \to j}_{t+1}(x) \right. \\& \hspace{4cm} \left. + (1-\delta) \lambda^j_t(x,y) \max_{\phi^j_s(x)}\left\{ \sum_{j'\in\mathcal{J}}\phi_s^j(x,j')J^j_{t+1}(x,y) - c(\phi^j_s(x))\right\} \right] \\
+    &=f(x,y,j,z_t)+\beta \mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^j_{t+1}(x) \right. \\& \hspace{6cm} \left. + (1-\delta) \lambda^j_t(x,y) \max_{\phi^j_s(x)}\left\{J^j_{t+1}(x,y) - c(\phi^j_s(x))\right\} \right]
 \end{align*}
 ```
-Note that the optimal strategy for employed workers is to engage in random search i.e.: $$\phi_{s}^{j}(x, j') = \frac{1}{\mid\mathcal{J}\mid} \qquad \forall\:x \text{ and }j,j'\in\mathcal{J}$$
+Note that employed workers are guaranteed to receive the value of their current match next period, whether they stay at the same firm or move to a different firm. Since directing seach is costly then, the optimal strategy for employed workers is to engage in random search i.e.: $$\phi_{s}^{j}(x, j') = \frac{1}{\mid\mathcal{J}\mid} \qquad \forall\:x \text{ and }j,j'\in\mathcal{J}$$
 
 thus:
 
-$$J^j_{t}(x,y)=f(x,y,j,z_t)+\beta\mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^j_{t+1}(x) + (1-\delta) \lambda^j_t(x,y)J^j_{t+1}(x,y)\right]$$ {#eq-bellman-match}
+$$J^j_{t}(x,y)=f(x,y,j,z_t)+\beta\mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^{j\to j}_{t+1}(x) + (1-\delta) \lambda^j_t(x,y)J^j_{t+1}(x,y)\right]$$ {#eq-bellman-match}
 
 ### Match Surplus
 
-Define the surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as: $$S^{j\to j'}_{t}(x,y) = J^{j'}_{t}(x,y) - [U^{j}_t(x) - F^{j\to j'}]$$
+Define the surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as: $$S^{j\to j'}_{t}(x,y) = J^{j'}_{t}(x,y) - U^{j\to j'}_t(x)$$
 
-After some algebra we obtain the following expression for the surplus of a match: $$S_{t}^{j\to j'}(x,y) = s(x,y,j \to j',z_t) - \Lambda^{j'}(x) - F^{j \to j'} + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j'\to j'}_{t+1}(x,y)\right\}\right]$$ {#eq-surplus}
+Next I will characterize the surplus function. First Denote the instant surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as: $$s(x,y,j \to j',z_t) = f(x,y,j,z_t) - b(x,j',z_t)$$
 
-where $\Lambda^{j'}(x)$ is a function of the expected value of the difference of the instantaneous utility of a type $x$ worker in $j'$ and every other location. For derivations and function definitions see [Appendix -@sec-appendix_surplus].
-
-Note that match surplus encodes all the necessary and sufficient conditions for a firm $y'$ in location $j'$ to poach a worker from a firm $y$ in location $j$:
+Next, note that we can write the surplus of staying in a match as^[Here I take advantage of the translation property of the $\log\text{sum}\exp$ function, i.e. $\log\sum\exp(x_i) = \log\sum\exp(x - a)+ a$ for any $a\in\mathbb{R}$]: 
 ```{=latex}
 \begin{align*}
-  S_t^{j\to j'}(x,y') - S^{j \to j}_t(x,y') &= J^{j'}_{t}(x,y') - [U^{j}_t(x) - F^{j\to j'}] - \left(J^{j}_{t}(x,y) - [U^{j}_t(x) - F^{j\to j}]\right) \\ 
-  &=  J^{j'}_{t}(x,y') - [ J^{j}_{t}(x,y) + F^{j\to j'}]
+S^{j\to j}_{t}(x,y) &= J^{j}_{t}(x,y) - U^{j\to j}_t(x) \\
+&= s(x,y,j \to j, z_t)+ \beta\mathbb{E}_t\left[((1-\delta)\lambda^j_{t+1}(x,y))\left(J^j_{t+1}(x,y) - U^j_{t+1}(x)\right)\right] + \\&\beta c_1 \mathbb{E}_t\left[\frac{U^{j\to j}_{t+1}(x)}{c_1}\right] -   \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j \to j'}(x)]/c_1\right)}\right) + \beta c_1 \log{(J)}}\\
+&= s(x,y,j \to j, z_t)+ \beta\mathbb{E}_t\left[((1-\delta)\lambda^j_{t+1}(x,y))\left(J^j_{t+1}(x,y) - U^j_{t+1}(x)\right)\right] + \\&\hspace{2cm} -   \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j \to j'}(x) - U_{t+1}^{j \to j}(x)]/c_1\right)}\right) + \beta c_1 \log{(J)}}
 \end{align*}
 ```
-therefore worker $x$ is poached by firm $y'$ in location $j'$ from firm $y$ in location $j$ if and only if the surplus obtained from moving to $j'$ and matching with $y'$ is higher than the surplus of staying at $j$ matched with $y'$.
+
+Notice that $\lambda^{j}(x,y) > 0$ if and only if $S^{j\to j}_{t}(x,y) > 0$ therefore we can write the following Bellman equation for the surplus of a match:
+
+```{=latex}
+\begin{align*}
+S_{t}^{j \to j}(x,y) = s(x,y,j \to j, z_t) + \beta \left[(1-\delta)\mathbb{E}_{t}\max\left\{0, S_{t+1}^{j \to j}(x,y)\right\} - \right. \\ \left. \hspace{5cm} 
+c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j \to j'}(x) - U_{t+1}^{j \to j}(x)]/c_1\right)}\right) + c_1 \log{(J)}} \right]
+\end{align*}
+```
+{#eq-surplus-same-location}
+
+Finally we can use the expression in [@eq-surplus-same-location] to write the surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as: 
+
+```{=latex}
+\begin{align*}
+S_{t}^{j\to j'}(x,y) &= J^{j'}_{t}(x,y) - U^{j\to j'}_t(x) \\
+&= \left[J^{j'}_{t}(x,y) - U^{j' \to j'}\right] + \left[U^{j' \to j'}- U^{j\to j'}_t(x) \right]\\
+&= S_{t}^{j' \to j'}(x,y)+ \left[U^{j' \to j'}- U^{j\to j'}_t(x) \right]
+\end{align*}
+``` 
+{#eq-surplus}
+
+From the expressions in [@eq-surplus-same-location] and [@eq-surplus] we can see that the following three things are evident:
+
+- The surpluss function is independent of the distribution of worker and vacancies in each location. 
+- A worker in location $j$ can be hired from a firm in location $j'$ by firm $y$ if and only if the surplus of the match is positive:
+$$S^{j\to j'}_{t}(x,y) \geq 0 \qquad \iff \quad = J^{j'}_{t}(x,y) - U^{j\to j'}_t(x) \geq 0$$
+- A worker employed at location $j$ by firm $y$ can be poached by a firm $y'$ in location $j'$ if and only if the surplus of the match is higher than the surplus of staying at the same firm in the same location:
+```{=latex}
+\begin{align*}
+S^{j\to j'}_{t}(x,y') > S^{j\to j}_{t}(x,y) &\iff J^{j'}_{t}(x,y') - U^{j\to j'}_t(x) > J^{j}_{t}(x,y) - U^{j\to j}_t(x) \\
+&\iff J^{j'}_{t}(x,y') - [U^{j}_t(x) - F^{j\to j'}] > J^{j}_{t}(x,y) - U^{j}_t(x) \\
+&\iff J^{j'}_{t}(x,y') > J^{j}_{t}(x,y) +  F^{j\to j'}
+\end{align*}
+```
 
 When the aggregate state changes from $z_{t-1} \to z_t$ the surplus function determines how does the stock of unemployed and employed workers change: $$u^{j}_{t+}(x) = \underbrace{u^j_t(x)}_{\text{inherited from }t} + \overbrace{\int \Big(\underbrace{\mathbb{1}_{S^{j \to j}_t(x,y)<0}}_{\text{endogenous destruction}} + \underbrace{\delta\mathbb{1}_{S^{j \to j}_t(x,y)\geq0}}_{\text{exogenous destruction}}\Big)h^j_t(x,y)dy}^{\text{new unemployment created by shock}}$$ and $$h^{j}_{t+}(x,y) = (1-\delta)\mathbb{1}_{\left\{S^{j \to j}(x,y)\geq 0\right\}}h^j_t(x,y)$$
 

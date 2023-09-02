@@ -23,6 +23,10 @@ format:
                 </style>
     ipynb: default
     pdf : default
+    beamer:
+        navigation: horizontal
+        # header-includes: |
+        # \titlegraphic{\includegraphics[width=0.4\paperwidth]{clemson.png}}
 bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
 ---
 

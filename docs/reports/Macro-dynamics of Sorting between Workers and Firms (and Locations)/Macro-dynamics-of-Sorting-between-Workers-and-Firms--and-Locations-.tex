@@ -175,14 +175,14 @@
 \title{Macro-dynamics of Sorting between Workers and Firms (and
 Locations)}
 \author{Mitchell Valdes-Bobes}
-\date{September 1, 2023}
+\date{September 2, 2023}
 
 \begin{document}
 \maketitle
 \begin{abstract}
 Lorem ipsum dolor sit amet.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[enhanced, breakable, interior hidden, frame hidden, sharp corners, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, boxrule=0pt, breakable, enhanced, interior hidden, borderline west={3pt}{0pt}{shadecolor}, sharp corners]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -245,6 +245,10 @@ Lorem ipsum dolor sit amet.
   Read
   (\protect\hyperlink{ref-simsImplicationsRationalInattention2003}{Sims
   2003})
+\item[$\square$]
+  Read
+  (\protect\hyperlink{ref-matejkaRationalInattentionDiscrete2015}{Matějka
+  and McKay 2015})
 \item[$\square$]
   Check that the unemployment value function is a contraction.
 \item[$\square$]
@@ -523,7 +527,7 @@ offered their reservation value
 \[U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right]\right) -c(\phi^j_u(x)) \right\} \]
 
 This means that the optimal search policy for each worker is
-\begin{equation}\protect\hypertarget{eq-optimal-search-unemployed}{}{ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}}\label{eq-optimal-search-unemployed}\end{equation}
+\begin{equation}\protect\hypertarget{eq-optimal-search-unemployed}{}{ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{f}}_{t+1}(x) - F^{j \to \tilde{j}}\right] /c_1\right)}}}\label{eq-optimal-search-unemployed}\end{equation}
 
 derivation is in Appendix~\ref{sec-appendix_search_unemp}.
 
@@ -531,11 +535,8 @@ Substituting the optimal strategy into the Bellman Equation of the
 unemployed worker we get (derivation in
 Appendix~\ref{sec-appendix_bellman_unemp}):
 \[U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)}\]
-or simply
-\begin{equation}\protect\hypertarget{eq-bellman-unemployed}{}{U^{j}_{t}(x)=b(x,j,z)+\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)-F^{j\to j'}]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}}\label{eq-bellman-unemployed}\end{equation}
 
-Where \(\text{lse}(x\in \mathbb{R}^n)\) is the \textbf{log-sum-exp}
-function.
+\begin{equation}\protect\hypertarget{eq-bellman-unemployed}{}{U^{j \to j'}_{t}(x)=b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)} + F^{j \to j'}}\label{eq-bellman-unemployed}\end{equation}
 
 \hypertarget{joint-value-of-a-match}{%
 \subsection{Joint Value of a Match}\label{joint-value-of-a-match}}
@@ -1173,6 +1174,12 @@ Wage Stickiness}.''} \emph{American Economic Review} 95 (1): 50--65.
 Lise, Jeremy, and Jean-Marc Robin. 2017. {``The {Macrodynamics} of
 {Sorting} Between {Workers} and {Firms}.''} \emph{American Economic
 Review} 107 (4): 1104--35. \url{https://doi.org/10.1257/aer.20131118}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-matejkaRationalInattentionDiscrete2015}{}}%
+Matějka, Filip, and Alisdair McKay. 2015. {``Rational {Inattention} to
+{Discrete Choices}: {A New Foundation} for the {Multinomial Logit
+Model}.''} \emph{American Economic Review} 105 (1): 272--98.
+\url{https://doi.org/10.1257/aer.20130047}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-postel-vinayEquilibriumWageDispersion2002}{}}%
 Postel-Vinay, Fabien, and Jean-Marc Robin. 2002. {``Equilibrium {Wage

@@ -16,6 +16,7 @@ title: Introduction
 **TODO**:
 
 - [ ] Read [@simsImplicationsRationalInattention2003]
+- [ ] Read [@matejkaRationalInattentionDiscrete2015]
 - [ ] Check that the unemployment value function is a contraction.
 - [ ] Think about distribution of firms across and within locations.
 - [ ] Solve a modified version of the model where there is no aggregate state.

@@ -26,7 +26,7 @@ book:
   appendices: 
     - appendix_search_unemp.qmd
     - appendix_bellman_unemp.qmd
-    - appendix_surplus.qmd
+    # - appendix_surplus.qmd
 
 
 
