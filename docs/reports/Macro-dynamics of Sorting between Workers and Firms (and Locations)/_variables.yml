@@ -8,8 +8,10 @@ primitives:
   gamma : 0.1       # Curvature of cost of living function
   # Production function parameters
   function:
-    params : [0.03, 2.053, -0.140, 8.035, -1.907, 6.596]  # Parameters of production function (Worker's share of output)
-    functional_form : "(params[1] .+ params[2] .* x .+ params[3] .* y' .+ params[4] .* x.^2 + params[5] .* (y').^2 .+ params[6] .* x .* y')" # Functional form of production function  
+    params : [0.5]  # Parameters of production function (Worker's share of output)
+    functional_form : "x.^params[1] .* y'.^(1-params[1])" # Functional form of production function  
+    # params : [0.5, 0.75]  # Parameters of production function (Worker's share of output)
+    # functional_form : "(params[1] .* x.^((1-params[2])/params[2]) .+ (1-params[1]) .* (y').^((1-params[2])/params[2])).^(params[2]/(1-params[2]))" # Functional form of production function  
   A     : 10         # Gains from idea exchange
   nu    : 10        # Idea exchange parameter
   b_hat : 0.7       # Home production parameter
@@ -20,12 +22,12 @@ primitives:
   omega_1 : 0.0497  
   omega_2 : 0.5
   # Cost of moving location
-  F_bar   : 1.0     # Fixed cost of moving
+  F_bar   : 0.1     # Fixed cost of moving
 
 grids:
   n_x : 21          # Number of skills levels workers
-  n_y : 21          # Number of prductivity levels firms
-  n_j : 10          # Number of locations  
+  n_y : 20          # Number of prductivity levels firms
+  n_j : 2           # Number of locations  
   n_z : 51          # Number of aggregate productivity levels
   x_min  : 0.0      # Minimum skill level
   x_max  : 1.0      # Maximum skill level
@@ -35,8 +37,7 @@ grids:
 distributions: # Parameters that govern the initial distributions
   skill:
     name : beta # Name of distribution
-    param1 : 2.15 # First parameter of distribution
-    param2 : 12.0 # Second parameter of distribution
+    params : [2.15, 12.0] # Second parameter of distribution
   productivity:
     name : uniform 
   

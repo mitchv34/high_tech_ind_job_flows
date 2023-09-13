@@ -2,7 +2,8 @@
 Title: Macro-dynamics of Sorting between Workers and Firms (and Locations)
 Author: Mitchell Valdes-Bobes @mitchv34
 Date: 2023-08-26
-Description: 
+Description:  This file contains the code to solve the model in the paper 
+                    "Macro-dynamics of Sorting between Workers and Firms (and Locations)".
 ==========================================================================================#
 #==========================================================================================
 # * Packages 
@@ -51,6 +52,9 @@ using Distributions
     y_grid      ::Array{Float64,1} #
     z_grid      ::Array{Float64,1} #
     j_grid      ::Array{Int64,1}   #
+    # Distribution parameters
+    dist_name   ::String           # Name of the distribution of overal skills
+    dist_params ::Array{Float64,1} # Parameters of the distribution
 end # end of Parameters
 #==========================================================================================
 # Results: Strucutre to store all results of the model 
@@ -59,15 +63,15 @@ mutable struct Results
     # * Note that i'm ignoring the shocks since im leaving it fixed at 1
     # * In the general version of the model one extra dimension is needed in all results
     # Unemployment value function Uʲₜ(x) (n_j × n_x × n_z) 
-    U          ::Array{Float64,2} 
-    # Optimal strategy of each unemployed worker in each location ϕᵤʲₜ(x) (n_j × n_x × n_z)
-    ϕ_u        ::Array{Float64,2}
-    # Optimal strategy of each employed worker in each location ϕₛʲₜ(x) (n_j × n_x × n_y × n_z)
-    ϕ_s        ::Array{Float64,3}
+    U          ::Array{Float64, 2} 
+    # Optimal strategy of each unemployed worker in each location ϕᵤʲₜ(x, j') (n_j × n_j × n_x × n_z)
+    ϕ_u        ::Array{Float64, 3}
+    # Optimal strategy of each employed worker in each location ϕₛʲₜ(x, j') (n_j × n_j × n_x × n_y × n_z)
+    ϕ_s        ::Array{Float64, 4}
     # Surplus of each move between locations for each worker - firm match Sₜ(j → j', x, y) (n_j × n_j × n_x × n_y × n_z)
-    S_move     ::Array{Float64,4}
+    S_move     ::Array{Float64, 4}
     # Value of vacancy creation in each location for each type of firm (n_j × n_y × n_z)
-    B          ::Array{Float64,2}
+    B          ::Array{Float64, 2}
     # Market tightness (n_j × n_y × n_z)
     θ          ::Array{Float64, 2} 
     # Number of vacancies (n_j × n_y × n_z)
@@ -78,9 +82,9 @@ mutable struct Results
         # Pre-allocate unemployment value function
         U = zeros(n_j, n_x) #!, n_z)
         # Pre-allocate optimal strategy of each unemployed worker in each location
-        ϕ_u = zeros(n_j, n_x) #!, n_z)
+        ϕ_u = zeros(n_j, n_j, n_x) #!, n_z)
         # Pre-allocate optimal strategy of each employed worker in each location
-        ϕ_s = zeros(n_j, n_x, n_y) #!, n_z)
+        ϕ_s = zeros(n_j, n_j, n_x, n_y) #!, n_z)
         # Pre-allocate surplus of each move between locations for each worker - firm match
         S_move = zeros(n_j, n_j, n_x, n_y) #!, n_z)
         # Pre-allocate value of vacancy creation in each location for each type of firm
@@ -150,7 +154,7 @@ function read_primitives(path_to_params::AbstractString)::Primitives
     # ! I'm manually creating the function for now
     f = (x,y) -> x.^params[1] .* y'.^(1-params[1])
     # f = (x,y) -> (params[1] .+ params[2] .* x .+ params[3] .* y' .+ params[4] .* x.^2 + params[5] .* (y').^2 .+ params[6] .* x .* y') # Functional form of production function 
-
+    # f = (x,y) -> (params[1] .* x.^((1-params[2])/params[2]) .+ (1-params[1]) .* (y').^((1-params[2])/params[2])).^(params[2]/(1-params[2]))
 
     # Create Primitives struct
     Primitives(
@@ -176,7 +180,9 @@ function read_primitives(path_to_params::AbstractString)::Primitives
         x_grid = collect(x_grid),
         y_grid = collect(y_grid),
         z_grid = collect(z_grid),
-        j_grid = collect(j_grid)
+        j_grid = collect(j_grid),
+        dist_name = data["distributions"]["skill"]["name"],
+        dist_params = data["distributions"]["skill"]["params"]
     )
 end # end of read_primitives
 #==========================================================================================
@@ -220,8 +226,8 @@ function worker_productivity(prim::Primitives, dist::DistributionsModel)
     @unpack A, x_grid = prim
     # Get value of idea exchange in each location
     X = idea_exchange(prim, dist)
-    B = x_grid' .* (1 .+ A .* X .* x_grid') 
-    return B
+    Ω = x_grid' .* (1 .+ A .* X .* x_grid') 
+    return Ω
 end # end of worker_productivity
 #==========================================================================================
 # output: A function that computes the value of output in each location for each type of
@@ -229,17 +235,16 @@ end # end of worker_productivity
 ==========================================================================================#
 function output(prim::Primitives, dist::DistributionsModel)
     # Unpack primitives
-    @unpack  n_j,n_x, n_y, x_grid, y_grid = prim
+    @unpack  n_j, n_x, n_y, y_grid = prim
     output_funct = prim.output
     # Get productivity of each type of worker in each location
-    B = worker_productivity(prim, dist)
+    Ω = worker_productivity(prim, dist)
     # Pre-allocate output
     Y = zeros(n_j, n_x, n_y)
     # Compute output
     for j in 1:n_j # Loop over locations
-        x_j = B[j, :] # Get productivity of workers in location j
         # Compute output
-        Y[j, :, :] = z .* output_funct(B[j, :],  y_grid)
+        Y[j, :, :] = z .* output_funct(Ω[j, :],  y_grid)
     end # end of loop over locations
     return Y
 end # end of output
@@ -266,8 +271,8 @@ function congestion_cost(prim::Primitives, dist::DistributionsModel)
     μ = sum(ℓ, dims=2)
     # Compute the cost of living in each location
     C = θ .* (μ .^ γ)
-    # return C
-    return zeros(size(C)) # For now I'm setting the cost of living to zero
+    return C
+    # return zeros(size(C)) # For now I'm setting the cost of living to zero
 end # end of congestion_cost
 #==========================================================================================
 # instant_surplus: Compute instant surplus of each move between locations for each
@@ -292,18 +297,18 @@ end # end of instant_surplus
 #==========================================================================================
 # compute_Λ: Compute what I call Λʲ(x) in the notes 
 ==========================================================================================#
-function compute_Λ(prim::Primitives, b::Array{Float64, 2})::Array{Float64, 2}
-    # Unpack primitives
-    @unpack n_j, n_x, β, c = prim
-    # Pre-allocate Λ
-    Λ = zeros(n_j, n_x)
-    for j in 1:n_j # Loop over locations
-        for x in 1:n_x # Loop over skills
-            Λ[j, x] = β .* c .* (-log(n_j) .+ log(sum( (exp.(b[:, x] .- b[j, x]) ./ c))))
-        end
-    end
-    return Λ
-end 
+# function compute_Λ(prim::Primitives, b::Array{Float64, 2})::Array{Float64, 2}
+#     # Unpack primitives
+#     @unpack n_j, n_x, β, c = prim
+#     # Pre-allocate Λ
+#     Λ = zeros(n_j, n_x)
+#     for j in 1:n_j # Loop over locations
+#         for x in 1:n_x # Loop over skills
+#             Λ[j, x] = β .* c .* (-log(n_j) .+ log(sum( (exp.(b[:, x] .- b[j, x]) ./ c))))
+#         end
+#     end
+#     return Λ
+# end 
 #?=========================================================================================
 #? Dynamic Programming I : Solving Bellmans for Unemployemnt and Surplus
 #?=========================================================================================
@@ -318,7 +323,7 @@ function compute_unemployment_value!(prim::Primitives, res::Results, dist::Distr
         println(@bold @blue "Solving the unemployment value function")
     end
     # Unpack primitives
-    @unpack n_j, n_x, β, c  = prim
+    @unpack n_j, n_x, β, c , F_bar = prim
 
     # Calcualte production in each location for each type of worker and firm
     f = output(prim, dist);
@@ -332,8 +337,15 @@ function compute_unemployment_value!(prim::Primitives, res::Results, dist::Distr
     iter = 1
     # Iterate until convergence
     while (err > tol) & (iter < max_iter)
-        # Compute the value of unemployment in each location for each type of worker
-        U_new = b .- C  .+  β .* c .* ( log.( sum( exp.(res.U ./ c)  , dims = 1 )  ) .- log(n_j))
+        # Pre-allocate
+        U_new = zeros(n_j, n_x)
+        for j ∈ 1:n_j # Loop over locations
+            # Comppute the moving cost vector 
+            F = F_bar .* ones(n_j) # Moving cost vector initialized at F_bar
+            F[j] = 0 # Moving cost from location j to location j is zero            
+            # Compute the value of unemployment in each location for each type of worker
+            U_new[j, :] = (b[j, :] .- C[j]) .+  β .* c .* ( log.( sum( exp.((res.U .- F) ./ c)  , dims = 1 )  ) .- log(n_j))' 
+        end 
         # Compute the error
         err = maximum(abs.(U_new .- res.U))
         # Update U
@@ -354,12 +366,17 @@ end # end of compute_unemployment_value
 ==========================================================================================#
 function optimal_strategy!(prim::Primitives, res::Results)
     # Unpack primitives
-    @unpack c, n_j = prim
+    @unpack c, n_j, F_bar = prim
     # Compute the optimal strategy of workers in each location
     # Note that ϕ_u is a (n_j x n_x) matrix where each row is a location and each 
     # column is a skill level, the elements of are the probability that a worker
     # of a given skill level will give to search for a job in each location
-    res.ϕ_u = exp.(res.U ./ c) ./ sum(exp.(res.U ./ c), dims=1)
+    for j ∈ 1:n_j # Loop over locations
+        # Comppute the moving cost vector 
+        F = F_bar .* ones(n_j) # Moving cost vector initialized at F_bar
+        F[j] = 0 # Moving cost from location j to location j is zero            
+        res.ϕ_u[j, :, :] = exp.((res.U .- F) ./ c) ./ sum(exp.((res.U .- F) ./ c), dims=1)
+    end
     #* I obtained that employed workers search randomly i.e. ϕ_s = 1/n_j
     res.ϕ_s .= 1 ./ n_j
 end # end of optimal_strategy
@@ -373,7 +390,7 @@ function compute_surplus!(prim::Primitives, res::Results, dist::DistributionsMod
         println(@bold @blue "Solving the surplus Bellman equation")
     end
     # Unpack primitives
-    @unpack n_j, n_x, n_y, β, F_bar = prim
+    @unpack n_j, n_x, n_y, β, F_bar, c, δ = prim
     # Calcualte production in each location for each type of worker and firm
     f = output(prim, dist);
     # Calculate the value of unemployment in each location for each type of worker
@@ -383,7 +400,7 @@ function compute_surplus!(prim::Primitives, res::Results, dist::DistributionsMod
     # Calculate instant surplus of each move
     s_move = instant_surplus(prim, f, b, C);
     # Calculate Λ
-    Λ = compute_Λ(prim, b);
+    # Λ = compute_Λ(prim, b);
     ## Start by computing the surplus of non move matches
     # Initialize surplus of non move matches (intial guess is zero)
     S_non_move = zeros(n_j, n_x, n_y)
@@ -397,7 +414,12 @@ function compute_surplus!(prim::Primitives, res::Results, dist::DistributionsMod
         S_non_move_new = zeros(n_j, n_x, n_y)
         # Compute the surplus
         for j ∈ 1:n_j
-            S_non_move_new[j, :, :] = s_move[j, j, :, :] .- Λ[j, :] + β .* max.(0, S_non_move[j, :, :] )
+            # Comppute the moving cost vector 
+            F = F_bar .* ones(n_j) # Moving cost vector initialized at F_bar
+            F[j] = 0 # Moving cost from location j to location j is zero
+            # Compute the surplus of non move matches
+            term =  log.(sum( exp.( (res.U .- res.U[j, :]' .- F) ./ c), dims = 1 )) .- log(n_j)
+            S_non_move_new[j, :, :] = s_move[j, j, :, :] + β .* (1 - δ) .* max.(0, S_non_move[j, :, :] ) .- β .* c .* term'
         end
         # Compute the error
         # err = maximum(abs.(S_non_move_new .- S_non_move))
@@ -425,13 +447,11 @@ function compute_surplus!(prim::Primitives, res::Results, dist::DistributionsMod
             if j == j_prime
                 res.S_move[j, j_prime, :, :] = S_non_move[j, :, :]
             end
-            for x in 1:n_x # Loop over skills
+            # for x in 1:n_x # Loop over skills
                 for y in 1:n_y # Loop over productivity
-                    res.S_move[j, j_prime, x, y] = s_move[j, j_prime, x, y] .- Λ[j_prime, x] .+ β .* max.(0, S_non_move[j_prime, x, y] ) 
+                    res.S_move[j, j_prime, :, y] = S_non_move[j_prime, :, y] .+ (res.U[j_prime,:] .- res.U[j,:] ) .- F[j_prime]
                 end
-            end
-            # Subtract moving cost from surplus
-            res.S_move[j, j_prime, :, :] = res.S_move[j, j_prime, :, :] .- F[j_prime]
+            # end
         end
     end
 end # end of compute_surplus
@@ -471,11 +491,11 @@ function get_total_effort(prim::Primitives, dist::DistributionsModel, res::Resul
     # Compute total search effort in each location
     for j in 1:n_j # Loop over locations
         # Total number of unemployed searching for a job in location j
-        unemp = sum( dist.u_plus .* res.ϕ_u[j, :]' )
+        unemp = sum( dist.u_plus .* res.ϕ_u[:, j, :] )
         # Total number of employed searching for a job in location j
         emp = 0
         for y ∈ 1:n_y
-            emp += sum( dist.h_plus[:, :, y] .* res.ϕ_s[j, :, y]' )
+            emp += sum( dist.h_plus[:, :, y] .* res.ϕ_s[:, j, :, y] )
         end
         L[j] =unemp + s .* emp
     end
@@ -491,21 +511,21 @@ function get_vacancy_creation_value!(prim::Primitives, res::Results, dist::Distr
     # Get total seach effort
     L = get_total_effort(prim, dist, res)
     B = zeros(n_j, n_y) # Pre-allocate
-    for j in 1:n_j # Loop over locations (origin)
-        for j_prime ∈ 1:n_j # Loop over locations (destination)
+    for j in 1:n_j # Loop over locations (destination)
+        for j_prime ∈ 1:n_j # Loop over locations (origin)
             # Add value of matches with unemployed workers 
             # Only positive surplus  moves between locations j and j_prime add value
             match_surv = max.(0, res.S_move[j_prime, j, :, :]) 
             # Value of matches with unemployed workers
-            s_from_unemp = sum(res.ϕ_u[j, :] .* dist.u_plus[j_prime, :] .* match_surv, dims=1) / L[j]
+            s_from_unemp = sum(res.ϕ_u[j_prime, j, :] .* dist.u_plus[j_prime, :] .* match_surv, dims=1) / L[j]
             # added value of matches with unemployed workers
             B[j, :] += s_from_unemp' 
             # Add value of poaching other firms 
             for y ∈ 1:n_y # Loop over types of firms to find poaching opportunities
                 # Poaching condition is surplus of moving is greater that surplus of staying
-                worker_poached =  max.(0, res.S_move[j, j_prime, :, y] .- res.S_move[j_prime, j_prime, :, :])
+                worker_poached =  max.(0, res.S_move[j_prime, j, :, y] .- res.S_move[j_prime, j_prime, :, :])
                 # Value of matches with employed workers
-                s_from_poaching = s * sum(res.ϕ_s[j, :, y] .* dist.h_plus[j_prime, :, y] .* worker_poached) / L[j] 
+                s_from_poaching = s * sum(res.ϕ_s[j_prime, j, :, y] .* dist.h_plus[j_prime, :, y] .* worker_poached) / L[j] 
                 # added value of matches formed from poaching other firms' workers
                 B[j, y] += s_from_poaching
             end # end loop over types of firms
@@ -524,7 +544,7 @@ function update_market_tightness_and_vacancies!(prim::Primitives, res::Results, 
     # Compute total search effort
     L = get_total_effort(prim, dist, res)
     # Market tightness
-    res.θ = (sum((ω₁.* res.B ./ c₀).^c₁, dims=2) ./ L).^(c₁/(ω₂ + c₁)) 
+    res.θ = (sum((ω₁.* res.B ./ c₀).^(1/c₁), dims=2) ./ L).^(c₁/(ω₂ + c₁)) 
     # Number of vacancies 
     res.v = ((ω₁ .* (res.θ.^(-ω₂)) .* res.B )./ c₀).^(1/c₁) 
 end # end function update_market_tightness_and_vacancies
@@ -550,17 +570,17 @@ function update_distrutions!(prim::Primitives, res::Results, dist::Distributions
                 # η[j' → j, x, y'→y] = 1 if S[j' → j, x, y] > S[j' → j', x, y']
                 #? To be clear n[j,j',x,y,y'] = 1 if firm [j',y'] can poach a worker with skill x from firm [j,y] 
                 #? for example η_move[j, :, x, y, :] are all the firms that can poach a worker with skill x from firm [j,y]
-                η_move[j, :, x, y, :] = res.S_move[j, :, x, :] .>= res.S_move[j, j, x, y] 
+                η_move[j, :, x, y, :] = res.S_move[j, :, x, :] .> res.S_move[j, j, x, y] 
             end # Loop over firms
         end # Loop over skills
     end # Loop over locations
     # Update distribiutions:
     u_next = zeros(n_j, n_x);
     h_hired = zeros(n_j, n_x, n_y);
-    for j ∈ 1:n_j # Loop over locations (origins)
+    for j ∈ 1:n_j # Loop over locations (destinations)
         for x ∈ 1:n_x # Loop over skills
             # Total mass of x workers that arrive to location j from all other locations
-            arrive = dist.u_plus[:, x] .* res.ϕ_u[j, x]
+            arrive = dist.u_plus[:, x] .* res.ϕ_u[:, j, x]
             # Probability of that ech firm in location j offers a job to a worker of type x coming from any other location
             prob_hire = η[:, j, x, :] .* (res.v[j, :] / V[j])' .* p[j]
             # Compute the mass of x workers that each firm is able to hire from unemployment in location j
@@ -575,47 +595,104 @@ function update_distrutions!(prim::Primitives, res::Results, dist::Distributions
             u_next[j, x] = should_be
         end # Loop over skills
     end # Loop over locations (origins)
+
     # Check that the mass of workers in unemployement in interim stage is the same as the mass of workers in unemployment 
     # plus the mass of workers that are hired from unemployment in the next stage
     @assert sum(dist.u_plus) ≈ sum(u_next) + sum(h_hired) @bold @red "Error!: uₜ₊ ≂̸ uₜ₊₁ + hᵤ where hᵤ is the mass of workers hired from unemployment"
     # For each location, skill and firm compute the probability of not being poeached by any other firm in any other location
+    # TODO : Optimize this loop
     h_retained = zeros(n_j, n_x, n_y); 
     for j ∈ 1:n_j # Loop over locations
         for x ∈ 1:n_x # Loop over skills
             for y ∈ 1:n_y # Loop over firms
                 # Probability of a worker being poached by any other firm in any other location
-                prob_poach = s .* p .* res.v ./ V .* η_move[j, :, x, y, :] .* res.ϕ_s[j, x, y]
+                prob_poach = s .* p .* res.v ./ V .* η_move[j, :, x, y, :] .* res.ϕ_s[:, j, x, y]
                 # Probability of a worker not being poached from any other location
                 prob_no_poach = 1 .- sum(prob_poach)
                 # Probability of a worker not being poached from any other location
-                h_retained[j, x, y] = dist.h_plus[j,x,y] .* prob_no_poach
+                h_retained[j, x, y] = dist.h_plus[j, x, y] .* prob_no_poach
             end # Loop over firms
         end # Loop over skills
     end # Loop over locations
     # Compute the mass of workers that each firm in each location is able to poach from other firms in other locations
     h_poached = zeros(n_j, n_x, n_y)
     poached_from_self = 0
+    # TODO : Optimize this loop
     for j ∈ 1:n_j # Loop over locations
         for x ∈ 1:n_x # Loop over skills
             for y ∈ 1:n_y # Loop over firms
                 # Probability of a worker being poached by any other firm in any other location
                 prob_poach = (s .* p[j] .* res.v[j, y] ./ V[j] ) .* η_move[:, j, x, :, y]
                 # Mass that each firm is able to poach from other firms in other locations(sum over locations)
-                mass_poach = sum( prob_poach .* dist.h_plus[:, x, :] .* res.ϕ_s[j, x, :]')
+                mass_poach = sum( prob_poach .* dist.h_plus[:, x, :] .* res.ϕ_s[j, :, x, :])
                 # Add mass to the corresponding location- skill -firm
                 h_poached[j, x, y] = mass_poach
                 # Compute the mass of workers that the firm poaches from itself
-                poached_from_self += prob_poach[j, y] .* dist.h_plus[j, x, y] .* res.ϕ_s[j, x, y]
+                # poached_from_self += prob_poach[j, y] .* dist.h_plus[j, x, y] .* res.ϕ_s[j, x, y]
             end # Loop over firms
         end # Loop over skills
     end # Loop over locations
     # Check that the mass of workers employed at interim stage is the same as the mass of workers that are retained or poached
     @assert sum(dist.h_plus) ≈ sum(h_poached) + sum(h_retained) @bold @red "Error!: hₜ₊ ≂̸ hₜ₊₁ + hₚ + hᵣ where hₚ is the mass of workers poached and hᵣ is the mass of workers retained"
-    
+    sum(h_retained, dims=[2, 3])
+    sum(h_poached, dims=[2, 3])
     # Update the distribution of unemployed and employed workers
-    dist.u = u_next
+    dist.u = copy(u_next)
+    sum(dist.u, dims=2)
     dist.h = h_retained + h_poached + h_hired;
+    sum(dist.h, dims=[2, 3])
     # Update the distribution of workers across locations
     dist.ℓ = dist.u  + dropdims(sum(dist.h, dims=3), dims=3)
 end # End of function update_distrutions!
+#?=========================================================================================
+#? Putting it all together
+#?=========================================================================================
+#==========================================================================================
+# iterate_distributions!: Iterates the model from the initial distribution until convergence
+==========================================================================================#
+function iterate_distributions!(prim::Primitives, res::Results, dist::DistributionsModel; 
+    max_iter::Int64=5000, tol::Float64=1e-6, verbose::Bool=true, store_path::Bool=false)
+    
+    # Initialize error and iteration counter
+    err = Inf
+    iter = 1
+    if store_path
+        dists = []
+    end
 
+    while (err > tol) & (iter < max_iter)
+        if store_path
+            push!(dists, dist.ℓ')
+        end
+        # Solve unemployment value
+        compute_unemployment_value!(prim, res, dist; verbose = false);
+        # Solve optimal strategies
+        optimal_strategy!(prim, res);
+        # Solve surplus
+        compute_surplus!(prim, res, dist; verbose = false);
+        # Update Distribution at interim stage
+        update_interim_distributions!(prim, res, dist);
+        # Update value of vacancy creation
+        get_vacancy_creation_value!(prim, res, dist);
+        # Update Market tightness and vacancies
+        update_market_tightness_and_vacancies!(prim, res, dist);
+        # Store t - 1 distributions
+        u_initial = copy(dist.u);
+        h_initial = copy(dist.h);
+        # Update Distribution at next stage
+        update_distrutions!(prim, res, dist);
+        # Compute error
+        err = maximum(abs.(dist.u - u_initial)) + maximum(abs.(dist.h - h_initial))
+        if iter % 50 == 0
+            println(@bold @yellow "Iteration:  $iter, Error: $(round(err, digits=10))")
+        elseif err < tol
+            println(@bold @green "Iteration:  $iter, Converged!")
+        end
+        iter += 1
+    end
+    if store_path
+        return dists
+    else 
+        return "No path stored, use store_path = true to store the path of convergence"
+    end
+end

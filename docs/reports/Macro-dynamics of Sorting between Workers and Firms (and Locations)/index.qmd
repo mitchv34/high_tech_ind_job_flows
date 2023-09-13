@@ -13,13 +13,22 @@ title: Introduction
   - I intend to use idea exchange as the driver of location productivity.
   - I plan to draw on a framework similar to [@davisSpatialKnowledgeEconomy2019] to model the value added to production by idea exchange.
 
-**TODO**:
+## **TODO**:
 
 - [ ] Read [@simsImplicationsRationalInattention2003]
 - [ ] Read [@matejkaRationalInattentionDiscrete2015]
 - [ ] Check that the unemployment value function is a contraction.
 - [ ] Think about distribution of firms across and within locations.
-- [ ] Solve a modified version of the model where there is no aggregate state.
-- [ ] Solve a two location version of the model to gain intuition.
-- [ ] Think if I could include the cost of moving to a different location in the cost of the mixed strategy.
 - [ ] For now the cost of posting only depends on the number of vacancies, should I introduce a location component? I think It will be important to have only high productive firms posting a lot of vacancies in high productivity locations.
+
+**From Rasmus meeting**:
+
+- [ ] Talk to John Keenan
+- [ ] Figure out a way to talk to Espen R. Moen he is visiting in October.
+- [ ] Read [@cahucWageBargainingOntheJob2006]
+- [ ] Read [@baggerEmpiricalModelWage2019]
+- [ ] I could drop the extreme bargaining assumption If I'm not going to compute transitional dynamics.
+
+**From Carter meeting**:
+
+- [ ] Read [@liseMultidimensionalSkillsSorting2020]

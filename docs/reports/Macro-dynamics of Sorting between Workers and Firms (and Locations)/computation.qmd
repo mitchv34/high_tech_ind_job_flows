@@ -5,7 +5,7 @@ title: Computation of the Equilibrium
 ```{python}
 #| echo : false
 #| output : false
-parameters_path = "/Users/mitchv34/Work/high_tech_ind_job_flows/src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params2.yml"
+parameters_path = "/Users/mitchv34/Work/high_tech_ind_job_flows/src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml"
 # Coppy the yaml file in parametets_path to the root root directory of quarto project and rename it to _variables.yml
 import shutil
 
@@ -17,7 +17,7 @@ shutil.copy(parameters_path, path_project + "/" + name_new)
 
 ## Parametrization
 
--   $\{x_1,\ldots,x_{N_x}\}\subset[${{< var grids.x_min >}},{{< var grids.x_max >}}$]$ is a discretization of the continuum of worker types.
+-   $\{x_1,\ldots,x_{N_x}\}\subset[$ {{< var grids.x_min >}}, {{< var grids.x_max >}} $]$ is a discretization of the continuum of worker types.
 
     -   $N_x$={{< var grids.n_x >}} as in the paper.
 
@@ -25,34 +25,35 @@ shutil.copy(parameters_path, path_project + "/" + name_new)
 
     -   Parameters for the distribution are estimated by the authors.
 
--   $\{y_1,\ldots,y_{N_y}\}\subset[${{< var grids.y_min >}},{{< var grids.y_max >}}$]$ is a discretization of the continuum of firm types.
-    -   \$N_y$={{< var grids.n_y >}} as in the paper.
-<!---
--   Assume the productivity shock follows the following $\text{AR}(1)$ process:$$\log{z_{t}} = \rho \log{z_{t+1}}+\varepsilon_t \qquad \varepsilon_t \sim \mathcal{N}(0,\sigma^2(1-\rho^2))$$
-
-    -   I discretize this process into a Markov with values $\{z_1,\ldots,z_{N_z}\}$ and transition matrix $\pi(z\mid z')$ using Tauchen's method.
-    -   $N_z=51$ as in the paper.
-    -   $\rho=0.999$ and $\sigma = 0.071$ as in the paper.
-
+-   $\{y_1,\ldots,y_{N_y}\}\subset[$ {{< var grids.y_min >}}, {{< var grids.y_max >}} $]$ is a discretization of the continuum of firm types.
+    -   $N_y$={{< var grids.n_y >}} as in the paper.
 -   I set $\beta=0.95$ consistent with a $5\%$ discount rate as in the paper. 
---->
+
 - For now I'm assuming that the aggregate state of the world is fixed and equal to $1$.
 
--   As in [@liseMacrodynamicsSortingWorkers2017] value added at the match level takes the functional form:
-    $$f(x,y,z_t) = z_t\times(p_1 + p_2 x + p_3y + p_4 x^2+ p_5 y^2 + p_6 xy)$$
+-   I depart from [@liseMacrodynamicsSortingWorkers2017], and assume that the value added at the match level is a Cobb-Douglas function of the worker and firm productivity on each location:
+    $$f(x,y,z_t) = z_t \Omega\left(x, \overline{X}^J\right)^\alpha y^{1-\alpha}$$
 
-    -   With $(p_1, p_2, p_3, p_4, p_5, p_6) =$ {{< var function.params >>}} as estimated by the authors.
+    -   With $\alpha=$ {{< var primitives.function.params >}}.
 
--   Denote $y^*(x,z)$ the firm type that maximizes the surplus of worker $x$ When the aggregate state is $z$.
+-   Denote $y^*(x,j,z)$ the firm type that maximizes the output of worker $x$ in location $j$ when the aggregate state is $z$.
 
 -   Home production is characterized as $$b(x) = b_{share} f(x,y^*(x,1),1)$$
 
-    -   $b_{share} = 0.7$ the same that the authors use (they take it from [@hallEmploymentFluctuationsEquilibrium2005])
+    -   $b_{share} =$ {{< var primitives.b_hat >}} the same that the authors use (they take it from [@hallEmploymentFluctuationsEquilibrium2005])
 
--   The matching function is $$M(L_t, V_t) = \min\{\alpha L_t^{\omega}V_t^{1-\omega}, L_t, V_t\}$$
+-   The matching function is $$M(L_t, V_t) = \min\{\omega_1 L_t^{\omega_2}V_t^{1-\omega_2}, L_t, V_t\}$$
 
-    -   The authors estimate $\alpha = 0.497$ and $\omega=0.5$.
+    -   The authors estimate $\omega_1 =$ {{< var primitives.omega_1 >}} and $\omega_2=$ {{< var primitives.omega_2 >}}.
 
 -   The cost of creating a $v$ vacancies are $$c(v) = \frac{c_0 v^{1-c_1}}{1 - c_1}$$
 
-    -   The authors estimate $c_0 = 0.028$ and $c_1 = 0.084$.
+    -   The authors estimate $c_0 =$ {{< var primitives.c_0 >}} and $c_1=$ {{< var primitives.c_1 >}}.
+
+
+Using the value of $B^j_t$ any particular cost and matching function can be used to pin down the number of vacancies posted by each firm in each location. Note that this particular matching function implies that $$q^j_t = \frac{M(L^j_t, V^j_t)}{V^j_t}=\frac{\omega_1 L_t^{\omega_2} V_t^{1 - \omega_2}}{V^j_t}= \omega_1(\theta_t^j)^{-\omega_2}$$
+
+Using the expression in @eq-vacancy-posting-clearing we can write: $$c_0 v^{j}_t(y)^{b} = q^j B^j(y) \qquad \implies \qquad  v^{j}_t(y) = \left(\frac{q_t^j B^j(y)}{c_0}\right)^{\frac{1}{c_1}} = \left(\frac{\omega_1(\theta_t^j)^{-\omega_2} B^j(y)}{c_0}\right)^{\frac{1}{c_1}} $$
+
+Then integrating over all firms in each location we get the total number of vacancies posted in each location as: $$V_t^j = \int v^j_t(y)dy = \left((\theta_t^j)^{-\omega_2}\right)^{\frac{1}{c_1}}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}dy$$ Multiply by $1/L^j_t$ on both sides to obtain: $$\theta^j_t = \frac{1}{L^j_t}\left((\theta_t^j)^{-\omega_2}\right)^{\frac{1}{c_1}}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}dy$$ solving for $\theta^j_t$ we get: $$\theta^j_t = \left(\frac{1}{L^j_t}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}dy\right)^{\frac{c_1}{c_1+\omega_2}}$$
+

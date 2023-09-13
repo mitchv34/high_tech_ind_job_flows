@@ -115,6 +115,7 @@ sum(ℓ_low, dims=2)
 sum(ℓ_high, dims=2)
 
 plot(prim.x_grid, ℓ', title ="Initial distribution of skills", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+plot(prim.x_grid, dist.ℓ', title ="Distribution of skills iteration 1", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
 
 plot(ℓ_total_low, label = "Low skill", lw = 2, title = "Distribution of skills")
 plot!(ℓ_total_high, lw = 2, label = "High skill")
@@ -122,7 +123,7 @@ plot!(ℓ_total, lw = 2, label = "Overall")
 
 
 # Unpack primitives
-@unpack n_j, n_x, β, c  = prim
+@unpack n_j, n_x, β, c, x_grid  = prim
 μ = sum(dist.ℓ, dims=2)
 # Compute the average skill level in each location 
 x̄ = [(μ[j] > 0) ? sum(ℓ[j, :] .* x_grid) ./ μ[j] : 0.0 for j ∈ 1:n_j]
@@ -133,27 +134,39 @@ plot(prim.j_grid, X, title = "Idea exchange environment", lw = 2, label = "")
 B = x_grid' .* (1 .+ prim.A .* X .* x_grid') 
 plot(prim.x_grid, B', title = "Worker productivity", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
 f = output(prim, dist);
-plot(prim.x_grid, f[:, :, 10]', title = "Firm 10 productivity", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+plot(prim.x_grid, f[:, :, 20]', title = "Firm productivity", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+plot!(prim.x_grid, f[:, :, 10]', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j), linestyle = :dash)
 # Compute the value of unemployment in each location for each type of worker
 b = home_production(prim, dist);
-plot(prim.x_grid, b', title = "Value of unemployment", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+plot(prim.x_grid, b', title = "Home Production of unemployment", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
 # Compute the cost of living in each location
 C = congestion_cost(prim, dist);
-plot(prim.j_grid, C, title = "Cost of living", lw = 2, label = "")
+plot(prim.x_grid, (b .- C)', title = "Instant Utility", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
 compute_unemployment_value!(prim, res, dist; verbose = true);
-
-# Compute the value of unemployment in each location for each type of worker
-plot(prim.x_grid, (b .- C)')
-
-
-U_new = b .- C  .+  β .* c .* ( log.( sum( exp.(res.U ./ c)  , dims = 1 )  ) .- log(n_j))
-# Compute the error
-err = maximum(abs.(U_new .- res.U))
-# Update U
-res.U = copy(U_new)
-
-
+# Plot value of unemployment
 plot(prim.x_grid, res.U', title ="Value of unemployment", xlabel="Skill Level", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+
+# Solve optimal strategies
+optimal_strategy!(prim, res);
+
+plot(prim.x_grid, res.ϕ_u[1, :, :]', title ="Optimal strategy", xlabel="Skill Level", lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j), legend = :outertopright, c = reshape([j for j ∈ 1:prim.n_j], 1, prim.n_j))
+plot!(prim.x_grid, res.ϕ_u[9, :, :]', title ="Optimal strategy", xlabel="Skill Level", lw = 2, linestyle = :dash, c = reshape([j for j ∈ 1:prim.n_j], 1, prim.n_j), label = "")
+ylims!(0.05, 0.11)
+
+# Solve surplus
+compute_surplus!(prim, res, dist; verbose = true);
+
+# Plot surplus
+heatmap(prim.x_grid, prim.y_grid, res.S_move[1,1,:,:]' .> 0, st = :heatmap, title ="Surplus in City 1", xlabel="Skill Level", ylabel="Firm Type", legend = :outertopright)
+heatmap(prim.x_grid, prim.y_grid, res.S_move[10,10,:,:]' .> 0, st = :heatmap, title ="Surplus in City 10", xlabel="Skill Level", ylabel="Firm Type", legend = :outertopright)
+
+# Update Distribution at interim stage
+update_interim_distributions!(prim, res, dist);
+# Update value of vacancy creation
+get_vacancy_creation_value!(prim, res, dist);
+# Update Market tightness and vacancies
+update_market_tightness_and_vacancies!(prim, res, dist);
+
 
 #?=========================================================================================
 #? Solve the model  

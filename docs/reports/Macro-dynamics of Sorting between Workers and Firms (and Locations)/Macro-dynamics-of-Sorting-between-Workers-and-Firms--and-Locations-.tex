@@ -175,14 +175,14 @@
 \title{Macro-dynamics of Sorting between Workers and Firms (and
 Locations)}
 \author{Mitchell Valdes-Bobes}
-\date{September 2, 2023}
+\date{September 8, 2023}
 
 \begin{document}
 \maketitle
 \begin{abstract}
 Lorem ipsum dolor sit amet.
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, boxrule=0pt, breakable, enhanced, interior hidden, borderline west={3pt}{0pt}{shadecolor}, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, interior hidden, enhanced, sharp corners, borderline west={3pt}{0pt}{shadecolor}, breakable, boxrule=0pt]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -237,7 +237,8 @@ Lorem ipsum dolor sit amet.
   \end{itemize}
 \end{itemize}
 
-\textbf{TODO}:
+\hypertarget{todo}{%
+\section{\texorpdfstring{\textbf{TODO}:}{TODO:}}\label{todo}}
 
 \begin{itemize}
 \tightlist
@@ -254,18 +255,39 @@ Lorem ipsum dolor sit amet.
 \item[$\square$]
   Think about distribution of firms across and within locations.
 \item[$\square$]
-  Solve a modified version of the model where there is no aggregate
-  state.
-\item[$\square$]
-  Solve a two location version of the model to gain intuition.
-\item[$\square$]
-  Think if I could include the cost of moving to a different location in
-  the cost of the mixed strategy.
-\item[$\square$]
   For now the cost of posting only depends on the number of vacancies,
   should I introduce a location component? I think It will be important
   to have only high productive firms posting a lot of vacancies in high
   productivity locations.
+\end{itemize}
+
+\textbf{From Rasmus meeting}:
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  Talk to John Keenan
+\item[$\square$]
+  Figure out a way to talk to Espen R. Moen he is visiting in October.
+\item[$\square$]
+  Read (\protect\hyperlink{ref-cahucWageBargainingOntheJob2006}{Cahuc,
+  Postel-Vinay, and Robin 2006})
+\item[$\square$]
+  Read (\protect\hyperlink{ref-baggerEmpiricalModelWage2019}{Bagger and
+  Lentz 2019})
+\item[$\square$]
+  I could drop the extreme bargaining assumption If I'm not going to
+  compute transitional dynamics.
+\end{itemize}
+
+\textbf{From Carter meeting}:
+
+\begin{itemize}
+\tightlist
+\item[$\square$]
+  Read
+  (\protect\hyperlink{ref-liseMultidimensionalSkillsSorting2020}{Lise
+  and Postel-Vinay 2020})
 \end{itemize}
 
 \bookmarksetup{startatroot}
@@ -339,10 +361,10 @@ Lorem ipsum dolor sit amet.
   \tightlist
   \item
     Workers choose a mixed strategy to search: \[
-    \phi^i_j(x) = \{\phi^i_j(x, j')\}_{j'\in \mathcal{J}}
-    \] where \(\phi^i_j(x, j')\) is the probability that a type \(x\)
+    \phi^j_i(x) = \{\phi^j_i(x, j')\}_{j'\in \mathcal{J}}
+    \] where \(\phi^j_i(x, j')\) is the probability that a type \(x\)
     worker from location \(j\) search in location \(j'\) and
-    \(i\in \{u,e\}\) refers to the employment status of the worker.
+    \(i\in \{u,s\}\) refers to the employment status of the worker.
   \item
     Each strategy has an asociated cost \(c_s(\phi_i^j(x))\):
     \footnote{The cost is proportional to the Kullback--Leibler
@@ -353,7 +375,7 @@ Lorem ipsum dolor sit amet.
       directing search to a particular location. More information on the
       Kullback--Leibler divergence
       \href{https://en.wikipedia.org/wiki/Kullback\%E2\%80\%93Leibler_divergence}{here}}
-    \[c_s(\phi^i_j(x)) = c_1 \left(\sum_{j'\in \mathcal{J}}\phi^i_j(x, j')\log{(J\phi^i_j(x, j'))}\right)\]
+    \[c_s(\phi^j_i(x)) = c \sum_{j'\in \mathcal{J}}\phi^j_i(x, j')\log{(J\phi^i_j(x, j'))}\]
   \item
     Some works in the literature that use this cost structure are
     (\protect\hyperlink{ref-wuPartiallyDirectedSearch2020}{Wu 2020}) and
@@ -493,9 +515,9 @@ Denote:
     worker at location \(j'\) who is hired by a ﬁrm of type \(y\) at a
     location \(j\).
   \item
-    \(W^{j'\to j}_{1, t}(x,y,y')\) is the value offered at the time
+    \(W^{j'\to j}_{1, t}(x,y' \to y')\) is the value offered at the time
     \(t\) by type \(y\) firm at location \(j\) to a type \(x\) worker
-    employment at a type \(y'\) firm in location \(j'\).
+    employed at a type \(y'\) firm in location \(j'\).
   \end{itemize}
 \item
   \(J^j_t(x,y)\) is the value of a match between a type \(x\) worker and
@@ -527,16 +549,14 @@ offered their reservation value
 \[U^{j}_{t}(x) = b(x, j, z) + \beta \max_{\phi^j_u(x)} \left\{\sum_{j'\in \mathcal{J}} \left(\phi^j_u(x, j')\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right]\right) -c(\phi^j_u(x)) \right\} \]
 
 This means that the optimal search policy for each worker is
-\begin{equation}\protect\hypertarget{eq-optimal-search-unemployed}{}{ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{f}}_{t+1}(x) - F^{j \to \tilde{j}}\right] /c_1\right)}}}\label{eq-optimal-search-unemployed}\end{equation}
+\begin{equation}\protect\hypertarget{eq-optimal-search-unemployed}{}{ \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{\tilde{j}}_{t+1}(x) - F^{j \to \tilde{j}}\right] /c\right)}}}\label{eq-optimal-search-unemployed}\end{equation}
 
 derivation is in Appendix~\ref{sec-appendix_search_unemp}.
 
 Substituting the optimal strategy into the Bellman Equation of the
 unemployed worker we get (derivation in
 Appendix~\ref{sec-appendix_bellman_unemp}):
-\[U^{j}_{t}(x) = b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)}\]
-
-\begin{equation}\protect\hypertarget{eq-bellman-unemployed}{}{U^{j \to j'}_{t}(x)=b(x, j, z) + \beta c_1 \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c_1\right)}-\log{(J)}\right)} + F^{j \to j'}}\label{eq-bellman-unemployed}\end{equation}
+\begin{equation}\protect\hypertarget{eq-bellman-unemployed}{}{U^{j}_{t}(x) = b(x, j, z) -\beta c \log{(J)} + \beta c \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - F^{j \to j'}]/c\right)}\right)}}\label{eq-bellman-unemployed}\end{equation}
 
 \hypertarget{joint-value-of-a-match}{%
 \subsection{Joint Value of a Match}\label{joint-value-of-a-match}}
@@ -546,7 +566,7 @@ Appendix~\ref{sec-appendix_bellman_unemp}):
 \item
   If a match between a worker and a firm in location \(j\) is destroyed
   the firm will get \(0\) and the worker gets their unemployment value
-  in that location \(U^j_t(x)\).
+  in that location \(U^{j\to j}_t(x)\).
 \item
   Matches are destroyed for two reasons:
 
@@ -557,22 +577,20 @@ Appendix~\ref{sec-appendix_bellman_unemp}):
   \item
     \emph{Endogenous destruction}, if and only if
     \(J^j_t(x,y) < U^j_t(x)\).
-
-    \begin{itemize}
-    \tightlist
-    \item
-      Denote
-      \(\lambda^j_{t}(x,y) = \mathbb{1}_{\{J^j_{t}(x,y)>U^j_{t}(x,y)\}}\)
-    \end{itemize}
+  \item
+    Denote
+    \(\lambda^j_{t}(x,y) = (1-\delta)\mathbb{1}_{\{J^j_{t}(x,y)>U^{j\to j}_{t}(x,y)\}}\)
+    the probability that a match survives accounting for both exogenous
+    and endogenous destruction.
   \end{itemize}
 \end{itemize}
 
 We can write the Bellman equation of a match value as:
 
 \begin{align*}
-J^j_t(x,y) = \underbrace{f(x,y,j,z_t)}_{\text{match value added}} &+ \beta\max_{\phi^j_s(x)}\left\{\mathbb{E}_t\left[  \overbrace{ (1-(1-\delta)\lambda^j_{t+1}(x,y)) }^{\text{match is destroyed}}\underbrace{U^j_{t+1}(x)}_{\text{worker gets unemployment value}} \right. \right. + \\
- + & \underbrace{(1-\delta)\lambda^j_t(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'}_t)}^{\text{no new offers}} \underbrace{J^j_{t+1}(x,y)}_{\text{stays with same firm}} \right. \right. +\\
-& +sp^{j'}_t \left.\left. \underbrace{\int\max\{J^{j}_{t+1}(x,y),W^{j\to j'}_{1,t+1}(x,y',y)-F^{j\to j'}\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right] \right\}
+J^j_t(x,y) = \underbrace{f(x,y,j,z_t)}_{\text{match value added}} &+ \beta\mathbb{E}_t\left[  \overbrace{ (1-\lambda^j_{t+1}(x,y)) }^{\text{match is destroyed}}\underbrace{U^{j}_{t+1}(x)}_{\text{worker gets unemployment value}} \right. + \\
+  & \underbrace{(\lambda^j_t(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'}_t)}^{\text{no new offers}} \underbrace{J^j_{t+1}(x,y)}_{\text{stays with same firm}} \right. \right. +\\
+& sp^{j'}_t \left. \underbrace{\int\max\{J^{j}_{t+1}(x,y),W^{j\to j'}_{1,t+1}(x,y',y)-F^{j\to j'}\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right]
 \end{align*}
 
 When a type \(x\) worker employed at a type \(y\) firm in city \(j\)
@@ -592,66 +610,104 @@ outcomes:
 \item
   \(J^{j'}_{t+1}(x,y')>J^j_{t+1}(x,y)+F^{j\to j'}\) the worker moves
   from \((j,y) \to (j',y')\) and receives
-  \(W^{j\to j'}_{1,t+1}(x,y',y)\)
+  \(W^{j\to j'}_{1,t+1}(x,y \to y')\)
 \item
   \(J^j_{t+1}(x,y)>J^{j'}_{t+1}(x,y')-F^{j\to j'}\) the worker stays at
-  \((j,y)\) and receives \(W^{j}_{1,t+1}(x,y,y')\)
+  \((j,y)\).
 \end{itemize}
 
-to able to poach from different locations the firm must be at least
-\(F^{j\to j'}\) more productive.
+To able to poach from different locations the firm must be at least
+\(F^{j\to j'}\) more productive. If the worker is hired by the poaching
+firm they receive the incumbent firm reservation value plus the cost of
+changing jobs, i.e.
 
-As in
-(\protect\hyperlink{ref-postel-vinayEquilibriumWageDispersion2002}{Postel-Vinay
-and Robin 2002}) if the worker is hired by the poaching firm the worker
-receives the incumbent firm reservation value plus the cost of changing
-jobs, i.e.
-
-\[J^{j'}_{t+1}(x,y')>J^{j}_{t+1}(x,y)+F^{j\to j'}  \qquad \implies \qquad W^{j\to j'}_{1,t+1}(x,y',y) = J^{j}_{t+1}(x,y)+F^{j\to j'}\]
+\[J^{j'}_{t+1}(x,y')>J^{j}_{t+1}(x,y)+F^{j\to j'}  \qquad \implies \qquad W^{j\to j'}_{1,t+1}(x,y\to y') = J^{j}_{t+1}(x,y)+F^{j\to j'}\]
 
 therefore
 
 \begin{align*}
-    J^j_{t}(x,y)=f(x,y,j,z_t)+\beta\max_{\phi^j_s(x)}\left\{\mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^j_{t+1}(x) \right.\right. \\ \left.\left. \qquad + (1-\delta) \lambda^j_t(x,y)\sum_{j'\in\mathcal{J}}\phi_s^j(x,j')J^j_{t+1}(x,y)\right] - c(\phi^j_s(x))\right\}
+    J^j_{t}(x,y)&=f(x,y,j,z_t)+\beta \mathbb{E}_t\left[(1 - \lambda^j_{t+1}(x,y))U^{j}_{t+1}(x) \right. \\& \hspace{4cm} \left. +  \lambda^j_t(x,y) \max_{\phi^j_s(x)}\left\{ \sum_{j'\in\mathcal{J}}\phi_s^j(x,j')J^j_{t+1}(x,y) - c(\phi^j_s(x))\right\} \right] \\
+    &=f(x,y,j,z_t)+\beta \mathbb{E}_t\left[(1 - \lambda^j_{t+1}(x,y))U^j_{t+1}(x) \right. \\& \hspace{6cm} \left. +  \lambda^j_t(x,y) J^j_{t+1}(x,y)\max_{\phi^j_s(x)}\left\{1 - c(\phi^j_s(x))\right\} \right]
 \end{align*}
 
-Note that the optimal strategy for employed workers is to engage in
-random search i.e.:
+Note that employed workers are guaranteed to receive the value of their
+current match next period, whether they stay at the same firm or move to
+a different firm. Since directing seach is costly then, the optimal
+strategy for employed workers is to engage in random search i.e.:
 \[\phi_{s}^{j}(x, j') = \frac{1}{\mid\mathcal{J}\mid} \qquad \forall\:x \text{ and }j,j'\in\mathcal{J}\]
 
 thus:
 
-\begin{equation}\protect\hypertarget{eq-bellman-match}{}{J^j_{t}(x,y)=f(x,y,j,z_t)+\beta\mathbb{E}_t\left[(1 - (1-\delta)\lambda^j_{t+1}(x,y))U^j_{t+1}(x) + (1-\delta) \lambda^j_t(x,y)J^j_{t+1}(x,y)\right]}\label{eq-bellman-match}\end{equation}
+\begin{equation}\protect\hypertarget{eq-bellman-match}{}{J^j_{t}(x,y)=f(x,y,j,z_t)+\beta\mathbb{E}_t\left[(1 - \lambda^j_{t+1}(x,y))U^{j}_{t+1}(x) + \lambda^j_t(x,y)J^j_{t+1}(x,y)\right]}\label{eq-bellman-match}\end{equation}
 
 \hypertarget{match-surplus}{%
 \subsection{Match Surplus}\label{match-surplus}}
 
-Define the surplus of a match between a type \(x\) worker in location
-\(j\) and a type \(y\) firm in location \(j'\) as:
-\[S^{j\to j'}_{t}(x,y) = J^{j'}_{t}(x,y) - [U^{j}_t(x) - F^{j\to j'}]\]
+Define the surplus of a match between a type \(x\) unemployed worker in
+location \(j\) and a type \(y\) firm in location \(j'\) as:
+\[S^{j\to j'}_{t}(x,y) = J^{j'}_{t}(x,y) - [U^{j}_t(x) + F^{j\to j'}]\]
 
-After some algebra we obtain the following expression for the surplus of
-a match:
-\begin{equation}\protect\hypertarget{eq-surplus}{}{S_{t}^{j\to j'}(x,y) = s(x,y,j \to j',z_t) - \Lambda^{j'}(x) - F^{j \to j'} + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j'\to j'}_{t+1}(x,y)\right\}\right]}\label{eq-surplus}\end{equation}
+Next I will characterize the surplus function. First, define the instant
+surplus of a match between a type \(x\) worker in location \(j\) and a
+type \(y\) firm in location \(j'\) as:
+\[s(x,y,j \to j',z_t) = f(x,y,j,z_t) - b(x,j',z_t)\]
 
-where \(\Lambda^{j'}(x)\) is a function of the expected value of the
-difference of the instantaneous utility of a type \(x\) worker in \(j'\)
-and every other location. For derivations and function definitions see
-Appendix~\ref{sec-appendix_surplus}.
-
-Note that match surplus encodes all the necessary and sufficient
-conditions for a firm \(y'\) in location \(j'\) to poach a worker from a
-firm \(y\) in location \(j\):
+Next, I characterize the surplus of staying in a match as\footnote{Here
+  I take advantage of the translation property of the
+  \(\log\text{sum}\exp\) function,
+  i.e.~\(\log\sum\exp(x_i) = \log\sum\exp(x - a)+ a\) for any
+  \(a\in\mathbb{R}\)}:
 
 \begin{align*}
-  S_t^{j\to j'}(x,y') - S^{j \to j}_t(x,y') &= J^{j'}_{t}(x,y') - [U^{j}_t(x) - F^{j\to j'}] - \left(J^{j}_{t}(x,y) - [U^{j}_t(x) - F^{j\to j}]\right) \\ 
-  &=  J^{j'}_{t}(x,y') - [ J^{j}_{t}(x,y) + F^{j\to j'}]
+S^{j\to j}_{t}(x,y) &= J^{j}_{t}(x,y) - U^{j}_t(x) \\
+&= s(x,y,j \to j, z_t)+ \beta\mathbb{E}_t\left[\lambda^j_{t+1}(x,y)\left(J^j_{t+1}(x,y) - U^j_{t+1}(x)\right)\right] + \\&\beta c \mathbb{E}_t\left[\frac{U^{j}_{t+1}(x)}{c}\right] -   \beta c \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'} - F^{j \to j'}(x)]/c\right)}\right) + \beta c \log{(J)}}\\
+&= s(x,y,j \to j, z_t)+ \beta\mathbb{E}_t\left[\lambda^j_{t+1}(x,y)\left(J^j_{t+1}(x,y) - U^j_{t+1}(x)\right)\right] + \\&\hspace{2cm} -   \beta c \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j'}(x) - U_{t+1}^{j}(x) - F^{j \to j'}]/c\right)}\right) + \beta c \log{(J)}}
 \end{align*}
 
-therefore worker \(x\) is poached by firm \(y'\) in location \(j'\) from
-firm \(y\) in location \(j\) if and only if the surplus obtained from
-moving to \(j'\) and matching with \(y'\) is higher than the surplus of
-staying at \(j\) matched with \(y'\).
+Notice that \(\lambda^{j}(x,y) > 0\) if and only if
+\(S^{j\to j}_{t}(x,y) > 0\) therefore we can write the following Bellman
+equation for the surplus of a match:
+
+\begin{align}\label{eq-surplus-same-location}
+S_{t}^{j \to j}(x,y) = s(x,y,j \to j, z_t) + \beta \left[(1-\delta)\mathbb{E}_{t}\max\left\{0, S_{t+1}^{j \to j}(x,y)\right\} - \right. \nonumber \\ \left. \hspace{5cm} 
+c \log{\left( \sum_{j' \in \mathcal{J}}\exp{\left(\mathbb{E}_t[U_{t+1}^{j \to j'}(x) - U_{t+1}^{j \to j}(x)]/c\right)}\right) + c \log{(J)}} \right]
+\end{align}
+
+Finally we can use the expression in \eqref{eq-surplus-same-location} to
+write the surplus of a match between a type \(x\) worker in location
+\(j\) and a type \(y\) firm in location \(j'\) as:
+
+\begin{align}\label{eq-surplus}
+S_{t}^{j\to j'}(x,y) &= J^{j'}_{t}(x,y) - U^{j\to j'}_t(x) \nonumber \\
+&= \left[J^{j'}_{t}(x,y) - U^{j' \to j'}\right] + \left[U^{j' \to j'}- U^{j\to j'}_t(x) \right]\\
+&= S_{t}^{j' \to j'}(x,y)+ \left[U^{j' \to j'}- U^{j\to j'}_t(x) \right]
+\end{align}
+
+From the expressions in \eqref{eq-surplus-same-location} and
+\eqref{eq-surplus} we can see that the following three things are
+evident:
+
+\begin{itemize}
+\tightlist
+\item
+  The surpluss function is independent of the distribution of worker and
+  vacancies in each location.
+\item
+  A worker in location \(j\) can be hired from a firm in location \(j'\)
+  by firm \(y\) if and only if the surplus of the match is positive:
+  \[S^{j\to j'}_{t}(x,y) \geq 0 \qquad \iff \quad = J^{j'}_{t}(x,y) - U^{j\to j'}_t(x) \geq 0\]
+\item
+  A worker employed at location \(j\) by firm \(y\) can be poached by a
+  firm \(y'\) in location \(j'\) if and only if the surplus of the match
+  is higher than the surplus of staying at the same firm in the same
+  location:
+\end{itemize}
+
+\begin{align*}
+S^{j\to j'}_{t}(x,y') > S^{j\to j}_{t}(x,y) &\iff J^{j'}_{t}(x,y') - U^{j\to j'}_t(x) > J^{j}_{t}(x,y) - U^{j\to j}_t(x) \\
+&\iff J^{j'}_{t}(x,y') - [U^{j}_t(x) - F^{j\to j'}] > J^{j}_{t}(x,y) - U^{j}_t(x) \\
+&\iff J^{j'}_{t}(x,y') > J^{j}_{t}(x,y) +  F^{j\to j'}
+\end{align*}
 
 When the aggregate state changes from \(z_{t-1} \to z_t\) the surplus
 function determines how does the stock of unemployed and employed
@@ -682,34 +738,11 @@ B^j_t(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\unde
 & +\underbrace{\sum_{j'\in \mathcal{J}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,j)\frac{h^{j'}_{t+}(x,y)}{L^{j'}_t}}_{\text{likelihood of match}}\times \overbrace{ [S^{j' \to j}_t(x,y)-S^{j' \to j'}_{t}(x,y')]^{+}}^{\text{poaching is succesfull}}dx\right)dy\right)}_{\text{expected value added from poaching other firms employees}}
 \end{align}
 
-For simplicity we use the notation \(x^+ = \max\{0,x\}\).
+Where \(x^+ = \max\{0,x\}\).
 
 Firms will post vacancies such that the marginal cost of the vacancies
 and the marginal expected benefit \(B^j_t\) are equal:
 \begin{equation}\protect\hypertarget{eq-vacancy-posting-clearing}{}{c_{j}'(v^{j}_t(y))=q^{j}_{t}B^{j}_{t}(y)}\label{eq-vacancy-posting-clearing}\end{equation}
-
-Using the value of \(B^j_t\) any particular cost and matching function
-can be used to pin down the number of vacancies posted by each firm in
-each location. I follow
-(\protect\hyperlink{ref-liseMacrodynamicsSortingWorkers2017}{Lise and
-Robin 2017}) in choosing the following:
-\[c_{j}(v^{j}_t(y)) = \frac{a v^{1+b}}{1+b}\] and
-\[M(L_t, V_t) = \min\{\alpha L_t^{\omega} V_t^{1 - \omega}, L_t, V_t \}\]
-as the cost and matching function respectively. Note that this
-particular matching function implies that
-\[q^j_t = \frac{M(L^j_t, V^j_t)}{V^j_t}=\frac{\alpha L_t^{\omega} V_t^{1 - \omega}}{V^j_t}= \alpha(\theta_t^j)^{-\omega}\]
-
-Using the expression in Equation~\ref{eq-vacancy-posting-clearing} we
-can write:
-\[a v^{j}_t(y)^{b} = q^j B^j(y) \qquad \implies \qquad  v^{j}_t(y) = \left(\frac{q_t^j B^j(y)}{a}\right)^{\frac{1}{b}} = \left(\frac{\alpha(\theta_t^j)^{-\omega} B^j(y)}{a}\right)^{\frac{1}{b}} \]
-
-Then integrating over all firms in each location we get the total number
-of vacancies posted in each location as:
-\[V_t^j = \int v^j_t(y)dy = \left((\theta_t^j)^{-\omega}\right)^{\frac{1}{b}}\int\left(\frac{\alpha B^j(y)}{a}\right)^{\frac{1}{b}}dy\]
-Multiply by \(1/L^j_t\) on both sides to obtain:
-\[\theta^j_t = \frac{1}{L^j_t}\left((\theta_t^j)^{-\omega}\right)^{\frac{1}{b}}\int\left(\frac{\alpha B^j(y)}{a}\right)^{\frac{1}{b}}dy\]
-solving for \(\theta^j_t\) we get:
-\[\theta^j_t = \left(\frac{1}{L^j_t}\int\left(\frac{\alpha B^j(y)}{a}\right)^{\frac{1}{b}}dy\right)^{\frac{b}{b+\omega}}\]
 
 \hypertarget{labor-market-flows}{%
 \section{Labor Market Flows}\label{labor-market-flows}}
@@ -775,7 +808,7 @@ h^j(x,y) &=  h^j_{u, t+1}(x,y) + h^j_{p, t+1}(x,y) + h^j_{r,t+1}(x,y)
 
 Then I can compute the distribution of skill in each location as:
 \[\ell^j_{t+1}(x) = u^j_{t+}(x) + \int h^j_{t+}(x,y)dy\] and the total
-population in each location as: \[\mu^j_{t+1} = \int \ell^j_{t+}(x)dx\]
+population in each location as: \[\mu^j_{t+1} = \int \ell^j_{t+1}(x)dx\]
 
 \bookmarksetup{startatroot}
 
@@ -896,8 +929,8 @@ Equilibrium}\label{computation-of-the-equilibrium}}
 
 \begin{itemize}
 \item
-  \(\{x_1,\ldots,x_{N_x}\}\subset[\)0\(]\) is a discretization of the
-  continuum of worker types.
+  \(\{x_1,\ldots,x_{N_x}\}\subset[\) 0, 1 \(]\) is a discretization of
+  the continuum of worker types.
 
   \begin{itemize}
   \tightlist
@@ -913,49 +946,36 @@ Equilibrium}\label{computation-of-the-equilibrium}}
     Parameters for the distribution are estimated by the authors.
   \end{itemize}
 \item
-  \(\{y_1,\ldots,y_{N_y}\}\subset[\)0\(]\) is a discretization of the
-  continuum of firm types.
+  \(\{y_1,\ldots,y_{N_y}\}\subset[\) 0, 1 \(]\) is a discretization of
+  the continuum of firm types.
 
   \begin{itemize}
   \tightlist
   \item
-    \$N\_y\$=21 as in the paper. \textless!---
-  \end{itemize}
-\item
-  Assume the productivity shock follows the following \(\text{AR}(1)\)
-  process:\[\log{z_{t}} = \rho \log{z_{t+1}}+\varepsilon_t \qquad \varepsilon_t \sim \mathcal{N}(0,\sigma^2(1-\rho^2))\]
-
-  \begin{itemize}
-  \tightlist
-  \item
-    I discretize this process into a Markov with values
-    \(\{z_1,\ldots,z_{N_z}\}\) and transition matrix \(\pi(z\mid z')\)
-    using Tauchen's method.
-  \item
-    \(N_z=51\) as in the paper.
-  \item
-    \(\rho=0.999\) and \(\sigma = 0.071\) as in the paper.
+    \(N_y\)=20 as in the paper.
   \end{itemize}
 \item
   I set \(\beta=0.95\) consistent with a \(5\%\) discount rate as in the
-  paper. ---\textgreater{}
+  paper.
 \item
   For now I'm assuming that the aggregate state of the world is fixed
   and equal to \(1\).
 \item
-  As in
+  I depart from
   (\protect\hyperlink{ref-liseMacrodynamicsSortingWorkers2017}{Lise and
-  Robin 2017}) value added at the match level takes the functional form:
-  \[f(x,y,z_t) = z_t\times(p_1 + p_2 x + p_3y + p_4 x^2+ p_5 y^2 + p_6 xy)\]
+  Robin 2017}), and assume that the value added at the match level is a
+  Cobb-Douglas function of the worker and firm productivity on each
+  location:
+  \[f(x,y,z_t) = z_t \Omega\left(x, \overline{X}^J\right)^\alpha y^{1-\alpha}\]
 
   \begin{itemize}
   \tightlist
   \item
-    With \((p_1, p_2, p_3, p_4, p_5, p_6) =\)
+    With \(\alpha=\) 0.5.
   \end{itemize}
 \item
-  Denote \(y^*(x,z)\) the firm type that maximizes the surplus of worker
-  \(x\) When the aggregate state is \(z\).
+  Denote \(y^*(x,j,z)\) the firm type that maximizes the output of
+  worker \(x\) in location \(j\) when the aggregate state is \(z\).
 \item
   Home production is characterized as
   \[b(x) = b_{share} f(x,y^*(x,1),1)\]
@@ -963,18 +983,18 @@ Equilibrium}\label{computation-of-the-equilibrium}}
   \begin{itemize}
   \tightlist
   \item
-    \(b_{share} = 0.7\) the same that the authors use (they take it from
+    \(b_{share} =\) 0.7 the same that the authors use (they take it from
     (\protect\hyperlink{ref-hallEmploymentFluctuationsEquilibrium2005}{Hall
     2005}))
   \end{itemize}
 \item
   The matching function is
-  \[M(L_t, V_t) = \min\{\alpha L_t^{\omega}V_t^{1-\omega}, L_t, V_t\}\]
+  \[M(L_t, V_t) = \min\{\omega_1 L_t^{\omega_2}V_t^{1-\omega_2}, L_t, V_t\}\]
 
   \begin{itemize}
   \tightlist
   \item
-    The authors estimate \(\alpha = 0.497\) and \(\omega=0.5\).
+    The authors estimate \(\omega_1 =\) 4.97e-2 and \(\omega_2=\) 0.5.
   \end{itemize}
 \item
   The cost of creating a \(v\) vacancies are
@@ -983,9 +1003,26 @@ Equilibrium}\label{computation-of-the-equilibrium}}
   \begin{itemize}
   \tightlist
   \item
-    The authors estimate \(c_0 = 0.028\) and \(c_1 = 0.084\).
+    The authors estimate \(c_0 =\) 2.8e-2 and \(c_1=\) 0.584.
   \end{itemize}
 \end{itemize}
+
+Using the value of \(B^j_t\) any particular cost and matching function
+can be used to pin down the number of vacancies posted by each firm in
+each location. Note that this particular matching function implies that
+\[q^j_t = \frac{M(L^j_t, V^j_t)}{V^j_t}=\frac{\omega_1 L_t^{\omega_2} V_t^{1 - \omega_2}}{V^j_t}= \omega_1(\theta_t^j)^{-\omega_2}\]
+
+Using the expression in Equation~\ref{eq-vacancy-posting-clearing} we
+can write:
+\[c_0 v^{j}_t(y)^{b} = q^j B^j(y) \qquad \implies \qquad  v^{j}_t(y) = \left(\frac{q_t^j B^j(y)}{c_0}\right)^{\frac{1}{c_1}} = \left(\frac{\omega_1(\theta_t^j)^{-\omega_2} B^j(y)}{c_0}\right)^{\frac{1}{c_1}} \]
+
+Then integrating over all firms in each location we get the total number
+of vacancies posted in each location as:
+\[V_t^j = \int v^j_t(y)dy = \left((\theta_t^j)^{-\omega_2}\right)^{\frac{1}{c_1}}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}dy\]
+Multiply by \(1/L^j_t\) on both sides to obtain:
+\[\theta^j_t = \frac{1}{L^j_t}\left((\theta_t^j)^{-\omega_2}\right)^{\frac{1}{c_1}}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}dy\]
+solving for \(\theta^j_t\) we get:
+\[\theta^j_t = \left(\frac{1}{L^j_t}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}dy\right)^{\frac{c_1}{c_1+\omega_2}}\]
 
 \cleardoublepage
 \phantomsection
@@ -1084,75 +1121,28 @@ U^{j \to j' } &= b + \beta c_1\left[
 \log{\left(\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}\right] /c_1\right)}\right)} - \log{\left(J\right)} \right] - F^{j \to j'}
 \end{align*}
 
-\hypertarget{sec-appendix_surplus}{%
-\chapter{Derivation of Surplus Bellman
-Equation}\label{sec-appendix_surplus}}
-
-First note that the differerence in unemployement value between two
-locations is:
-\[U^{j}_{t}(x) - U^{j'}_{t}(x) = b(x,j,z_t) - b(x,j',z_t) \] we will use
-this fact later.
-
-We start by deriving the expression for the surplus created by a match
-within a location \(S^{j\to j}(x,y)\). Re-write
-Equation~\ref{eq-bellman-match} as:
-\begin{equation}\protect\hypertarget{eq-bellman-match-2}{}{J^j_t(x,y) = f(x,y,j,z_t) + \beta \mathbb{E}_t\left[(1-\delta)\lambda^j_{t+1}(x,y)\left(J^j_{t+1}(x,y)-U_{t+1}^j(x)\right) \right]+ \beta \mathbb{E}_t\left[U^j_{t+1}(x)\right]}\label{eq-bellman-match-2}\end{equation}
-
-Note that
-\[\mathbb{E}_t\left[U^j_{t+1}(x)\right] - U^j_{t}(x) = \mathbb{E}_t\left[U^j_{t+1}(x)\right] - b(x,j,z)-\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}\]
-
-Focus on the term:
-\[\beta \mathbb{E}_t\left[U^j_{t+1}(x)\right] - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]}{c_{1}}\right\}\right)\]
-we take advantaje of the following translation identity property of the
-\(\text{lse}\) function:
-\[\text{lse}\left(\left\{x_{i}\right\}\right)=\text{lse}\left(\left\{x_{i}-a\right\}\right)+a \quad \implies \quad a - \text{lse}\left(\left\{x_{i}\right\}\right) = - \text{lse}\left(\left\{x_{i}-a\right\}\right)\]
-
-thus we can write:
-
-\begin{align*}
-  \beta \mathbb{E}_t\left[U^j_{t+1}(x)\right] - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]}{c_{1}}\right\}\right) &= - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]-\mathbb{E}_t\left[U^j_{t+1}(x)\right]}{c_{1}}\right\}\right)\\
-  & = - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[U^{j'}_{t+1}(x)-U^j_{t+1}(x)\right]}{c_{1}} \right\}\right) \\
-  & = - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[b(x,j',z_{t+1}) - b(x,j,z_{t+1})\right]}{c_{1}} \right\}\right) 
-\end{align*}
-
-Subtracting \(U^j_{t}(x)\) to both sides of
-Equation~\ref{eq-bellman-match-2} and using the previous result we get:
-
-\begin{align*}
-  J^j_t(x,y) - U^j_{t}(x) &= f(x,y,j,z_t) - b(x,j,z_t) - \beta c_1 \log\left(J\right) - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[b(x,j',z_{t+1}) - b(x,j,z_{t+1})\right]}{c_{1}} \right\}\right) + \ldots\\
-  & \hspace{10cm} \ldots + \beta \mathbb{E}_t\left[(1-\delta)\lambda^j_{t+1}(x,y)\left(J^j_{t+1}(x,y)-U_{t+1}^j(x)\right) \right] 
-\end{align*}
-
-Define \(s(x,y,j\to j',z_t) = f(x,y,j,z_t) - b(x,j',z_t)\) and
-\[\Lambda^j(x) = \beta c_1 \left( \log\left(J\right) + \text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[b(x,j',z_{t+1}) - b(x,j,z_{t+1})\right]}{c_{1}} \right\}\right)\right)\]
-and the Bellman equation becomes:
-\[S_{t}^{j\to j}(x,y) = s(x,y,j \to j,z_t) - \Lambda^j(x) + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j\to j}_{t+1}(x,y)\right\}\right]\]
-
-Next consider the the surplus created by a match between a worker \(x\)
-in location \(j_1\) and a firm \(y\) in location \(j_2\):\footnote{Note
-  that \(F^{j\to j} = 0\) therefore we are generalizing the case where
-  \(j_1 = j_2\)}.
-
-\begin{align*}
-  S_{t}^{j_1 \to j_2} &= J_{t}^{j_2}(x,y) - [U_{t}^{j_1}(x) + F^{j_1\to j_2}] \\
-  & = \left(J_{t}^{j_2}(x,y) - U_{t}^{j_2}(x)\right) - \left(U_{t}^{j_1}(x) - U_{t}^{j_2}(x)\right) - F^{j_1\to j_2}\\
-  & =  \left(J_{t}^{j_2}(x,y) - U_{t}^{j_2}(x)\right) - \left(b(x,j_1,z_t) - b(x,j_2,z_t)\right) - F^{j_1\to j_2}\\
-  & = S^{j_2 \to j_2}_t(x,y)  - \left(b(x,j_1,z_t) - b(x,j_2,z_t)\right) - F^{j_1\to j_2}\\
-  & = s(x,y,j_2 \to j_2,z_t) - \Lambda^{j_2}(x) + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j_2\to j_2}_{t+1}(x,y)\right\}\right]  - \left(b(x,j_1,z_t) - b(x,j_2,z_t)\right) - F^{j_1\to j_2}\\
-  & = s(x,y,j_1 \to j_2,z_t) - \Lambda^{j_2}(x) + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j_2\to j_2}_{t+1}(x,y)\right\}\right] - F^{j_1\to j_2}
-\end{align*}
-
 \hypertarget{bibliography}{%
 \chapter*{References}\label{bibliography}}
 \addcontentsline{toc}{chapter}{References}
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-baggerEmpiricalModelWage2019}{}}%
+Bagger, Jesper, and Rasmus Lentz. 2019. {``An {Empirical Model} of {Wage
+Dispersion} with {Sorting}.''} \emph{The Review of Economic Studies} 86
+(1): 153--90. \url{https://doi.org/10.1093/restud/rdy022}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-behrensProductiveCitiesSorting2014a}{}}%
 Behrens, Kristian, Gilles Duranton, and Frédéric Robert-Nicoud. 2014.
 {``Productive {Cities}: {Sorting}, {Selection}, and {Agglomeration}.''}
 \emph{Journal of Political Economy} 122 (3): 507--53.
 \url{https://doi.org/10.1086/675534}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-cahucWageBargainingOntheJob2006}{}}%
+Cahuc, Pierre, Fabien Postel-Vinay, and Jean-Marc Robin. 2006. {``Wage
+{Bargaining} with {On-the-Job Search}: {Theory} and {Evidence}.''}
+\emph{Econometrica} 74 (2): 323--64.
+\url{https://doi.org/10.1111/j.1468-0262.2006.00665.x}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-cheremukhinTargetedSearchMatching2020}{}}%
 Cheremukhin, Anton, Paulina Restrepo-Echavarria, and Antonella Tutino.
@@ -1169,6 +1159,12 @@ Economy}.''} \emph{American Economic Review} 109 (1): 153--70.
 Hall, Robert E. 2005. {``Employment {Fluctuations} with {Equilibrium
 Wage Stickiness}.''} \emph{American Economic Review} 95 (1): 50--65.
 \url{https://doi.org/10.1257/0002828053828482}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-liseMultidimensionalSkillsSorting2020}{}}%
+Lise, Jeremy, and Fabien Postel-Vinay. 2020. {``Multidimensional
+{Skills}, {Sorting}, and {Human Capital Accumulation}.''} \emph{American
+Economic Review} 110 (8): 2328--76.
+\url{https://doi.org/10.1257/aer.20162002}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-liseMacrodynamicsSortingWorkers2017}{}}%
 Lise, Jeremy, and Jean-Marc Robin. 2017. {``The {Macrodynamics} of
