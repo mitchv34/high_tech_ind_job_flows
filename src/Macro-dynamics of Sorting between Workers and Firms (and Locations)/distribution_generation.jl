@@ -8,7 +8,7 @@ Description: This file contains the code to generate the distributions used in t
 # * Packages 
 ==========================================================================================#
 using Distributions
-include("model.jl")
+# include("model.jl")
 #?=========================================================================================
 #? Functions
 #?=========================================================================================
@@ -50,11 +50,10 @@ end
     This will be used to generate the mixture distribution. 
     In the model this represent different initial sizes and skill distributions of locations.
 ==========================================================================================#
-# ! For now I'm just using weights and same parammeters for all components
 function split_skill_dist(prim::Primitives, unemployment_rate::Float64 = 0.1)
     # Generate the component parameters
-    @unpack x_grid, dist_params, dist_name = prim
-    α, β = dist_params
+    @unpack x_grid, x_dist_params, x_dist_name, y_grid, y_dist_params, y_dist_name = prim
+    α, β = x_dist_params
     num_components = prim.n_j
     component_params = generate_component_parameters(α, β, num_components)
     # Generate the weights
@@ -69,9 +68,8 @@ function split_skill_dist(prim::Primitives, unemployment_rate::Float64 = 0.1)
     
     for i in 1:num_components
         α_i, β_i = component_params[i]
-        println("α = $α_i, β = $β_i")
+        println(@bold @yellow "α = $(round(α_i, digits = 3)), β = $(round(β_i, digits = 3))")
         push!(location_dists, Beta(α_i, β_i))
-        # push!(location_dists, Beta(α, β))
     end
     
     # Verify that the weights sum to 1
@@ -102,8 +100,12 @@ function split_skill_dist(prim::Primitives, unemployment_rate::Float64 = 0.1)
     for j ∈ 1 : prim.n_j
         h[j, :, :] .= e[j, :] ./ prim.n_y
     end
-    # Construct a distributions model with the mixture distribution
-    dist = DistributionsModel(ℓ_total, ℓ, u, h);
+    
+    # Construct the firm productivity distribution
+    α_y, β_y = y_dist_params
+    Φ = pdf.(Beta(α_y, β_y), y_grid)
+    # Generate the distribution object
+    dist = DistributionsModel(ℓ_total, ℓ, u, h, Φ);
     return dist
 end
 

@@ -67,9 +67,9 @@ $$\begin{align*}
 J^j_t(x,y) &= {f(x,y,j,z_t)} + \beta\mathbb{E}_t\left[   (1-\lambda^j_{t+1}(x,y))U^{j}_{t+1}(x) \right.  + \lambda^j_t(x,y)\max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ (1-sp^{j'}_t) J^j_{t+1}(x,y) \right. \right. +\\ 
 & \hspace{7cm}sp^{j'}_t \left.\int\max\{J^{j}_{t+1}(x,y), J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy'  \right]\\
 &= {f(x,y,j,z_t)} + \beta\mathbb{E}_t\left[   (1-\lambda^j_{t+1}(x,y))U^{j}_{t+1}(x) \right.  +\lambda^j_t(x,y)J^j_{t+1}(x,y) + \\
-&\left.\hspace{4.5cm} \lambda^j_t(x,y)\max_{\phi_s^j(x)}\left\{\sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \int\max\{0, J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy' -c(\phi_s^j(x)) \right\} \right]\\
+&\left.\hspace{4.5cm} \lambda^j_t(x,y)\max_{\phi_s^j(x)}\left\{\mu\sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \int\max\{0, J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy' -c(\phi_s^j(x)) \right\} \right]\\
 &= {f(x,y,j,z_t)} + \beta\mathbb{E}_t\left[   (1-\lambda^j_{t+1}(x,y))U^{j}_{t+1}(x) \right.  +\lambda^j_t(x,y)J^j_{t+1}(x,y) + \\
-&\left.\hspace{4.5cm} \lambda^j_t(x,y)\max_{\phi_s^j(x)}\left\{\sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \int\max\{0, S^{j\to j'}(x,y') - S^{j\to j}(x,y) \}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy' -c(\phi_s^j(x)) \right\} \right]
+&\left.\hspace{4.5cm} \lambda^j_t(x,y)\max_{\phi_s^j(x)}\left\{\mu \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \int\max\{0, S^{j\to j'}(x,y') - S^{j\to j}(x,y) \}\frac{v^{j'}_{t+1}(x)}{V^{j'}_{t+1}}dy' -c(\phi_s^j(x)) \right\} \right]
 \end{align*}$$
 We can derive the optimal strategy for each worker as:
 $$\phi_{u}^{j}(x,y,j')=\frac{\exp{\left(\mathbb{E}_{t}\left[p^{j'}_{t+1} \mu \int \max\left\{0, S_{t+1}^{j\to j'}(x,y') - S^{j \to j}_{t+1}(x,y) \right\}\frac{v^{j'}_{t+1}(y')}{V^{j'}_{t+1}}dy' \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\mathbb{E}_{t}\left[p^{\tilde{j}}_{t+1} \mu \int \max\left\{0, S_{t+1}^{j\to \tilde{j} }(x,y')-S^{j \to j}_{t+1}(x,y) \right\}\frac{v^{ \tilde{j} }_{t+1}(y')}{V^{\tilde{j}}_{t+1}}dy' \right] / c\right)}}$$
