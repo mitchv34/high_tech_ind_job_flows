@@ -1,8 +1,17 @@
+using Distributed
+using YAML
 z = 1
-include("model1.jl");
-include("distribution_generation.jl")
+# Get number of processors from YAML file
 path_params = "src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml";
-prim, res = init_model(path_params);
+nprocs = YAML.load(open(path_params))["parallel"]["nprocs"];
+# Start parallel workers
+addprocs(nprocs - 1);
+
+# Load model
+@everywhere path_params = "src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml";
+@everywhere include("model1.jl");
+@everywhere prim, res = init_model(path_params);
+include("distribution_generation.jl")
 # Create distributions
 dist = split_skill_dist(prim);
 
@@ -11,7 +20,7 @@ plot(prim.x_grid, dist.ℓ', lw = 2, label = reshape(["City $j" for j ∈ 1:prim
 # Distriution of firm productivity
 plot(prim.y_grid, dist.Φ, lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
 
-# convergence_path = iterate_distributions!(prim, res, dist; verbose=true, store_path=true);
+convergence_path = iterate_distributions!(prim, res, dist; verbose=true, store_path=true);
 
 # Plot first and last distributions
 # plot(prim.x_grid, convergence_path[1], lw = 2, 
@@ -29,7 +38,7 @@ plot(prim.y_grid, dist.Φ, lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n
 # sum(dist.u, dims = 2) ./ sum(dist.ℓ, dims = 2)
 
 iter = 0
-# for i  = 1:10
+for i  = 1:50
 # Update Distribution at interim stage
 update_interim_distributions!(prim, res, dist);
 # Update value of vacancy creation
@@ -37,7 +46,7 @@ get_vacancy_creation_value!(prim, res, dist);
 # Update Market tightness and vacancies
 update_market_tightness_and_vacancies!(prim, res, dist);
 # Update surplus and unemployment
-compute_surplus_and_unemployment!(prim, res, dist, verbose=true);
+@time compute_surplus_and_unemployment!(prim, res, dist, verbose=false);
 # Solve optimal strategies
 optimal_strategy!(prim, res); 
 # Store t - 1 distributions
@@ -55,7 +64,9 @@ if iter % 1 == 0
     # Print city sizes
     println(@bold @yellow "City sizes:  $(round.(sum(dist.ℓ, dims=2), digits=3))")
 end 
-# end
+end
+
+
 
 plot(prim.x_grid, dist.ℓ', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
 
@@ -71,7 +82,7 @@ plot(prim.x_grid, dist.u', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n
 avgskill(ℓ) = sum(ℓ .* prim.x_grid', dims = 2) ./ sum(ℓ, dims = 2)
 avgvacancy(v) = sum(v .* prim.y_grid', dims = 2) ./ sum(v, dims = 2)
 
-scatter(avgskill(dist.ℓ), avgvacancy(res.v), markersize = 5, label = "", xlabel = "Average skill level", ylabel = "Average vacancy level")
+scatter(avgskill(dist.ℓ)', avgvacancy(res.v)', markersize = 5, label = "", xlabel = "Average skill level", ylabel = "Average vacancy level")
 
 
 # # Compute average skill level in each city
@@ -81,16 +92,16 @@ scatter(avgskill(dist.ℓ), avgvacancy(res.v), markersize = 5, label = "", xlabe
 # scatter!(sum(convergence_path[end], dims =1)', avgskill(convergence_path[end])',markersize = 5,
 #     label = "Average skill level (Final)", legend = :topleft)
 
-# p_moveto1 = plot(prim.x_grid, res.ϕ_u[1, 1, :], lw = 2, label = "City 1 → 1")
-# plot!(prim.x_grid, res.ϕ_u[2, 1, :], lw = 2, label = "City 2 → 1")
-# plot!(prim.x_grid, res.ϕ_u[3, 1, :], lw = 2, label = "City 3 → 1")
 
-# p_moveto2 = plot(prim.x_grid, res.ϕ_u[1, 2, :], lw = 2, label = "City 1 → 2")
-# plot!(prim.x_grid, res.ϕ_u[2, 2, :], lw = 2, label = "City 2 → 2")
-# plot!(prim.x_grid, res.ϕ_u[3, 2, :], lw = 2, label = "City 3 → 2")
-
-# p_moveto3 = plot(prim.x_grid, res.ϕ_u[1, 3, :], lw = 2, label = "City 1 → 3")
-# plot!(prim.x_grid, res.ϕ_u[2, 3, :], lw = 2, label = "City 2 → 3")
-# plot!(prim.x_grid, res.ϕ_u[3, 3, :], lw = 2, label = "City 3 → 3")
-
-# plot(p_moveto1, p_moveto2, p_moveto3, layout = (1, 3), size = (800, 600))
+j_dest = 1
+plot(legend = :outerleft)
+for j_orig ∈ 1:prim.n_j
+    plot!(prim.x_grid, res.ϕ_u[j_orig, j_dest, :], lw = 2, label = "City $j_orig → $j_dest")
+end
+plot!()
+j_dest = 2
+plot(legend = :outerleft)
+for j_orig ∈ 1:prim.n_j
+    plot!(prim.x_grid, res.ϕ_u[j_orig, j_dest, :], lw = 2, label = "City $j_orig → $j_dest")
+end
+plot!()

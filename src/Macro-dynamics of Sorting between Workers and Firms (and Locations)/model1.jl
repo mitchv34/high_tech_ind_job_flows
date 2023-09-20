@@ -8,18 +8,20 @@ Description:  This file contains the code to solve the model in the paper
 #==========================================================================================
 # * Packages 
 ==========================================================================================#
-using LinearAlgebra
-using Parameters
-using YAML
-using Term 
-using Distributions
+@everywhere using LinearAlgebra
+@everywhere using Parameters
+@everywhere using YAML
+@everywhere using Term 
+@everywhere using Distributions
+@everywhere using Distributed
+@everywhere using SharedArrays
 #?=========================================================================================
 #? Structures
 #?=========================================================================================
 #==========================================================================================
 # Parameters: Strucutre to store all parameters of the model 
 ==========================================================================================#
-@with_kw struct Primitives
+@everywhere @with_kw struct Primitives
     # Primitives
     β           ::Float64          # Discount factor
     c           ::Float64          # Cost of search
@@ -63,7 +65,7 @@ end # end of Parameters
 #==========================================================================================
 # Results: Strucutre to store all results of the model 
 ==========================================================================================#
-mutable struct Results
+@everywhere mutable struct Results
     # * Note that i'm ignoring the shocks since im leaving it fixed at 1
     # * In the general version of the model one extra dimension is needed in all results
     # Unemployment value function Uʲₜ(x) (n_j × n_x × n_z) 
@@ -113,7 +115,7 @@ end # end of Results
         distribution of unemployed workers across locations and skills, and the distribution
         of employed workers across locations, skills and firms.
 ==========================================================================================#
-mutable struct DistributionsModel
+@everywhere mutable struct DistributionsModel
     # Overal distribution of skills {ℓ(x)}
     ℓ_total    ::Array{Float64, 1} # ! This is inmutable 
     # Skill distribution on each location {ℓʲ(x)}
@@ -146,7 +148,7 @@ end # end of DistributionsModel
 #==========================================================================================
 # read_primitives: A function that reads the primitives of the model from a YAML file
 ==========================================================================================#
-function read_primitives(path_to_params::AbstractString)::Primitives
+@everywhere function read_primitives(path_to_params::AbstractString)::Primitives
     # Read YAML file
     data = YAML.load_file(path_to_params)
 
@@ -209,7 +211,7 @@ end # end of read_primitives
 #==========================================================================================
 # init_model: A function that initializes the model 
 ==========================================================================================#
-function init_model(path_to_params::AbstractString)
+@everywhere function init_model(path_to_params::AbstractString)
     # Generate primitives
     prim = read_primitives(path_to_params)
     # Generate results
@@ -224,8 +226,7 @@ end # end of init_model
 # idea_exchange: A function that computes the the value of idea exchange in each 
         location given the distribution of workers.
 ==========================================================================================#
-
-function idea_exchange(prim::Primitives, dist::DistributionsModel)
+@everywhere function idea_exchange(prim::Primitives, dist::DistributionsModel)
     # Unpack DistributionsModel
     @unpack ℓ = dist
     # Unpack primitives
@@ -242,7 +243,7 @@ end # end of idea_exchange
 # worker_productivity: A function that computes the producivity of each type of worker
         in each location
 ==========================================================================================#
-function worker_productivity(prim::Primitives, dist::DistributionsModel)
+@everywhere function worker_productivity(prim::Primitives, dist::DistributionsModel)
     # Unpack primitives
     @unpack A, x_grid = prim
     # Get value of idea exchange in each location
@@ -254,7 +255,7 @@ end # end of worker_productivity
 # output: A function that computes the value of output in each location for each type of
         worker and firm
 ==========================================================================================#
-function output(prim::Primitives, dist::DistributionsModel)
+@everywhere function output(prim::Primitives, dist::DistributionsModel)
     # Unpack primitives
     @unpack  n_j, n_x, n_y, y_grid = prim
     output_funct = prim.output
@@ -273,7 +274,7 @@ end # end of output
 # home_production: Compute the value of home production in each location for each type of 
         worker
 ==========================================================================================#
-function home_production(prim::Primitives, dist::DistributionsModel)
+@everywhere function home_production(prim::Primitives, dist::DistributionsModel)
     # Unpack primitives
     @unpack b_hat = prim
     f = output(prim, dist)
@@ -284,7 +285,7 @@ end # end of home_production
 #==========================================================================================
 # congestion_cost: A function that computes the cost of living in each location
 ==========================================================================================#
-function congestion_cost(prim::Primitives, dist::DistributionsModel)
+@everywhere function congestion_cost(prim::Primitives, dist::DistributionsModel)
     # Unpack DistributionsModel
     @unpack ℓ = dist
     # Unpack primitives
@@ -300,7 +301,7 @@ end # end of congestion_cost
 # instant_surplus: Compute instant surplus of each move between locations for each
         worker - firm match
 ==========================================================================================#
-function instant_surplus(prim::Primitives, f::Array{Float64, 3}, b::Array{Float64, 2}, C::Array{Float64, 2})
+@everywhere function instant_surplus(prim::Primitives, f::Array{Float64, 3}, b::Array{Float64, 2}, C::Array{Float64, 2})
     @unpack n_j, n_x, n_y = prim
     # Pre allocate
     s_move = zeros(n_j, n_j, n_x, n_y); # s(j➡j', x, y) 
@@ -317,7 +318,7 @@ end # end of instant_surplus
 #==========================================================================================
 # optimal_strategy: Compute the optimal strategy of workers in each location 
 ==========================================================================================#
-function optimal_strategy!(prim::Primitives, res::Results)
+@everywhere function optimal_strategy!(prim::Primitives, res::Results)
     # Unpack primitives
     @unpack c, n_j, n_y, F_bar, ω₁, ω₂, c = prim
     @unpack L, V, v = res
@@ -343,13 +344,13 @@ function optimal_strategy!(prim::Primitives, res::Results)
     end
 end # end of optimal_strategy
 #==========================================================================================
-# compute_surplus: Compute the surplus Bellman equation using value function iteration
+# compute_surplus: Compute the surplus Bellman equation 
 ==========================================================================================#
-function compute_surplus_and_unemployment!(prim::Primitives, res::Results, dist::DistributionsModel; 
+@everywhere function compute_surplus_and_unemployment!(prim::Primitives, res::Results, dist::DistributionsModel; 
                             max_iter::Int64=5000, tol::Float64=1e-6, verbose::Bool=true)
     
     if verbose
-        println(@bold @blue "Solving the surplus Bellman equation")
+        println(@bold @blue "Solving the surplus Dynamic Programming problem")
     end
     # Unpack primitives
     @unpack n_j, n_x, n_y, β, F_bar, c, δ, ω₁, ω₂, μ = prim
@@ -371,17 +372,17 @@ function compute_surplus_and_unemployment!(prim::Primitives, res::Results, dist:
     iter = 1
     # Iterate until convergence
     while (err > tol) & (iter < max_iter)
+        U_new = SharedArray{Float64}(size( res.U ) );
+        S_new = SharedArray{Float64}(size( res.S_move ) );
         # Pre-allocate new values
-        U_new = zeros(size( res.U ) )
-        S_new = zeros(size( res.S_move ) )
         # Compute continuation value
-        j = 1
-        for j ∈ 1:n_j # Loop over locations (origin)
+        @sync @distributed for j ∈ 1:n_j # Loop over locations (origin)
             exp_term = exp.(dropdims(sum( permutedims(p .* μ .* max.(0, res.S_move[j, :, :, :]), [1,3,2]) .* v ./ V, dims = 2) , dims = 2) ./ c )
             # Replace nan with 1
             exp_term[isnan.(exp_term)] .= 1
             cont_val = β .* (res.U[j, :]' + c .* log.( sum(exp_term, dims = 1) ) .- c .* log(n_j) )
             U_new[j, :] =( b[j, :] .- C[j])' .+ cont_val
+            # @show U_new[j, :] 
             # Comppute the moving cost vector 
             F = F_bar .* ones(n_j) # Moving cost vector initialized at F_bar
             F[j] = 0 # Moving cost from location j to location j is zero
@@ -425,7 +426,7 @@ end # end of compute_surplus
 # update_interim_DistributionsModel! : Updates the distribution of workers and vacancies 
         at the interim stage.
 ==========================================================================================#
-function update_interim_distributions!(prim::Primitives, res::Results, dist::DistributionsModel)
+@everywhere function update_interim_distributions!(prim::Primitives, res::Results, dist::DistributionsModel)
     # Unpack parameters
     @unpack δ, n_j, n_x, n_y = prim
     # Unpack results
@@ -446,7 +447,7 @@ end # end function update_interim_DistributionsModel!
 # get_total_effort : Calculate total search effort on each location as the sum of all 
         unemployed workers + s times the number of employed workers (at interim stage)
 ==========================================================================================#
-function get_total_effort(prim::Primitives, dist::DistributionsModel, res::Results)
+@everywhere function get_total_effort(prim::Primitives, dist::DistributionsModel, res::Results)
     # Unpack parameters
     @unpack δ, s, n_j, n_y = prim
     # Preallocate
@@ -468,7 +469,7 @@ end
 # get_vacancy_creation_value!: Calculate the value of vacancy creation (for each location 
         - type of firm)
 ==========================================================================================#
-function get_vacancy_creation_value!(prim::Primitives, res::Results, dist::DistributionsModel)
+@everywhere function get_vacancy_creation_value!(prim::Primitives, res::Results, dist::DistributionsModel)
     # Unpack parameters
     @unpack n_j, n_x, n_y, s, μ = prim
     # Get total seach effort
@@ -501,7 +502,7 @@ end # end function get_vacancy_creation_value!
 # update_market_tightness_and_vacancies!:  Using the value of vacancy creation to compute
         each market tightness and number of vacancies
 ==========================================================================================#
-function update_market_tightness_and_vacancies!(prim::Primitives, res::Results, dist::DistributionsModel)
+@everywhere function update_market_tightness_and_vacancies!(prim::Primitives, res::Results, dist::DistributionsModel)
     # Unpack parameters
     @unpack ω₁, ω₂, c₀, c₁ = prim
     @unpack Φ = dist
@@ -523,7 +524,7 @@ end # end function update_market_tightness_and_vacancies
 # update_distrutions! : updates the distribution of workers across locations, skills and 
         firms at the next period  
 ==========================================================================================#
-function update_distrutions!(prim::Primitives, res::Results, dist::DistributionsModel)
+@everywhere function update_distrutions!(prim::Primitives, res::Results, dist::DistributionsModel)
     @unpack ω₁, ω₂, n_j, n_x, n_y, s = prim
     @unpack L = res
     # Calculate total number of mathces in each location
@@ -650,7 +651,7 @@ end # End of function update_distrutions!
 #==========================================================================================
 # iterate_distributions!: Iterates the model from the initial distribution until convergence
 ==========================================================================================#
-function iterate_distributions!(prim::Primitives, res::Results, dist::DistributionsModel; 
+@everywhere function iterate_distributions!(prim::Primitives, res::Results, dist::DistributionsModel; 
     max_iter::Int64=5000, tol::Float64=1e-6, verbose::Bool=true, store_path::Bool=false)
     
     # Initialize error and iteration counter
