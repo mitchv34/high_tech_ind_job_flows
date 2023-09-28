@@ -371,12 +371,14 @@ end # end of optimal_strategy
     # Set iteration counter
     iter = 1
     # Iterate until convergence
+    U_new = zeros( size( res.U ) );
+    S_new = zeros( size( res.S_move ) );
     while (err > tol) & (iter < max_iter)
-        U_new = SharedArray{Float64}(size( res.U ) );
-        S_new = SharedArray{Float64}(size( res.S_move ) );
         # Pre-allocate new values
         # Compute continuation value
-        @sync @distributed for j ∈ 1:n_j # Loop over locations (origin)
+        # @sync @distributed for j ∈ 1:n_j # Loop over locations (origin)
+        Threads.@threads for j ∈ 1:n_j # Loop over locations (origin)
+        # for j ∈ 1:n_j # Loop over locations (origin)
             exp_term = exp.(dropdims(sum( permutedims(p .* μ .* max.(0, res.S_move[j, :, :, :]), [1,3,2]) .* v ./ V, dims = 2) , dims = 2) ./ c )
             # Replace nan with 1
             exp_term[isnan.(exp_term)] .= 1
@@ -410,7 +412,7 @@ end # end of optimal_strategy
         res.U = copy(U_new)
         # Update iteration counter
         if verbose
-            if iter % 100 == 0
+            if iter % 200 == 0
                 println(@bold @yellow "Iteration:  $iter, Error: $(round(err, digits=6))")
             elseif err < tol
                 println(@bold @green "Iteration:  $iter, Converged!")
@@ -660,7 +662,9 @@ end # End of function update_distrutions!
     if store_path
         dists = []
     end
-
+    if verbose
+        println(@bold @blue "Solving the model")
+    end
     while (err > tol) & (iter < max_iter)
         if store_path
             push!(dists, dist.ℓ')
@@ -681,13 +685,15 @@ end # End of function update_distrutions!
         # Update Distribution at next stage
         update_distrutions!(prim, res, dist);
         # Compute error
-        err = maximum(abs.(dist.u - u_initial)) + maximum(abs.(dist.h - h_initial))
-        if iter % 50 == 0
-            println(@bold @yellow "Iteration:  $iter, Error: $(round(err, digits=10))")
-            # Print city sizes
-            println(@bold @yellow "City sizes:  $(round.(sum(dist.ℓ, dims=2), digits=3))")
-        elseif err < tol
-            println(@bold @green "Iteration:  $iter, Converged!")
+        err = maximum(abs.(dist.u - u_initial))/maximum(abs.(dist.u)) + maximum(abs.(dist.h - h_initial))/maximum(abs.(dist.h))
+        if verbose
+            if iter % 50 == 0
+                println(@bold @yellow "Iteration:  $iter, Error: $(round(err, digits=10))")
+                # Print city sizes
+                println(@bold @yellow "City sizes:  $(round.(sum(dist.ℓ, dims=2), digits=3))")
+            elseif err < tol
+                println(@bold @green "Iteration:  $iter, Converged!")
+            end
         end
         iter += 1
     end

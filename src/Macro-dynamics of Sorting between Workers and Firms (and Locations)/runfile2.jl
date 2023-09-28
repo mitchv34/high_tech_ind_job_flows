@@ -1,11 +1,12 @@
 using Distributed
 using YAML
+using BenchmarkTools
 z = 1
 # Get number of processors from YAML file
 path_params = "src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml";
 nprocs = YAML.load(open(path_params))["parallel"]["nprocs"];
 # Start parallel workers
-addprocs(nprocs - 1);
+# addprocs(1);
 
 # Load model
 @everywhere path_params = "src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml";
@@ -16,11 +17,12 @@ include("distribution_generation.jl")
 dist = split_skill_dist(prim);
 
 # Distribution of skills in each city
-plot(prim.x_grid, dist.ℓ', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
-# Distriution of firm productivity
-plot(prim.y_grid, dist.Φ, lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+# plot(prim.x_grid, dist.ℓ', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+# # Distriution of firm productivity
+# plot(prim.y_grid, dist.Φ, lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
 
-convergence_path = iterate_distributions!(prim, res, dist; verbose=true, store_path=true);
+bthread = @elapsed convergence_path = iterate_distributions!(prim, res, dist; verbose=true, store_path=true, tol=1e-4);
+
 
 # Plot first and last distributions
 # plot(prim.x_grid, convergence_path[1], lw = 2, 
@@ -37,8 +39,8 @@ convergence_path = iterate_distributions!(prim, res, dist; verbose=true, store_p
 
 # sum(dist.u, dims = 2) ./ sum(dist.ℓ, dims = 2)
 
-iter = 0
-for i  = 1:50
+# iter = 0
+# for i  = 1:50
 # Update Distribution at interim stage
 update_interim_distributions!(prim, res, dist);
 # Update value of vacancy creation
@@ -46,7 +48,7 @@ get_vacancy_creation_value!(prim, res, dist);
 # Update Market tightness and vacancies
 update_market_tightness_and_vacancies!(prim, res, dist);
 # Update surplus and unemployment
-@time compute_surplus_and_unemployment!(prim, res, dist, verbose=false);
+b_threads = @benchmark compute_surplus_and_unemployment!(prim, res, dist, verbose=false);
 # Solve optimal strategies
 optimal_strategy!(prim, res); 
 # Store t - 1 distributions
@@ -64,7 +66,7 @@ if iter % 1 == 0
     # Print city sizes
     println(@bold @yellow "City sizes:  $(round.(sum(dist.ℓ, dims=2), digits=3))")
 end 
-end
+# end
 
 
 
