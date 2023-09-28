@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mitchell Valdes-Bobes">
+
+<title>Model Summary and Agenda</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="model_simplified_and_agenda_files/libs/clipboard/clipboard.min.js"></script>
+<script src="model_simplified_and_agenda_files/libs/quarto-html/quarto.js"></script>
+<script src="model_simplified_and_agenda_files/libs/quarto-html/popper.min.js"></script>
+<script src="model_simplified_and_agenda_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="model_simplified_and_agenda_files/libs/quarto-html/anchor.min.js"></script>
+<link href="model_simplified_and_agenda_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="model_simplified_and_agenda_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="model_simplified_and_agenda_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="model_simplified_and_agenda_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="model_simplified_and_agenda_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Model Summary and Agenda</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Mitchell Valdes-Bobes </p>
+  </div>
+    <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            University of Wisconsin-Madison
+          </p>
+      </div>
+    </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="agenda" class="level1">
+<h1>Agenda</h1>
+<ul class="task-list">
+<li><input type="checkbox">Discuss the model with updated bargaining.</li>
+<li><input type="checkbox">Discuss aglomerations effects.
+<ul class="task-list">
+<li><input type="checkbox">Computation of equilibrium.</li>
+</ul></li>
+</ul>
+</section>
+<section id="model-summary" class="level1">
+<h1>Model Summary</h1>
+<section id="model-setup" class="level2">
+<h2 class="anchored" data-anchor-id="model-setup">Model Setup</h2>
+<section id="demographics" class="level3">
+<h3 class="anchored" data-anchor-id="demographics">Demographics</h3>
+<ul>
+<li>There is a discrete and finite set of locations <span class="math inline">\(\mathcal{J}=\{1,\dots,|\mathcal{J}|\}\)</span> locations indexed by <span class="math inline">\(j\in\mathcal{J}\)</span>.</li>
+<li>Continuum of workers indexed by their ability <span class="math inline">\(x\in \mathcal{X}\)</span>.
+<ul>
+<li>The total measure is normalized to <span class="math inline">\(1\)</span>.</li>
+<li>Exogenous distribution <span class="math inline">\(\ell(x)\)</span></li>
+<li>Endogenous distribution in each location <span class="math inline">\(\ell^{j}(x)\)</span></li>
+<li>Denote <span class="math inline">\(\zeta_j\)</span> the total population in location <span class="math inline">\(j\)</span>.</li>
+</ul></li>
+<li>Continuum of firms indexed by technology <span class="math inline">\(y\in \mathcal{Y}\)</span>.
+<ul>
+<li>Total measure is normalized to <span class="math inline">\(1\)</span>.</li>
+<li>Uniformly distributed.</li>
+</ul></li>
+</ul>
+</section>
+<section id="technology" class="level3">
+<h3 class="anchored" data-anchor-id="technology">Technology</h3>
+<ul>
+<li>There is exogenous cost of posting <span class="math inline">\(v\)</span> job opportunities in location <span class="math inline">\(j\)</span> is <span class="math display">\[c_{j}(v)\geq0\]</span> assume it is increasing, convex, and independent of the firm type <span class="math inline">\(y\)</span> (but <em>potentially</em> dependent on location).</li>
+<li>Workers and firms discount the future at the rate <span class="math inline">\(\beta\)</span>.</li>
+<li>Workers can move across locations:
+<ul>
+<li>Workers choose a mixed strategy to search: <span class="math display">\[
+\phi^j_i(x) = \{\phi^j_i(x, j')\}_{j'\in \mathcal{J}}
+\]</span> where <span class="math inline">\(\phi^j_i(x, j')\)</span> is the probability that a type <span class="math inline">\(x\)</span> worker from location <span class="math inline">\(j\)</span> search in location <span class="math inline">\(j'\)</span> and <span class="math inline">\(i\in \{u,s\}\)</span> refers to the employment status of the worker.</li>
+<li>Each strategy has an asociated cost <span class="math inline">\(c_s(\phi_i^j(x))\)</span>: <span class="math display">\[c_s(\phi^j_i(x)) = c \sum_{j'\in \mathcal{J}}\phi^j_i(x, j')\log{(J\phi^i_j(x, j'))}\]</span></li>
+<li>When a worker move they must pay a cost <span class="math inline">\(F^{j \to j'}\geq 0\)</span> (with <span class="math inline">\(F^{j\to j} = 0\)</span>).</li>
+</ul></li>
+<li>Unemployed workers instant utility in each location is <span class="math inline">\(b(x,j)\)</span>.</li>
+<li>Firms have access to a production technology, defined at the match level and depending on the location <span class="math inline">\(f(x, y, j)\)</span>.</li>
+</ul>
+<p>Both unemployed and employed workers search, denote <span class="math inline">\(s\)</span> the search intensity of an employed worker and <span class="math inline">\(1\)</span> is the (normalized) search intensity of an unemployed worker. The total search intensity in location <span class="math inline">\(j\)</span> is <span class="math display">\[L^j = \sum_{j'\in\mathcal{J}}\left[\int \phi_u^{j'}(x,j)u^{j'}(x) dx + s\int\int \phi_s^{j'}(x,j)h^{j'}(x,y)dx dy\right]\]</span></p>
+<p>Let <span class="math inline">\(v^j(y)\)</span> be the number of job opportunities posted by a firm <span class="math inline">\(y\)</span> in location <span class="math inline">\(j\)</span>.</p>
+<ul>
+<li><span class="math inline">\(V^j= \int v^j(y) dy\)</span> is the total number of job opportunities posted location <span class="math inline">\(j\)</span>.</li>
+</ul>
+<p>Let <span class="math inline">\(M^j = M(L^j, V^j)\)</span> be the number of job matches in the location <span class="math inline">\(j\)</span> then:</p>
+<ul>
+<li>The probability that an unemployed worker contacts a vacancy in the location <span class="math inline">\(j\)</span> is <span class="math display">\[p^j = \frac{M^j}{L^j}\]</span>
+<ul>
+<li><span class="math inline">\(sp^j\)</span> is the probability that an employed worker contacts a vacancy.</li>
+</ul></li>
+<li>The probability that a ﬁrm contacts any searching worker <span class="math display">\[q^j = \frac{M^j}{V^j}\]</span></li>
+<li>Let <span class="math inline">\(\theta^j = V^j / L^j\)</span> be the market tightness in location <span class="math inline">\(j\)</span>.</li>
+</ul>
+</section>
+<section id="dynamic-programming-problem" class="level3">
+<h3 class="anchored" data-anchor-id="dynamic-programming-problem">Dynamic Programming Problem</h3>
+<p><strong>ADD DEFINITION OF OBJECTS HERE</strong></p>
+</section>
+<section id="worker" class="level3">
+<h3 class="anchored" data-anchor-id="worker">Worker</h3>
+<span class="math display">\[\begin{align*}
+U^{j}(x) = \underbrace{b(x,j)}_{\text{instant utility}} + &amp;\beta\max_{\phi^j_u(x)}\left\{ \underbrace{-c(\phi^j_u(x))}_{\text{cost of search strategy}} \right.  + \\
+&amp; \sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'})U^{j'}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
+&amp; \left. \left. \hspace{0cm} + p^{j'} \underbrace{\int \max\left\{U^{j'}(x),W^{j\to j'}_{0}(x,y)\right\}\frac{v^{j'}(y)}{V^{j'}}dy}_{\text{if offer, pays cost,moves to } j \text{ and then is matched randomly with some firm}} \right] \right\}
+\end{align*}\]</span>
+</section>
+</section>
+<section id="value-of-a-match" class="level2">
+<h2 class="anchored" data-anchor-id="value-of-a-match">Value of a match</h2>
+<span class="math display">\[\begin{align*}
+J^j(x,y) = \underbrace{f(x,y,j)}_{\text{match value added}} &amp;+ \beta\left[  \overbrace{ (1-\lambda^j(x,y)) }^{\text{match is destroyed}}\underbrace{U^{j}(x)}_{\text{worker gets unemployment value}} \right. + \\
+  &amp; \underbrace{(\lambda^j(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'})}^{\text{no new offers}} \underbrace{J^j(x,y)}_{\text{stays with same firm}} \right. \right. +\\
+&amp; sp^{j'} \left. \underbrace{\int\max\{J^{j}(x,y),W^{j\to j'}_{1}(x,y',y)\}\frac{v^{j'}(x)}{V^{j'}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right]
+\end{align*}\]</span>
+</section>
+<section id="surplus-of-a-match" class="level2">
+<h2 class="anchored" data-anchor-id="surplus-of-a-match">Surplus of a Match</h2>
+<p><span class="math display">\[S^{j\to j'}(x,y) = J^{j'}(x,y) - \left[U^j(x) + F^{j\to j'}\right]\]</span></p>
+</section>
+<section id="bargaining" class="level2">
+<h2 class="anchored" data-anchor-id="bargaining">Bargaining</h2>
+<p>I use the same bargaining as in <span class="citation" data-cites="cahucWageBargainingOntheJob2006">(<a href="#ref-cahucWageBargainingOntheJob2006" role="doc-biblioref">Cahuc, Postel-Vinay, and Robin 2006</a>)</span> this have the following implications for the value that a worker gets from a match:</p>
+<ul>
+<li>Unemployed worker in location <span class="math inline">\(j\)</span> when matched with firm <span class="math inline">\(y\)</span> in location <span class="math inline">\(j'\)</span> gets: <span class="math display">\[W^{j \to j'}_{0}(x,y) = (1 - \mu) U^{j'}(x) + \mu [J^{j'}(x,y) - F^{j' \to j}] = U^{j}(x) + \mu \left(J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}]\right)\]</span></li>
+<li>Worker employed in location <span class="math inline">\(j\)</span> by firm <span class="math inline">\(y\)</span> when matched with firm <span class="math inline">\(y'\)</span> in location <span class="math inline">\(j'\)</span> gets: <span class="math display">\[W^{j \to j'}_{1}(x,y) = (1 - \mu) J^{j}(x,y) + \mu [J^{j'}(x,y') - F^{j' \to j}] = J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\]</span></li>
+</ul>
+<p>Plugging this into the Bellman equations we get:</p>
+<section id="worker-1" class="level3">
+<h3 class="anchored" data-anchor-id="worker-1">Worker</h3>
+<span class="math display">\[\begin{align*}
+U^{j}(x) &amp;= b(x,j) + \beta\max_{\phi^j_u(x)}\left\{ -c(\phi^j_u(x))    + \sum_{j'\in \mathcal{J}} \phi^j_u(x, j')\left[ (1-p^{j'})U^{j'}(x) \right. \right.  \\
+&amp; \left. \left. \hspace{3cm} + p^{j'} \int \max\left\{U^{j'}(x),U^{j}(x) + \mu \left(J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}]\right)\right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] \right\} \\
+&amp;= b(x,j) + \beta\max_{\phi^j_u(x)}\left\{ -c(\phi^j_u(x))  +   \sum_{j'\in \mathcal{J}} \phi^j_u(x, j')\left[ (1-p^{j'})U^{j'}(x) + p^{j'}U^{j'}(x)\right. \right.  \\
+&amp; \left. \left. \hspace{3cm} + p^{j'} \mu \int \max\left\{0, J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}] \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] \right\} \\
+&amp;= b(x,j) + \beta\left[U^j(x)\right] + \beta\left( \sum_{j'\in\mathcal{J}}\phi^{j}_{u}(x,j')\left[p^{j'} \mu \int \max\left\{0, J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}] \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right]   \right. \\
+&amp; \hspace{5cm }\left. - c\left(\phi_{u}^{j}(x)\right)\right)
+\end{align*}\]</span>
+<p>Recall that the surplus of a match is defined as <span class="math display">\[S^{j\to j'}(x,y) = J^{j'}(x,y)-[U^j(x)+F^{j \to j'}]\]</span> We can rewrite the Bellman equation of the unemployed worker as:</p>
+<p><span class="math display">\[U^{j}(x) = b(x,j) + \beta\left[U^j(x)\right] + \beta\left( \sum_{j'\in\mathcal{J}}\phi^{j}_{u}(x,j')\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y) \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] - c\left(\phi_{u}^{j}(x)\right)\right)\]</span></p>
+<p>We can derive the optimal strategy for each worker as: <span class="math display">\[\phi_{u}^{j}(x,j')=\frac{\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y) \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \mu \int \max\left\{0, S^{j\to \tilde{j} }(x,y) \right\}\frac{v^{ \tilde{j} }(y)}{V^{\tilde{j}}}dy \right] / c\right)}}\]</span></p>
+<p>Plug back into the value function to get:</p>
+<p><span class="math display">\[U^{j}(x) = b(x,j) + \beta\left[\left[U^j(x)\right]  + c\log\left({\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y) \right\}\frac{v^{ j' }(y)}{V^{j'}}dy \right] / c\right)}} + c\log(\mid \mathcal{J} \mid ) \right)\right]\]</span></p>
+</section>
+<section id="value-of-a-match-1" class="level3">
+<h3 class="anchored" data-anchor-id="value-of-a-match-1">Value of a match</h3>
+<p>Note tha if the match survives the employed worker chooses their optimal search strategy <span class="math inline">\(\phi_s^j(x)\)</span> search in each of the locations <span class="math inline">\(j'\)</span> with the specified probability <span class="math inline">\(\phi_s^j(x,j')\)</span>.</p>
+<span class="math display">\[\begin{align*}
+\max_{\phi_s^j(x)} &amp;\left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ (1-sp^{j'}) J^j(x,y) \right.\right. \\ &amp; \left.\left. + sp^j\int\max\{J^{j}(x,y), J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}\]</span>
+<p>Wich can be rewritten as:</p>
+<span class="math display">\[\begin{align*}
+J^j(x,y) + \max_{\phi_s^j(x)} \left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ sp^j\int\max\{0,  \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}\]</span>
+<p>Since <span class="math display">\[S^{j\to j'}(x,y') = J^{j'}(x,y') - \left[U^j(x) + F^{j \to j'}\right]\]</span> then <span class="math display">\[S^{j\to j'}(x,y') - S^{j\to j}(x,y) = J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\]</span></p>
+<p>Then we can rewrite the previous equation as:</p>
+<span class="math display">\[\begin{align*}
+J^j(x,y) + \max_{\phi_s^j(x)} \left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ sp^j\int\max\{0,  S^{j\to j'}(x,y') - S^{j\to j}(x,y) \}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}\]</span>
+<p>We can derive the optimal strategy for each worker as:</p>
+<p><span class="math display">\[\phi_{u}^{j}(x,y,j')=\frac{\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y') - S^{j \to j}(x,y) \right\}\frac{v^{j'}(y')}{V^{j'}}dy' \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \mu \int \max\left\{0, S^{j\to \tilde{j} }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ \tilde{j} }(y')}{V^{\tilde{j}}}dy' \right] / c\right)}}\]</span></p>
+<p>Plug back into the value function:</p>
+<span class="math display">\[\begin{align*}
+J^j(x,y) = f(x,y,j) &amp; + \beta\left [ \left[  (1-\lambda^j(x,y))U^{j}(x)   +\lambda^j(x,y)J^j(x,y) \right] \right. \\ &amp; \left. +\log\left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right) \right. \\ &amp; \left.- c \log(\mid\mathcal{J}\mid)\right]
+\end{align*}\]</span>
+</section>
+<section id="surplus-value" class="level3">
+<h3 class="anchored" data-anchor-id="surplus-value">Surplus Value</h3>
+<p>Let <span class="math inline">\(s(x,y, j \to j') = f(x,y,j') - b(x,j)\)</span> I satart by writing the expression for the surpluss of staying in the same location:</p>
+<span class="math display">\[\begin{align*}
+S^{j \to j}(x,y) &amp;= J^j(x, y) - U^{j}(x) \\
+&amp; = s(x,y,j \to j) + \beta \lambda^j(x,y)\underbrace{\left[J^j(x,y) - U^j(x)\right]}_{S^{j\to j}(x,y)} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]\\
+&amp; = s(x,y,j \to j) + \beta \max\{0, S^{j\to j}(x,y)\} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]
+\end{align*}\]</span>
+<p>The terms <span class="math inline">\(\Lambda_0(x)\)</span> and <span class="math inline">\(\Lambda_1(x,y)\)</span> come from the Bellmans of the worker and the match respectively and are defined as:</p>
+<span class="math display">\[\begin{align*}
+\Lambda_1(x, y) &amp;= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right) \\
+\Lambda_0(x) &amp;= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y') \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)}\right) \\
+\end{align*}\]</span>
+<p>Next note that the surplus of moving to a different location is:</p>
+<span class="math display">\[\begin{align*}
+S^{j \to j'}(x,y) &amp;= J^{j'}(x, y) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+&amp; = [J^{j'}(x, y) - U^{j'}(x)] + U^{j'}(x) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+&amp; = S^{j'\to j'}(x,y) - [U^{j}(x) - U^{j'}(x) + F^{j \to j'}]
+\end{align*}\]</span>
+</section>
+</section>
+</section>
+<section id="aglomeration-effects" class="level1">
+<h1>Aglomeration Effects</h1>
+<p>This section focus on how the distribution of workers (skils) affect both the productivity of matches <span class="math inline">\(f(x,y,j)\)</span> and the instant utility of unemployed workers <span class="math inline">\(b(x,j)\)</span>.</p>
+<p><strong>Location Productivity</strong></p>
+<p>I borrow from <span class="citation" data-cites="davisSpatialKnowledgeEconomy2019">(<a href="#ref-davisSpatialKnowledgeEconomy2019" role="doc-biblioref">Davis and Dingel 2019</a>)</span> in assuming that the productivity of workers in a location <span class="math inline">\(j\)</span> is a result of idea exchange process within each location.</p>
+<ul>
+<li><p>Assume that a type <span class="math inline">\(x\)</span> worker in location <span class="math inline">\(j\)</span> has a <span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> where <span class="math inline">\(\overline{X}^j\)</span> is the value of idea exchange in location <span class="math inline">\(j\)</span>. Thus: <span class="math display">\[f(x,y,j) = f\left(\Omega(x, \overline{X}^j), y\right)\]</span></p></li>
+<li><p>Assume that the value of idea exchange in location <span class="math inline">\(j\)</span> is a function of the distribution of skills in location <span class="math inline">\(j\)</span>:</p>
+<p><span class="math display">\[ \overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right) \]</span></p></li>
+</ul>
+<p>It’s natural to make the following assumptions on <span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> and <span class="math inline">\(\overline{X}^j\)</span>:</p>
+<ul>
+<li><strong>Assumption 1</strong>: <span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> should be increasing in <span class="math inline">\(x\)</span> and <span class="math inline">\(\overline{X}^j\)</span> and in the absence of idea exchange, worker productivity is just their type: <span class="math inline">\(\Omega(x, 0) = x\)</span>.</li>
+<li><strong>Assumption 2</strong>: Worker type <span class="math inline">\(x\)</span> and idea exchange environment are complements i.e.&nbsp;<span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> supermodular in (<span class="math inline">\(x\)</span> , <span class="math inline">\(\overline{X}^j\)</span>).</li>
+<li><strong>Assumption 3</strong>: The value of idea exchange in location <span class="math inline">\(j\)</span> is increasing in the number of potential exchange partners <span class="math inline">\(\mu^j\)</span> and on the distribution of skills in location <span class="math inline">\(j\)</span> <span class="math inline">\(\ell^j(x)\)</span>.
+<ul>
+<li>With the <em>FOSD</em> order of distributions.</li>
+</ul></li>
+</ul>
+<p>I will focus on the following functional forms for <span class="math inline">\(\Omega(x, \overline{X}^j)\)</span> and <span class="math inline">\(\overline{X}^j\)</span>:</p>
+<p><span class="math display">\[\Omega(x, \overline{X}^j) = x(1 + A \overline{X}^j x)\]</span> where <span class="math inline">\(A\)</span> is a parameter that captures the scope of gains from idea exchange.</p>
+<p><span class="math display">\[
+    \overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j
+\]</span></p>
+<p>The probability of encountering someone during each moment of time seeking is given by <span class="math inline">\(1 - \exp(-ν \mu^j)\)</span>, note that as the number of potential exchange partners (<span class="math inline">\(\mu^j\)</span>) increases, the probability of encountering someone also increases, which makes intuitive sense.</p>
+<p>The average ability of the individuals you encounter in these exchanges is denoted as <span class="math inline">\(\hat{x}^j\)</span>. This is a weighted average of the abilities of the people you meet <span class="math display">\[\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}=\frac{\mathbb{E}^j[x]}{\mu^j}\]</span> where <span class="math inline">\(\mathbb{E}^j[x]\)</span> is the average ability of workers in location <span class="math inline">\(j\)</span>.</p>
+<p>Finally I assume that the production function is a Cobb-Duglas with the state of the economy <span class="math inline">\(z_t\)</span> being a Hicks neutral modifier</p>
+<p><span id="eq-prod_funct"><span class="math display">\[
+f(x,y,j,z_t) = z_t \Omega(x,\overline{X}^j)^\alpha y^{1-\alpha}
+\tag{1}\]</span></span></p>
+<p>Let <span class="math inline">\(y^*(x,1, j)\)</span> be the firm type that maximizes production for a worker of type <span class="math inline">\(x\)</span> in location <span class="math inline">\(j\)</span> when the aggregate shock is equal to <span class="math inline">\(1\)</span> and <span class="math inline">\(\hat{b}\)</span> an adjustment factor, then, home production is characterized as:<br>
+<span class="math display">\[
+b(x, j) = \hat{b} f(x,y^*(x,1),1, j)\]</span> Note that with the functional form I’m considering <span class="math inline">\(y^{*}(x,1,j) = \max{\mathcal{Y}}=y^{*}\)</span> for all <span class="math inline">\(x\)</span> and <span class="math inline">\(j\)</span>, thus: <span class="math display">\[b(x, j) = \hat{b} f(x,y^*,1, j)\]</span></p>
+<p><strong>Cost of living</strong></p>
+<ul>
+<li>As in <span class="citation" data-cites="davisSpatialKnowledgeEconomy2019">(<a href="#ref-davisSpatialKnowledgeEconomy2019" role="doc-biblioref">Davis and Dingel 2019</a>)</span> and <span class="citation" data-cites="behrensProductiveCitiesSorting2014a">(<a href="#ref-behrensProductiveCitiesSorting2014a" role="doc-biblioref">Behrens, Duranton, and Robert-Nicoud 2014</a>)</span> every individual in location <span class="math inline">\(j\)</span> pays the congestion cost :</li>
+</ul>
+<p><span class="math display">\[c_j = c(\zeta_j) = \theta\zeta_j^{\gamma}\]</span></p>
+<p><strong>Include FIGURES HERE</strong></p>
+</section>
+<section id="computation-of-equilibrium" class="level1">
+<h1>Computation of Equilibrium</h1>
+<p>Right now I’m brute forcing the computation of the equilibrium, I’m using the following algorithm:</p>
+<p>Take <span class="math inline">\(\ell(x)\)</span> as a primitive. Make initial guesses for <span class="math inline">\(\ell^j(x)\)</span>. Initialize <span class="math inline">\(S^{j \to j'}(x,y) \equiv 0\)</span> for all <span class="math inline">\(j\)</span>, <span class="math inline">\(j'\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
+<ol type="1">
+<li><p>Using <span class="math inline">\(S^{j \to j'}(x,y)\)</span> update the distribution of employed and unemployed workers in each location <span class="math inline">\(j\)</span>.</p></li>
+<li><p>Compute the value <span class="math inline">\(B^j(y)\)</span> of vacancy creation.</p></li>
+<li><p>Compute:</p>
+<ul>
+<li><span class="math inline">\(v^j(y)\)</span> the number of vacancies posted by a firm <span class="math inline">\(y\)</span> in location <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(V^j= \int v^j(y) dy\)</span> the total number of job opportunities posted location <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(L^j\)</span> the total search intensity in location <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(\theta^j = V^j / L^j\)</span> the market tightness in location <span class="math inline">\(j\)</span>.</li>
+</ul></li>
+<li><p>Compute <span class="math inline">\(S^{j \to j'}(x,y)\)</span>, and <span class="math inline">\(U^{j}\)</span>.</p>
+<ul>
+<li>Obtain wokers optimal strategies <span class="math inline">\(\phi^j_u(x)\)</span> and <span class="math inline">\(\phi^j_s(x)\)</span>.</li>
+</ul></li>
+<li><p>Update the distribution of workers in each location <span class="math inline">\(j\)</span>.</p>
+<ul>
+<li>If the distribution of workers in each location <span class="math inline">\(j\)</span> has converged stop, otherwise update worker productivity in each location and cost of living and go back to Step 1.</li>
+</ul></li>
+</ol>
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-behrensProductiveCitiesSorting2014a" class="csl-entry" role="listitem">
+Behrens, Kristian, Gilles Duranton, and Frédéric Robert-Nicoud. 2014. <span>“Productive <span>Cities</span>: <span>Sorting</span>, <span>Selection</span>, and <span>Agglomeration</span>.”</span> <em>Journal of Political Economy</em> 122 (3): 507–53. <a href="https://doi.org/10.1086/675534">https://doi.org/10.1086/675534</a>.
+</div>
+<div id="ref-cahucWageBargainingOntheJob2006" class="csl-entry" role="listitem">
+Cahuc, Pierre, Fabien Postel-Vinay, and Jean-Marc Robin. 2006. <span>“Wage <span>Bargaining</span> with <span class="nocase">On-the-Job Search</span>: <span>Theory</span> and <span>Evidence</span>.”</span> <em>Econometrica</em> 74 (2): 323–64. <a href="https://doi.org/10.1111/j.1468-0262.2006.00665.x">https://doi.org/10.1111/j.1468-0262.2006.00665.x</a>.
+</div>
+<div id="ref-davisSpatialKnowledgeEconomy2019" class="csl-entry" role="listitem">
+Davis, Donald R., and Jonathan I. Dingel. 2019. <span>“A <span>Spatial Knowledge Economy</span>.”</span> <em>American Economic Review</em> 109 (1): 153–70. <a href="https://doi.org/10.1257/aer.20130249">https://doi.org/10.1257/aer.20130249</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

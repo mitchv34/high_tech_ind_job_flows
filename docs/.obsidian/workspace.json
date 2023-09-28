@@ -129,6 +129,16 @@
                 "file": "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/different_bargaining/note.qmd"
               }
             }
+          },
+          {
+            "id": "37a3f78524015e3b",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency"
+              }
+            }
           }
         ]
       }
@@ -149,16 +159,16 @@
   },
   "active": "2cee507d9074889d",
   "lastOpenFiles": [
+    "reports/rasmus_meeting_09282023/model_simplified_and_agenda_files/mediabag",
+    "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf",
+    "reports/rasmus_meeting_09282023/model_simplified_and_agenda.log",
+    "reports/rasmus_meeting_09282023/model_simplified_and_agenda.aux",
     "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/site_libs/clipboard/clipboard.min.js",
     "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/site_libs/clipboard",
     "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/site_libs",
     "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/Macro-dynamics-of-Sorting-between-Workers-and-Firms--and-Locations-.pdf",
     "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.pdf",
     "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.toc",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.aux",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.log",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.tex",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index_files/mediabag",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index_files"
+    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.aux"
   ]
 }

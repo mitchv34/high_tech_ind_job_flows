@@ -28,7 +28,7 @@ primitives:
 grids:
   n_x : 21          # Number of skills levels workers
   n_y : 20          # Number of prductivity levels firms
-  n_j : 20           # Number of locations  
+  n_j : 5           # Number of locations  
   n_z : 51          # Number of aggregate productivity levels
   x_min  : 0.01     # Minimum skill level
   x_max  : 0.99     # Maximum skill level

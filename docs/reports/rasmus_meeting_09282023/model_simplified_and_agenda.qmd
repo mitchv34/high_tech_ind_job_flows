@@ -1,0 +1,277 @@
+---
+title: "Model Summary and Agenda"
+author:
+    name: Mitchell Valdes-Bobes
+    affiliation: University of Wisconsin-Madison
+# format:
+#     pdf:
+#         reference-section-title: "References"
+#         render-on-save: true
+#         latex-auto-mk : true
+#         link-citations: true
+#         number-sections: true
+#         keep-tex: true
+bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
+---
+
+# Agenda
+
+- [ ] Discuss the model with updated bargaining.
+- [ ] Discuss aglomerations effects.
+  - [ ] Computation of equilibrium.
+
+# Model Summary
+
+
+## Model Setup
+
+### Demographics
+
+-   There is a discrete and finite set of locations $\mathcal{J}=\{1,\dots,|\mathcal{J}|\}$ locations indexed by $j\in\mathcal{J}$.
+-   Continuum of workers indexed by their ability $x\in \mathcal{X}$.
+    -   The total measure is normalized to $1$.
+    -   Exogenous distribution $\ell(x)$
+    -   Endogenous distribution in each location $\ell^{j}(x)$
+    -   Denote $\zeta_j$ the total population in location $j$.
+-   Continuum of firms indexed by technology $y\in \mathcal{Y}$.
+    -   Total measure is normalized to $1$.
+    -   Uniformly distributed.
+
+### Technology
+-   There is exogenous cost of posting $v$ job opportunities in location $j$ is $$c_{j}(v)\geq0$$ assume it is increasing, convex, and independent of the firm type $y$ (but *potentially* dependent on location).
+-   Workers and firms discount the future at the rate $\beta$.
+-   Workers can move across locations:
+    -   Workers choose a mixed strategy to search: $$
+        \phi^j_i(x) = \{\phi^j_i(x, j')\}_{j'\in \mathcal{J}}
+        $$ where $\phi^j_i(x, j')$ is the probability that a type $x$ worker from location $j$ search in location $j'$ and $i\in \{u,s\}$ refers to the employment status of the worker.
+    -   Each strategy has an asociated cost $c_s(\phi_i^j(x))$:
+    $$c_s(\phi^j_i(x)) = c \sum_{j'\in \mathcal{J}}\phi^j_i(x, j')\log{(J\phi^i_j(x, j'))}$$
+    -   When a worker move they must pay a cost $F^{j \to j'}\geq 0$ (with $F^{j\to j} = 0$).
+
+-   Unemployed workers instant utility in each location is $b(x,j)$.
+-   Firms have access to a production technology, defined at the match level and depending on the location  $f(x, y, j)$.
+
+Both unemployed and employed workers search, denote $s$ the search intensity of an employed worker and $1$ is the (normalized) search intensity of an unemployed worker. The total search intensity in location $j$ is 
+$$L^j = \sum_{j'\in\mathcal{J}}\left[\int \phi_u^{j'}(x,j)u^{j'}(x) dx + s\int\int \phi_s^{j'}(x,j)h^{j'}(x,y)dx dy\right]$$
+
+
+Let $v^j(y)$ be the number of job opportunities posted by a firm $y$  in location $j$.
+
+-   $V^j= \int v^j(y) dy$ is the total number of job opportunities posted  location $j$.
+
+Let $M^j = M(L^j, V^j)$ be the number of job matches in the location $j$ then:
+
+-   The probability that an unemployed worker contacts a vacancy in the location $j$ is $$p^j = \frac{M^j}{L^j}$$
+    -   $sp^j$ is the probability that an employed worker contacts a vacancy.
+-   The probability that a ﬁrm contacts any searching worker $$q^j = \frac{M^j}{V^j}$$
+-   Let $\theta^j = V^j / L^j$ be the market tightness in location $j$.
+
+### Dynamic Programming Problem
+
+**ADD DEFINITION OF OBJECTS HERE**
+
+### Worker
+
+```{=latex}
+\begin{align*}
+U^{j}(x) = \underbrace{b(x,j)}_{\text{instant utility}} + &\beta\max_{\phi^j_u(x)}\left\{ \underbrace{-c(\phi^j_u(x))}_{\text{cost of search strategy}} \right.  + \\
+& \sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'})U^{j'}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
+& \left. \left. \hspace{0cm} + p^{j'} \underbrace{\int \max\left\{U^{j'}(x),W^{j\to j'}_{0}(x,y)\right\}\frac{v^{j'}(y)}{V^{j'}}dy}_{\text{if offer, pays cost,moves to } j \text{ and then is matched randomly with some firm}} \right] \right\} 
+\end{align*}
+```
+
+## Value of a match
+
+```{=latex}
+\begin{align*}
+J^j(x,y) = \underbrace{f(x,y,j)}_{\text{match value added}} &+ \beta\left[  \overbrace{ (1-\lambda^j(x,y)) }^{\text{match is destroyed}}\underbrace{U^{j}(x)}_{\text{worker gets unemployment value}} \right. + \\
+  & \underbrace{(\lambda^j(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'})}^{\text{no new offers}} \underbrace{J^j(x,y)}_{\text{stays with same firm}} \right. \right. +\\
+& sp^{j'} \left. \underbrace{\int\max\{J^{j}(x,y),W^{j\to j'}_{1}(x,y',y)\}\frac{v^{j'}(x)}{V^{j'}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right]
+\end{align*}
+```
+
+## Surplus of a Match
+$$S^{j\to j'}(x,y) = J^{j'}(x,y) - \left[U^j(x) + F^{j\to j'}\right]$$
+
+## Bargaining
+
+I use the same bargaining as in [@cahucWageBargainingOntheJob2006] this have the following implications for the value that a worker gets from a match:
+
+- Unemployed worker in location $j$ when matched with firm $y$ in location $j'$ gets: $$W^{j \to j'}_{0}(x,y) = (1 - \mu) U^{j'}(x) + \mu [J^{j'}(x,y) - F^{j' \to j}] = U^{j}(x) + \mu \left(J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}]\right)$$
+- Worker employed in location $j$ by firm $y$ when matched with firm $y'$ in location $j'$ gets: $$W^{j \to j'}_{1}(x,y) = (1 - \mu) J^{j}(x,y) + \mu [J^{j'}(x,y') - F^{j' \to j}] = J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)$$
+
+Plugging this into the Bellman equations we get:
+
+### Worker
+```{=latex}
+\begin{align*}
+U^{j}(x) &= b(x,j) + \beta\max_{\phi^j_u(x)}\left\{ -c(\phi^j_u(x))    + \sum_{j'\in \mathcal{J}} \phi^j_u(x, j')\left[ (1-p^{j'})U^{j'}(x) \right. \right.  \\
+& \left. \left. \hspace{3cm} + p^{j'} \int \max\left\{U^{j'}(x),U^{j}(x) + \mu \left(J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}]\right)\right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] \right\} \\
+&= b(x,j) + \beta\max_{\phi^j_u(x)}\left\{ -c(\phi^j_u(x))  +   \sum_{j'\in \mathcal{J}} \phi^j_u(x, j')\left[ (1-p^{j'})U^{j'}(x) + p^{j'}U^{j'}(x)\right. \right.  \\
+& \left. \left. \hspace{3cm} + p^{j'} \mu \int \max\left\{0, J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}] \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] \right\} \\
+&= b(x,j) + \beta\left[U^j(x)\right] + \beta\left( \sum_{j'\in\mathcal{J}}\phi^{j}_{u}(x,j')\left[p^{j'} \mu \int \max\left\{0, J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}] \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right]   \right. \\
+& \hspace{5cm }\left. - c\left(\phi_{u}^{j}(x)\right)\right)
+\end{align*}
+```
+
+Recall that the surplus of a match is defined as $$S^{j\to j'}(x,y) = J^{j'}(x,y)-[U^j(x)+F^{j \to j'}]$$
+We can rewrite the Bellman equation of the unemployed worker as:
+
+$$U^{j}(x) = b(x,j) + \beta\left[U^j(x)\right] + \beta\left( \sum_{j'\in\mathcal{J}}\phi^{j}_{u}(x,j')\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y) \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] - c\left(\phi_{u}^{j}(x)\right)\right)$$
+
+We can derive the optimal strategy for each worker as:
+$$\phi_{u}^{j}(x,j')=\frac{\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y) \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \mu \int \max\left\{0, S^{j\to \tilde{j} }(x,y) \right\}\frac{v^{ \tilde{j} }(y)}{V^{\tilde{j}}}dy \right] / c\right)}}$$
+
+Plug back into the value function to get:
+
+$$U^{j}(x) = b(x,j) + \beta\left[\left[U^j(x)\right]  + c\log\left({\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y) \right\}\frac{v^{ j' }(y)}{V^{j'}}dy \right] / c\right)}} + c\log(\mid \mathcal{J} \mid ) \right)\right]$$
+
+### Value of a match
+
+Note tha if the match survives the employed worker chooses their optimal search strategy $\phi_s^j(x)$ search in each of the locations $j'$ with the specified probability $\phi_s^j(x,j')$.
+
+```{=latex}
+\begin{align*}
+\max_{\phi_s^j(x)} &\left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ (1-sp^{j'}) J^j(x,y) \right.\right. \\ & \left.\left. + sp^j\int\max\{J^{j}(x,y), J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}
+```
+
+Wich can be rewritten as:
+
+```{=latex}
+\begin{align*}
+J^j(x,y) + \max_{\phi_s^j(x)} \left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ sp^j\int\max\{0,  \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}
+```
+
+Since 
+$$S^{j\to j'}(x,y') = J^{j'}(x,y') - \left[U^j(x) + F^{j \to j'}\right]$$
+then 
+$$S^{j\to j'}(x,y') - S^{j\to j}(x,y) = J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}$$
+
+Then we can rewrite the previous equation as:
+
+```{=latex}
+\begin{align*}
+J^j(x,y) + \max_{\phi_s^j(x)} \left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ sp^j\int\max\{0,  S^{j\to j'}(x,y') - S^{j\to j}(x,y) \}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}
+``` 
+We can derive the optimal strategy for each worker as:
+
+$$\phi_{u}^{j}(x,y,j')=\frac{\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y') - S^{j \to j}(x,y) \right\}\frac{v^{j'}(y')}{V^{j'}}dy' \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \mu \int \max\left\{0, S^{j\to \tilde{j} }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ \tilde{j} }(y')}{V^{\tilde{j}}}dy' \right] / c\right)}}$$
+
+Plug back into the value function:
+```{=latex}
+\begin{align*}
+J^j(x,y) = f(x,y,j) & + \beta\left [ \left[  (1-\lambda^j(x,y))U^{j}(x)   +\lambda^j(x,y)J^j(x,y) \right] \right. \\ & \left. +\log\left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right) \right. \\ & \left.- c \log(\mid\mathcal{J}\mid)\right]
+\end{align*}
+```
+
+### Surplus Value
+
+Let $s(x,y, j \to j') = f(x,y,j') - b(x,j)$ I satart by writing the expression for the surpluss of staying in the same location:
+
+```{=latex}
+\begin{align*}
+S^{j \to j}(x,y) &= J^j(x, y) - U^{j}(x) \\
+& = s(x,y,j \to j) + \beta \lambda^j(x,y)\underbrace{\left[J^j(x,y) - U^j(x)\right]}_{S^{j\to j}(x,y)} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]\\
+& = s(x,y,j \to j) + \beta \max\{0, S^{j\to j}(x,y)\} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]
+\end{align*}
+```
+
+The terms $\Lambda_0(x)$ and $\Lambda_1(x,y)$ come from the Bellmans of the worker and the match respectively and are defined as:
+
+```{=latex}
+\begin{align*}
+\Lambda_1(x, y) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right) \\
+\Lambda_0(x) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y') \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)}\right) \\
+\end{align*}
+```
+Next note that the surplus of moving to a different location is:
+
+```{=latex}
+\begin{align*}
+S^{j \to j'}(x,y) &= J^{j'}(x, y) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+& = [J^{j'}(x, y) - U^{j'}(x)] + U^{j'}(x) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+& = S^{j'\to j'}(x,y) - [U^{j}(x) - U^{j'}(x) + F^{j \to j'}]
+\end{align*}
+```
+
+# Aglomeration Effects
+
+
+This section focus on how the distribution of workers (skils) affect both the productivity of matches $f(x,y,j)$ and the instant utility of unemployed  workers $b(x,j)$.
+
+**Location Productivity**
+
+I borrow from [@davisSpatialKnowledgeEconomy2019] in assuming that the productivity of workers in a location $j$ is a result of idea exchange process within each location.
+
+-   Assume that a type $x$ worker in location $j$ has a $\Omega(x, \overline{X}^j)$ where $\overline{X}^j$ is the value of idea exchange in location $j$. Thus: $$f(x,y,j) = f\left(\Omega(x, \overline{X}^j), y\right)$$
+
+-   Assume that the value of idea exchange in location $j$ is a function of the distribution of skills in location $j$:
+
+    $$ \overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right) $$
+
+It's natural to make the following assumptions on $\Omega(x, \overline{X}^j)$ and $\overline{X}^j$:
+
+-   **Assumption 1**: $\Omega(x, \overline{X}^j)$ should be increasing in $x$ and $\overline{X}^j$ and in the absence of idea exchange, worker productivity is just their type: $\Omega(x, 0) = x$.
+-   **Assumption 2**: Worker type $x$ and idea exchange environment are complements i.e. $\Omega(x, \overline{X}^j)$ supermodular in ($x$ , $\overline{X}^j$).
+-   **Assumption 3**: The value of idea exchange in location $j$ is increasing in the number of potential exchange partners $\mu^j$ and on the distribution of skills in location $j$ $\ell^j(x)$.
+    -   With the *FOSD* order of distributions.
+
+I will focus on the following functional forms for $\Omega(x, \overline{X}^j)$ and $\overline{X}^j$:
+
+$$\Omega(x, \overline{X}^j) = x(1 + A \overline{X}^j x)$$
+where $A$ is a parameter that captures the scope of gains from idea exchange.
+
+$$
+    \overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j
+$$
+
+The probability of encountering someone during each moment of time seeking is given by $1 - \exp(-ν \mu^j)$, note that as the number of potential exchange partners ($\mu^j$) increases, the probability of encountering someone also increases, which makes intuitive sense.
+
+The average ability of the individuals you encounter in these exchanges is denoted as $\hat{x}^j$. This is a weighted average of the abilities of the people you meet $$\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}=\frac{\mathbb{E}^j[x]}{\mu^j}$$ where $\mathbb{E}^j[x]$ is the average ability of workers in location $j$.
+
+Finally I assume that the production function is a Cobb-Duglas with the state of the economy $z_t$ being a Hicks neutral modifier
+
+$$
+f(x,y,j,z_t) = z_t \Omega(x,\overline{X}^j)^\alpha y^{1-\alpha}
+$$ {#eq-prod_funct}
+
+Let $y^*(x,1, j)$ be the firm type that maximizes production for a worker of type $x$ in location $j$ when the aggregate shock is equal to $1$ and $\hat{b}$ an adjustment factor, then, home production is characterized as:  
+$$
+b(x, j) = \hat{b} f(x,y^*(x,1),1, j)$$
+Note that with the functional form I'm considering $y^{*}(x,1,j) = \max{\mathcal{Y}}=y^{*}$ for all $x$ and $j$, thus:
+$$b(x, j) = \hat{b} f(x,y^*,1, j)$$
+
+**Cost of living**
+
+-   As in [@davisSpatialKnowledgeEconomy2019] and [@behrensProductiveCitiesSorting2014a] every individual in location $j$ pays the congestion cost :
+
+$$c_j = c(\zeta_j) = \theta\zeta_j^{\gamma}$$
+
+
+# Computation of Equilibrium
+
+Right now I'm brute forcing the computation of the equilibrium, I'm using the following algorithm:
+
+Take $\ell(x)$ as a primitive. Make initial guesses for $\ell^j(x)$. Initialize $S^{j \to j'}(x,y) \equiv 0$ for all $j$, $j'$, $x$ and $y$.
+
+1. Using $S^{j \to j'}(x,y)$ update the distribution of employed and unemployed workers in each location $j$.
+
+2. Compute the value $B^j(y)$ of vacancy creation.
+
+3. Compute:
+
+    - $v^j(y)$ the number of vacancies posted by a firm $y$ in location $j$.
+    - $V^j= \int v^j(y) dy$ the total number of job opportunities posted  location $j$.
+    - $L^j$ the total search intensity in location $j$.
+    - $\theta^j = V^j / L^j$ the market tightness in location $j$.
+
+4.  Compute $S^{j \to j'}(x,y)$, and $U^{j}$.
+
+    - Obtain wokers optimal strategies $\phi^j_u(x)$ and $\phi^j_s(x)$.
+
+5. Update the distribution of workers in each location $j$.
+
+    - If the distribution of workers in each location $j$ has converged stop, otherwise update worker productivity in each location and cost of living and go back to Step 1.
