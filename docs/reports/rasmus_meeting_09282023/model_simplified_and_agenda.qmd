@@ -3,14 +3,14 @@ title: "Model Summary and Agenda"
 author:
     name: Mitchell Valdes-Bobes
     affiliation: University of Wisconsin-Madison
-# format:
-#     pdf:
-#         reference-section-title: "References"
-#         render-on-save: true
-#         latex-auto-mk : true
-#         link-citations: true
-#         number-sections: true
-#         keep-tex: true
+format:
+    pdf:
+        reference-section-title: "References"
+        render-on-save: true
+        latex-auto-mk : true
+        link-citations: true
+        number-sections: true
+        keep-tex: true
 bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
 ---
 
@@ -68,7 +68,10 @@ Let $M^j = M(L^j, V^j)$ be the number of job matches in the location $j$ then:
 
 ### Dynamic Programming Problem
 
-**ADD DEFINITION OF OBJECTS HERE**
+- $U^{j}(x)$ is the value of being unemployed in location $j$ with type $x$.
+- $J^{j}(x,y)$ is the match value in location $j$ with type $x$ and firm $y$.
+- $W^{j \to j'}_{0}(x,y)$ is the value of a worker in location $j$ when matched with firm $y$ in location $j'$.
+- $W^{j \to j'}_{1}(x,y\to y')$ is the value of a worker in location $j$ when matched with firm $y$ in location $j'$ and then matched with firm $y'$ in location $j'$.
 
 ### Worker
 
@@ -98,7 +101,7 @@ $$S^{j\to j'}(x,y) = J^{j'}(x,y) - \left[U^j(x) + F^{j\to j'}\right]$$
 I use the same bargaining as in [@cahucWageBargainingOntheJob2006] this have the following implications for the value that a worker gets from a match:
 
 - Unemployed worker in location $j$ when matched with firm $y$ in location $j'$ gets: $$W^{j \to j'}_{0}(x,y) = (1 - \mu) U^{j'}(x) + \mu [J^{j'}(x,y) - F^{j' \to j}] = U^{j}(x) + \mu \left(J^{j'}(x,y) - [U^{j}(x) + F^{j' \to j}]\right)$$
-- Worker employed in location $j$ by firm $y$ when matched with firm $y'$ in location $j'$ gets: $$W^{j \to j'}_{1}(x,y) = (1 - \mu) J^{j}(x,y) + \mu [J^{j'}(x,y') - F^{j' \to j}] = J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)$$
+- Worker employed in location $j$ by firm $y$ when matched with firm $y'$ in location $j'$ gets: $$W^{j \to j'}_{1}(x,y \to y') = (1 - \mu) J^{j}(x,y) + \mu [J^{j'}(x,y') - F^{j' \to j}] = J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)$$
 
 Plugging this into the Bellman equations we get:
 
@@ -232,17 +235,9 @@ The probability of encountering someone during each moment of time seeking is gi
 
 The average ability of the individuals you encounter in these exchanges is denoted as $\hat{x}^j$. This is a weighted average of the abilities of the people you meet $$\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}=\frac{\mathbb{E}^j[x]}{\mu^j}$$ where $\mathbb{E}^j[x]$ is the average ability of workers in location $j$.
 
-Finally I assume that the production function is a Cobb-Duglas with the state of the economy $z_t$ being a Hicks neutral modifier
-
 $$
-f(x,y,j,z_t) = z_t \Omega(x,\overline{X}^j)^\alpha y^{1-\alpha}
+f(x,y,j,z_t) = \Omega(x,\overline{X}^j)^\alpha y^{1-\alpha}
 $$ {#eq-prod_funct}
-
-Let $y^*(x,1, j)$ be the firm type that maximizes production for a worker of type $x$ in location $j$ when the aggregate shock is equal to $1$ and $\hat{b}$ an adjustment factor, then, home production is characterized as:  
-$$
-b(x, j) = \hat{b} f(x,y^*(x,1),1, j)$$
-Note that with the functional form I'm considering $y^{*}(x,1,j) = \max{\mathcal{Y}}=y^{*}$ for all $x$ and $j$, thus:
-$$b(x, j) = \hat{b} f(x,y^*,1, j)$$
 
 **Cost of living**
 

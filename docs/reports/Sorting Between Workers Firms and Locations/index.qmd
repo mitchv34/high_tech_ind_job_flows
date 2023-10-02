@@ -1,0 +1,16 @@
+---
+title: Introduction
+---
+<!-- TODO: Wtite a one page introduction -->
+
+*Notes*:
+
+- I adopt the framework from [@liseMacrodynamicsSortingWorkers2017].
+- Introducing a fixed amount of locations and population distribution of workers should be an equilibrium outcome.
+- Workers can "partially" direct their search to each location.
+  - In practice workers randomize over locations paying a cost.
+  - Cost of random search is zero.
+  - Cost increases unboundedly as the worker directs their search to a particular location.
+- Productivity depends on the quality of match and aggregate state as in the original paper. I want to introduce a third component which is location productivity. 
+  - I intend to use idea exchange as the driver of location productivity.
+  - I plan to draw on a framework similar to [@davisSpatialKnowledgeEconomy2019] to model the value added to production by idea exchange.

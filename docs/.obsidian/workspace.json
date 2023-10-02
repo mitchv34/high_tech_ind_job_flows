@@ -11,11 +11,9 @@
             "id": "2cee507d9074889d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/different_bargaining/note.qmd",
-                "mode": "source",
-                "source": false
+                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf"
               }
             }
           }
@@ -69,8 +67,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "d91b3141f1882347",
@@ -86,7 +83,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/different_bargaining/note.qmd",
+                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +100,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/different_bargaining/note.qmd",
+                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +123,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/different_bargaining/note.qmd"
+                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf"
               }
             }
           },
@@ -157,18 +154,18 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "2cee507d9074889d",
+  "active": "7a6bb2f60db49308",
   "lastOpenFiles": [
-    "reports/rasmus_meeting_09282023/model_simplified_and_agenda_files/mediabag",
-    "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf",
-    "reports/rasmus_meeting_09282023/model_simplified_and_agenda.log",
-    "reports/rasmus_meeting_09282023/model_simplified_and_agenda.aux",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/site_libs/clipboard/clipboard.min.js",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/site_libs/clipboard",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/site_libs",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/_book/Macro-dynamics-of-Sorting-between-Workers-and-Firms--and-Locations-.pdf",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.pdf",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.toc",
-    "reports/Macro-dynamics of Sorting between Workers and Firms (and Locations)/index.aux"
+    "reports/Sorting Between Workers Firms and Locations/_book/site_libs/clipboard/clipboard.min.js",
+    "reports/Sorting Between Workers Firms and Locations/_book/site_libs/clipboard",
+    "reports/Sorting Between Workers Firms and Locations/_book/site_libs",
+    "reports/Sorting Between Workers Firms and Locations/_book/Sorting-between-Workers-and-Firms--and-Locations-.pdf",
+    "reports/Sorting Between Workers Firms and Locations/index.pdf",
+    "reports/Sorting Between Workers Firms and Locations/index.log",
+    "reports/Sorting Between Workers Firms and Locations/index.toc",
+    "reports/Sorting Between Workers Firms and Locations/index.aux",
+    "reports/Sorting Between Workers Firms and Locations/index.tex",
+    "reports/Sorting Between Workers Firms and Locations/index_files/mediabag",
+    "reports/Sorting Between Workers Firms and Locations/index_files"
   ]
 }

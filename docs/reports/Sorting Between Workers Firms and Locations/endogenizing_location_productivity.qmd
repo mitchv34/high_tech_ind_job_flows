@@ -1,0 +1,40 @@
+---
+title: Endogenizing Location Productivity and Cost of Living
+---
+
+This section focus on how the distribution of workers (skils) affect both the productivity of matches $f(x,y,j)$ and the instant utility of unemployed  workers $b(x,j)$.
+
+## Location Productivity {#sec-agglomeration_effect}
+
+I borrow from [@davisSpatialKnowledgeEconomy2019] in assuming that the productivity of workers in a location $j$ is a result of idea exchange process within each location.
+
+-   Assume that a type $x$ worker in location $j$ has a $\Omega(x, \overline{X}^j)$ where $\overline{X}^j$ is the value of idea exchange in location $j$. Thus: $$f(x,y,j,z_t) = f\left(\Omega(x, \overline{X}^j), y, z_t\right)$$
+
+-   Assume that the value of idea exchange in location $j$ is a function of the distribution of skills in location $j$:
+
+    $$ \overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right) $$
+
+It's natural to make the following assumptions on $\Omega(x, \overline{X}^j)$ and $\overline{X}^j$:
+
+-   **Assumption 1**: $\Omega(x, \overline{X}^j)$ should be increasing in $x$ and $\overline{X}^j$ and in the absence of idea exchange, worker productivity is just their type: $\Omega(x, 0) = x$.
+-   **Assumption 2**: Worker type $x$ and idea exchange environment are complements i.e. $\Omega(x, \overline{X}^j)$ supermodular in ($x$ , $\overline{X}^j$).
+-   **Assumption 3**: The value of idea exchange in location $j$ is increasing in the number of potential exchange partners $\mu^j$ and on the distribution of skills in location $j$ $\ell^j(x)$.
+    -   With the *FOSD* order of distributions.
+
+I will focus on the following functional forms for $\Omega(x, \overline{X}^j)$ and $\overline{X}^j$:
+
+$$\Omega(x, \overline{X}^j) = x(1 + A \overline{X}^j x)$$
+where $A$ is a parameter that captures the scope of gains from idea exchange.
+
+$$
+    \overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j
+$$
+
+The probability of encountering someone during each moment of time seeking is given by $1 - \exp(-ν \mu^j)$, note that as the number of potential exchange partners ($\mu^j$) increases, the probability of encountering someone also increases, which makes intuitive sense.
+
+The average ability of the individuals you encounter in these exchanges is denoted as $\hat{x}^j$. This is a weighted average of the abilities of the people you meet $$\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}=\frac{\mathbb{E}^j[x]}{\mu^j}$$ where $\mathbb{E}^j[x]$ is the average ability of workers in location $j$.
+
+**Cost of living**
+
+-   As in [@davisSpatialKnowledgeEconomy2019] and [@behrensProductiveCitiesSorting2014a] every individual in location $j$ pays the congestion cost of $\theta\mu_j^{\gamma}$. Denote $b^j(x)$ the home production of type $x$ workers in location $j$ then the instant utility of unemployed workers in location $j$ is given by:
+$$b(x,y) = b^j(x) - \theta\mu_j^{\gamma}$$

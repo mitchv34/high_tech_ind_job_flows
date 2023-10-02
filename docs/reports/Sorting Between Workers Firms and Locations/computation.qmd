@@ -1,0 +1,130 @@
+---
+title: Computation of the Equilibrium
+---
+
+```{python}
+#| echo : false
+#| output : false
+parameters_path = "/Users/mitchv34/Work/high_tech_ind_job_flows/src/Sorting between Workers and Firms (and Locations)/parameters/params.yml"
+# Coppy the yaml file in parametets_path to the root root directory of quarto project and rename it to _variables.yml
+import shutil
+
+path_project = "/Users/mitchv34/Work/high_tech_ind_job_flows/docs/reports/Sorting Between Workers Firms and Locations/"
+name_new = "_variables.yml"
+
+shutil.copy(parameters_path, path_project + "/" + name_new)
+```
+
+## Functional Forms
+
+
+
+The matching function is $$M(L, V) = \omega_1 L^{\omega_2}V^{1-\omega_2}$$
+
+
+The cost of creating a $v$ vacancies are $$c(v) = \frac{c_0 v^{1-c_1}}{1 - c_1}$$
+
+
+Using the value of $B^j$ any particular cost and matching function can be used to pin down the number of vacancies posted by each firm in each location. Note that this particular matching function implies that $$q^j = \frac{M(L^j, V^j)}{V^j}=\frac{\omega_1 L^{\omega_2} V^{1 - \omega_2}}{V^j}= \omega_1(\theta^j)^{-\omega_2}$$
+
+Since the number of vancies is pindown by profit maximization we can write: $$c_0 v^{j}(y)^{b} = q^j B^j(y) \qquad \implies \qquad  v^{j}(y) = \left(\frac{q^j B^j(y)}{c_0}\right)^{\frac{1}{c_1}} = \left(\frac{\omega_1(\theta^j)^{-\omega_2} B^j(y)}{c_0}\right)^{\frac{1}{c_1}} $$
+
+Then integrating over all firms in each location we get the total number of vacancies posted in each location as: $$V^j = \int v^j(y)d\Gamma(y) = \left((\theta^j)^{-\omega_2}\right)^{\frac{1}{c_1}}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}d\Gamma(y)$$ Multiply by $1/L^j$ on both sides to obtain: $$\theta^j = \frac{1}{L^j}\left((\theta^j)^{-\omega_2}\right)^{\frac{1}{c_1}}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}d\Gamma(y)$$ solving for $\theta^j$ we get: $$\theta^j = \left(\frac{1}{L^j}\int\left(\frac{\omega_1 B^j(y)}{c_0}\right)^{\frac{1}{c_1}}d\Gamma(y)\right)^{\frac{c_1}{c_1+\omega_2}}$$
+
+
+I assume that the value added at the match level is a Cobb-Douglas function of the worker and firm productivity on each location:
+    $$f(x,y,z) = \Omega\left(x, \overline{X}^J\right)^\alpha y^{1-\alpha}$$
+
+I follow [@liseMacrodynamicsSortingWorkers2017] and characterize home production as $$b_{prod}(x) = b_{share} f(x,y^*(x,1),1)$$ where $y^*(x,j,z)$ the firm type that maximizes the output of worker $x$ in location $j$.  This means that the instant utility of unemployed worker of type $x$ in location $j$ is given by:
+$$b(x,j) = b_{share} f(x,y^*(x,1),1) - \theta \mu_j^\gamma$$
+
+
+### Parametrization
+
+I choose the simplest cost of moving funciton: 
+
+```{=latex}
+\begin{equation}
+    \label{eq-cost-of-moving}
+    F^{j\to  j'} = \begin{cases} 0 & \text{if } j = j' \\ \overline{F} & \text{if } j \neq j' \end{cases}
+\end{equation}
+```
+
+| Parameter  | Value  |  Source |
+|--------|--------|--------|
+| $\alpha$ | {{< var primitives.function.params >}} |  |
+| $\xi$ | {{< var primitives.mu >}} |  |
+| $\overline{F}$ | {{< var primitives.F_bar >}} |  |
+| $b_{share}$ |  {{< var primitives.b_hat >}} | [@hallEmploymentFluctuationsEquilibrium2005]
+| $\beta$ | {{< var primitives.beta >}} | Consistent with $5\%$ discount rate |
+| $s$ | {{< var primitives.s >}} | [@davisSpatialKnowledgeEconomy2019] |
+| $c_0$ | {{< var primitives.c_0 >}} | [@liseMacrodynamicsSortingWorkers2017] |
+| $c_1$ | {{< var primitives.c_1 >}} | [@liseMacrodynamicsSortingWorkers2017] |
+| $\omega_1$ | {{< var primitives.omega_1 >}} | [@liseMacrodynamicsSortingWorkers2017] |
+| $\omega_2$ | {{< var primitives.omega_2 >}} | [@liseMacrodynamicsSortingWorkers2017] |
+| $\gamma_1$ | {{< var primitives.gamma >}} | [@davisSpatialKnowledgeEconomy2019] |
+| $\gamma_2$ | {{< var primitives.theta >}} | [@davisSpatialKnowledgeEconomy2019] |
+| $A$ | {{< var primitives.A >}} | [@davisSpatialKnowledgeEconomy2019] |
+| $\nu$ | {{< var primitives.nu >}} | [@davisSpatialKnowledgeEconomy2019] |
+
+
+Type grids are defined as:
+
+-   $\{x_1,\ldots,x_{N_x}\}\subset[$ {{< var grids.x_min >}}, {{< var grids.x_max >}} $]$ is a discretization of the continuum of worker types.
+
+    -   $N_x$={{< var grids.n_x >}} as in [@liseMacrodynamicsSortingWorkers2017].
+
+    -   Parameters for the distribution are estimated by the authors.
+
+-   $\{y_1,\ldots,y_{N_y}\}\subset[$ {{< var grids.y_min >}}, {{< var grids.y_max >}} $]$ is a discretization of the continuum of firm types.
+    -   $N_y$={{< var grids.n_y >}} as in [@liseMacrodynamicsSortingWorkers2017].
+
+
+### Type Distributions
+
+<!-- TODO: Include the calibration of type distribution parameters from the data -->
+
+## Algorithm
+
+```{=latex}
+\begin{algorithm}
+
+\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+
+\caption{Algorithm to compute stationary distributions.}\label{alg:solution_algorithm}
+
+\Input{Parameters, Initial guesses for $\{u^j(x)\}_{j\in \mathcal{J}}$ and $\{h^j(x, y)\}_{j\in \mathcal{J}}$, $tol$, $n_{iter max}$}
+
+$S^{j\to j'}(x,y) \gets 0$ for all $j, j', x, y$  \;
+$U^{j}(x) \gets 0$ for all $j,x$  \;
+This implies:
+
+$\phi^j_u(x, j') \gets 1/\mid \mathbfcal{J} \mid$ for all $j,j',x$ (random search) \;
+$\phi^j_s(x, y, j') \gets 1/\mid \mathbfcal{J} \mid$ for all $j,j',x,y$ (random search) \;
+
+$error$ \gets $\infty$ \;
+\While{$error$ $ > tol$ and $n_{iter}  < n_{iter max} $}{
+    Using $S^{j \to j'}(x,y)$, update the distribution of employed and unemployed workers in each location $j$ using \eqref{eq-unemp-interim} and \eqref{eq-matches-interim} \ and obtain:
+    \begin{itemize}
+        \item $L^j$: the total search intensity in location $j$\;
+    \end{itemize}
+    Compute the value $B^j(y)$ of vacancy creation, use it to compute:
+    \begin{itemize}
+        \item $v^j(y)$: the number of vacancies posted by a firm $y$ in location $j$\;
+        \item $V^j = \int v^j(y) dy$: the total number of job opportunities posted in location $j$\;
+        \item $\theta^j = V^j / L^j$: the market tightness in location $j$\;
+    \end{itemize}
+    
+    Update $S^{j \to j'}(x,y)$ and $U^{j}(x)$ use it to compute:
+    
+    \begin{itemize}
+        \item Optimal search strategies $\phi^j_u(x)$ and $\phi^j_s(x)$\;
+    \end{itemize}
+    Update the distribution of unemplyed workers and matches in each location $j$ using \eqref{eq-law-of-motion-unemp} and \eqref{eq-law-of-motion-emp} \
+    Update error and iteration counter\;
+}
+\end{algorithm}
+```
+<!-- TODO: Include some experiments add times of computation  -->

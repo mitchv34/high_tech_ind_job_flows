@@ -1,0 +1,48 @@
+# Derivation of Surplus Bellman Equation {#sec-appendix_surplus}
+
+First note that the differerence in unemployement value between two locations is:
+$$U^{j}_{t}(x) - U^{j'}_{t}(x) = b(x,j,z_t) - b(x,j',z_t) $$
+we will use this fact later.
+
+We start by deriving the expression for the surplus created by a match within a location $S^{j\to j}(x,y)$. Re-write @eq-bellman-match as:
+$$J^j_t(x,y) = f(x,y,j,z_t) + \beta \mathbb{E}_t\left[(1-\delta)\lambda^j_{t+1}(x,y)\left(J^j_{t+1}(x,y)-U_{t+1}^j(x)\right) \right]+ \beta \mathbb{E}_t\left[U^j_{t+1}(x)\right]$${#eq-bellman-match-2}
+
+Note that 
+$$\mathbb{E}_t\left[U^j_{t+1}(x)\right] - U^j_{t}(x) = \mathbb{E}_t\left[U^j_{t+1}(x)\right] - b(x,j,z)-\beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]}{c_{1}}\right\}\right) - \beta c_{1}\log{J}$$
+
+Focus on the term:
+$$\beta \mathbb{E}_t\left[U^j_{t+1}(x)\right] - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]}{c_{1}}\right\}\right)$$
+we take advantaje of the following translation identity property of the $\text{lse}$ function:
+$$\text{lse}\left(\left\{x_{i}\right\}\right)=\text{lse}\left(\left\{x_{i}-a\right\}\right)+a \quad \implies \quad a - \text{lse}\left(\left\{x_{i}\right\}\right) = - \text{lse}\left(\left\{x_{i}-a\right\}\right)$$
+
+thus we can write:
+
+\begin{align*}
+  \beta \mathbb{E}_t\left[U^j_{t+1}(x)\right] - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]}{c_{1}}\right\}\right) &= - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}[U^{j'}_{t+1}(x)]-\mathbb{E}_t\left[U^j_{t+1}(x)\right]}{c_{1}}\right\}\right)\\
+  & = - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[U^{j'}_{t+1}(x)-U^j_{t+1}(x)\right]}{c_{1}} \right\}\right) \\
+  & = - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[b(x,j',z_{t+1}) - b(x,j,z_{t+1})\right]}{c_{1}} \right\}\right) 
+\end{align*}
+
+Subtracting $U^j_{t}(x)$ to both sides of @eq-bellman-match-2 and using the previous result we get:
+
+\begin{align*}
+  J^j_t(x,y) - U^j_{t}(x) &= f(x,y,j,z_t) - b(x,j,z_t) - \beta c_1 \log\left(J\right) - \beta c_{1}\text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[b(x,j',z_{t+1}) - b(x,j,z_{t+1})\right]}{c_{1}} \right\}\right) + \ldots\\
+  & \hspace{10cm} \ldots + \beta \mathbb{E}_t\left[(1-\delta)\lambda^j_{t+1}(x,y)\left(J^j_{t+1}(x,y)-U_{t+1}^j(x)\right) \right] 
+\end{align*}
+
+Define $s(x,y,j\to j',z_t) = f(x,y,j,z_t) - b(x,j',z_t)$ and $$\Lambda^j(x) = \beta c_1 \left( \log\left(J\right) + \text{lse}\left(\left\{\frac{\mathbb{E}_{t}\left[b(x,j',z_{t+1}) - b(x,j,z_{t+1})\right]}{c_{1}} \right\}\right)\right)$$
+and the Bellman equation becomes:
+$$S_{t}^{j\to j}(x,y) = s(x,y,j \to j,z_t) - \Lambda^j(x) + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j\to j}_{t+1}(x,y)\right\}\right]$$
+
+Next consider the the surplus created by a match between a worker $x$ in location $j_1$ and a firm $y$ in location $j_2$:^[Note that $F^{j\to j} = 0$ therefore we are generalizing the case where $j_1 = j_2$].
+
+\begin{align*}
+  S_{t}^{j_1 \to j_2} &= J_{t}^{j_2}(x,y) - [U_{t}^{j_1}(x) + F^{j_1\to j_2}] \\
+  & = \left(J_{t}^{j_2}(x,y) - U_{t}^{j_2}(x)\right) - \left(U_{t}^{j_1}(x) - U_{t}^{j_2}(x)\right) - F^{j_1\to j_2}\\
+  & =  \left(J_{t}^{j_2}(x,y) - U_{t}^{j_2}(x)\right) - \left(b(x,j_1,z_t) - b(x,j_2,z_t)\right) - F^{j_1\to j_2}\\
+  & = S^{j_2 \to j_2}_t(x,y)  - \left(b(x,j_1,z_t) - b(x,j_2,z_t)\right) - F^{j_1\to j_2}\\
+  & = s(x,y,j_2 \to j_2,z_t) - \Lambda^{j_2}(x) + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j_2\to j_2}_{t+1}(x,y)\right\}\right]  - \left(b(x,j_1,z_t) - b(x,j_2,z_t)\right) - F^{j_1\to j_2}\\
+  & = s(x,y,j_1 \to j_2,z_t) - \Lambda^{j_2}(x) + \beta\mathbb{E}_{t+1}\left[\max\left\{0, S^{j_2\to j_2}_{t+1}(x,y)\right\}\right] - F^{j_1\to j_2}
+\end{align*}
+
+
