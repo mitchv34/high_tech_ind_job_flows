@@ -84,6 +84,8 @@ Type grids are defined as:
 
 <!-- TODO: Include the calibration of type distribution parameters from the data -->
 
+![](../../..//figures/fitt_national_skill_cdf.png)
+
 ## Algorithm
 
 ```{=latex}

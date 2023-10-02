@@ -1,12 +1,48 @@
 using Distributed
+using DataFrames
+using CSV
 using YAML
 using BenchmarkTools
+using StatsBase
+using StatsPlots
+# Load plot settings
+include("../plotconfig.jl")
+include("model1.jl")
 z = 1
 # Get number of processors from YAML file
-path_params = "src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml";
-nprocs = YAML.load(open(path_params))["parallel"]["nprocs"];
-# Start parallel workers
-# addprocs(1);
+path_params = "./src/Sorting between Workers and Firms (and Locations)/parameters/params.yml";
+
+# Load YAML file
+params = YAML.load(open(path_params));
+
+function fit_distributiont_to_skill(data::DataFrame)
+    # Sample SKILL data using EMP_PCT column as weights
+    sample_size = 1000000
+    data_sample = sample(data.SKILL, Weights(data.EMP), sample_size, replace = true)
+    e_cdf = ecdf(data_sample)
+
+    dist_fit = fit( Beta, data_sample );
+
+    # Ecaluate and plot the CDF
+    x = 0:0.01:1;
+    y = e_cdf.(x);
+    p_cdf = plot(x, y, label = "Empirical CDF", lw = 2, legend = :topleft, xlabel = "Skill", ylabel = "CDF")
+    plot!(x, cdf(dist_fit, x), label = "Beta Fit", lw = 2);
+    
+    p_pdf = density(d, trim = true, bandwidth = 0.05, label = "Empirical PDF", lw = 2, xlabel = "Skill", ylabel = "PDF")
+    plot!(x, pdf.(dist_fit, x), label = "Beta Fit", lw = 2);
+
+    return dist_fit, p_cdf, p_pdf
+end
+
+# Load National data
+data_path_national = "./data/OEWS/estimated_skill_distributions/national_skill/national_skill_2019.csv"
+# For each year fit the distribution and save the parameters
+data_nat = CSV.read(data_path_national, DataFrame)
+fitted_dist, p_cdf, p_pdf = fit_distributiont_to_skill( data_nat )
+# Plot PDF of fitted distribution
+
+savefig(p_cdf, "./figures/fitt_national_skill_cdf.png")
 
 # Load model
 @everywhere path_params = "src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml";

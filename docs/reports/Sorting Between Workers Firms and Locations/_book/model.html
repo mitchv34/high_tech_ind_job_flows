@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Sorting between Workers and Firms (and Locations) - 2&nbsp; Model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./endogenizing_location_productivity.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./model.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Model</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Sorting between Workers and Firms (and Locations)</a> 
+        <div class="sidebar-tools-main">
+    <a href="./Sorting-between-Workers-and-Firms--and-Locations-.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./model.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Model</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./endogenizing_location_productivity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Endogenizing Location Productivity and Cost of Living</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./computation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Computation of the Equilibrium</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#model-setup" id="toc-model-setup" class="nav-link active" data-scroll-target="#model-setup"><span class="header-section-number">2.1</span> Model Setup</a>
+  <ul class="collapse">
+  <li><a href="#demographics" id="toc-demographics" class="nav-link" data-scroll-target="#demographics"><span class="header-section-number">2.1.1</span> Demographics</a></li>
+  <li><a href="#technology" id="toc-technology" class="nav-link" data-scroll-target="#technology"><span class="header-section-number">2.1.2</span> Technology</a></li>
+  <li><a href="#job-search" id="toc-job-search" class="nav-link" data-scroll-target="#job-search"><span class="header-section-number">2.1.3</span> Job Search</a></li>
+  </ul></li>
+  <li><a href="#dynamic-programming-problem" id="toc-dynamic-programming-problem" class="nav-link" data-scroll-target="#dynamic-programming-problem"><span class="header-section-number">2.2</span> Dynamic Programming Problem</a>
+  <ul class="collapse">
+  <li><a href="#search-strategy" id="toc-search-strategy" class="nav-link" data-scroll-target="#search-strategy"><span class="header-section-number">2.2.1</span> Search Strategy</a></li>
+  <li><a href="#unemployed-worker" id="toc-unemployed-worker" class="nav-link" data-scroll-target="#unemployed-worker"><span class="header-section-number">2.2.2</span> Unemployed Worker</a></li>
+  <li><a href="#joint-value-of-a-match" id="toc-joint-value-of-a-match" class="nav-link" data-scroll-target="#joint-value-of-a-match"><span class="header-section-number">2.2.3</span> Joint Value of a Match</a></li>
+  <li><a href="#match-surplus" id="toc-match-surplus" class="nav-link" data-scroll-target="#match-surplus"><span class="header-section-number">2.2.4</span> Match Surplus</a></li>
+  <li><a href="#vacancy-creation" id="toc-vacancy-creation" class="nav-link" data-scroll-target="#vacancy-creation"><span class="header-section-number">2.2.5</span> Vacancy Creation</a></li>
+  </ul></li>
+  <li><a href="#labor-market-flows" id="toc-labor-market-flows" class="nav-link" data-scroll-target="#labor-market-flows"><span class="header-section-number">2.3</span> Labor Market Flows</a></li>
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">References</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Model</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="model-setup" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="model-setup"><span class="header-section-number">2.1</span> Model Setup</h2>
+<section id="demographics" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="demographics"><span class="header-section-number">2.1.1</span> Demographics</h3>
+<ul>
+<li>There exists a discrete and finite set of locations denoted as <span class="math inline">\(\mathcal{J} = \{1, \ldots, |\mathcal{J}|\}\)</span>, with each location indexed by <span class="math inline">\(j \in \mathcal{J}\)</span>.</li>
+<li>A continuum of workers is characterized by their abilities, which are denoted as <span class="math inline">\(x \in \mathcal{X}\)</span>.
+<ul>
+<li>The total measure of workers is normalized to 1.</li>
+<li>Workers follow an exogenous distribution <span class="math inline">\(\ell(x)\)</span>.</li>
+<li>Within each location, there is an endogenous distribution of workers denoted as <span class="math inline">\(\ell^{j}(x)\)</span>.</li>
+<li>I represent the total population in location <span class="math inline">\(j\)</span> as <span class="math inline">\(\mu_j\)</span>.</li>
+</ul></li>
+<li>A continuum of firms is characterized by their technology, which is denoted as <span class="math inline">\(y \in \mathcal{Y}\)</span>.
+<ul>
+<li>The total measure of firms is normalized to 1.</li>
+<li>Firms follow an exogenous distribution <span class="math inline">\(\gamma(y)\)</span>.</li>
+</ul></li>
+</ul>
+</section>
+<section id="technology" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="technology"><span class="header-section-number">2.1.2</span> Technology</h3>
+<ul>
+<li>There is an exogenous cost associated with posting <span class="math inline">\(v\)</span> job opportunities in location <span class="math inline">\(j\)</span>, denoted as <span class="math inline">\(c_{j}(v)\)</span>, where <span class="math inline">\(c_{j}(v) \geq 0\)</span>.
+<ul>
+<li>I assume this cost function is increasing, convex, and potentially dependent on the location.</li>
+</ul></li>
+<li>Both workers and firms discount the future at the rate <span class="math inline">\(\beta\)</span>.</li>
+<li>Workers have the ability to move across locations:
+<ul>
+<li>Workers select a mixed strategy for their job search, denoted as <span class="math inline">\(\phi^j_i(x)\)</span>, where <span class="math inline">\(\phi^j_i(x) = \{\phi^j_i(x, j')\}_{j' \in \mathcal{J}}\)</span> represents the probability that a worker of type <span class="math inline">\(x\)</span> from location <span class="math inline">\(j\)</span> searches in location <span class="math inline">\(j'\)</span>, and <span class="math inline">\(i \in \{u,s\}\)</span> refers to the employment status of the worker.</li>
+<li>Each search strategy incurs an associated cost denoted as <span class="math inline">\(c_s(\phi_i^j(x))\)</span>.</li>
+<li>When a worker moves from one location to another (from <span class="math inline">\(j\)</span> to <span class="math inline">\(j'\)</span>), they must pay a relocation cost denoted as <span class="math inline">\(F^{j \to j'} \geq 0\)</span>, with <span class="math inline">\(F^{j \to j} = 0\)</span> for movements within the same location.</li>
+</ul></li>
+<li>Unemployed workers receive instant utility in each location denoted as <span class="math inline">\(b(x,j)\)</span>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>Firms have access to a production technology that operates at the match level and depends on the location and the aggregate state of the economy, represented as <span class="math inline">\(f(x, y, j)\)</span>.
+<ul>
+<li>Worker productivity is influenced by the distribution of skills within each location (see Chapter -<a href="endogenizing_location_productivity.html#sec-agglomeration_effect"><span>Section&nbsp;3.1</span></a> for more details).</li>
+</ul></li>
+</ul>
+<p>Certainly, I’ll review and refine this section for you:</p>
+</section>
+<section id="job-search" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="job-search"><span class="header-section-number">2.1.3</span> Job Search</h3>
+<p>Both unemployed and employed workers engage in job search activities. Let’s denote <span class="math inline">\(s\)</span> as the search intensity of an employed worker, <span class="math inline">\(s &lt; 1\)</span> is normalized such that an unemployed worker has a search intensity of <span class="math inline">\(1\)</span>. To compute the total search intensity in location <span class="math inline">\(j\)</span>, we need to consider the following expression:</p>
+<p><span class="math display">\[
+L^j = \sum_{j'\in\mathcal{J}}\left[\int \phi_u^{j'}(x,j)u^{j'}(x) dx + s\int\int \phi_s^{j'}(x,j)h^{j'}(x,y)dx dy\right]
+\]</span></p>
+<p>Total search intensity (<span class="math inline">\(L^j\)</span>) in location <span class="math inline">\(j\)</span> accounts for the search behaviors of both employed and unemployed workers from all other locations (<span class="math inline">\(j'\)</span>) in the model. It takes into account the probabilities of workers from everywhere else searching for jobs in location <span class="math inline">\(j\)</span>, capturing the spatial dynamics of the labor market.</p>
+<p>Now, let’s introduce some additional definitions:</p>
+<ul>
+<li><p>Let <span class="math inline">\(v^j(y)\)</span> represent the number of job opportunities posted by a firm <span class="math inline">\(y\)</span> in location <span class="math inline">\(j\)</span>.</p></li>
+<li><p><span class="math inline">\(V^j = \int v^j(y) dy\)</span> represents the total number of job opportunities posted location <span class="math inline">\(j\)</span>.</p></li>
+</ul>
+<p>Now, let’s define <span class="math inline">\(M^j = M(L^j, V^j)\)</span> as the number of job matches in location <span class="math inline">\(j\)</span>. With these definitions in place, we can calculate the following probabilities:</p>
+<ul>
+<li><p>The probability that an unemployed worker contacts a vacancy in location <span class="math inline">\(j\)</span> is given by: <span class="math display">\[p^j = \frac{M^j}{L^j}\]</span> Here, <span class="math inline">\(sp^j\)</span> represents the probability that an employed worker contacts a vacancy.</p></li>
+<li><p>The probability that a firm contacts any searching worker is defined as: <span class="math display">\[q^j = \frac{M^j}{V^j}\]</span></p></li>
+</ul>
+<p>Additionally, let <span class="math inline">\(\theta^j = V^j / L^j\)</span>, represent the market tightness in location <span class="math inline">\(j'\)</span>.</p>
+</section>
+</section>
+<section id="dynamic-programming-problem" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="dynamic-programming-problem"><span class="header-section-number">2.2</span> Dynamic Programming Problem</h2>
+<p>Consider the following notation:</p>
+<ul>
+<li><span class="math inline">\(U^{j}(x)\)</span> represents the value for an unemployed worker of type <span class="math inline">\(x\)</span> in location <span class="math inline">\(j'\)</span>.</li>
+<li>The value of receiving a job offer depends on the employment status of the worker:
+<ul>
+<li><span class="math inline">\(W^{j\to j'}_{0}(x,y)\)</span> denotes the value of a type-<span class="math inline">\(x\)</span> unemployed worker in location <span class="math inline">\(j\)</span> who is hired by a firm of type <span class="math inline">\(y\)</span> in location <span class="math inline">\(j'\)</span>.</li>
+<li><span class="math inline">\(W^{j\to j'}_{1}(x,y \to y')\)</span> represents the value offered by a type <span class="math inline">\(y'\)</span> firm in location <span class="math inline">\(j'\)</span> to a type <span class="math inline">\(x\)</span> worker currently employed at a type <span class="math inline">\(y\)</span> firm in location <span class="math inline">\(j\)</span>.</li>
+</ul></li>
+<li><span class="math inline">\(J^j(x,y)\)</span> denotes the value of a match between a type <span class="math inline">\(x\)</span> worker and a type <span class="math inline">\(y\)</span> firm inlocation <span class="math inline">\(j\)</span>.</li>
+</ul>
+<p>Now, let’s define the joint surplus of a match between a type <span class="math inline">\(x\)</span> unemployed worker in location <span class="math inline">\(j\)</span> and a type <span class="math inline">\(y\)</span> firm in location <span class="math inline">\(j'\)</span> as:</p>
+<p><span class="math display">\[S^{j\to j'}(x,y) = J^{j'}(x,y) - [U^{j}(x) + F^{j\to j'}]\]</span></p>
+<p><span class="math inline">\(S^{j\to j'}(x,y)\)</span> represent much better off (or worse off) the worker and the firm are when they are matched compared to when the worker is unemployed in location <span class="math inline">\(j\)</span> and considering the cost of moving from <span class="math inline">\(j\)</span> to <span class="math inline">\(j'\)</span>. If <span class="math inline">\(S^{j\to j'}(x,y)\)</span> is positive, it indicates a positive gain from the match; if it’s negative, it represents a net loss.</p>
+<section id="search-strategy" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="search-strategy"><span class="header-section-number">2.2.1</span> Search Strategy</h3>
+<p>In this section I describe the search strategy of workers. I specify what do I mean by a search strategy and how do workers choose their search strategy. I also describe the cost of search and how it is related to the search strategy. Finally I derive the optimal search strategy for each worker type and location. Throughout this section I abstract from the employment status of the worker.</p>
+<p>I assume that workers are <em>rational inattentive</em> in the style of <span class="citation" data-cites="simsImplicationsRationalInattention2003">(<a href="#ref-simsImplicationsRationalInattention2003" role="doc-biblioref">Christopher A. Sims 2003</a>)</span>, <span class="citation" data-cites="simsRationalInattentionLinearQuadratic2006">(<a href="#ref-simsRationalInattentionLinearQuadratic2006" role="doc-biblioref">Christopher A. Sims 2006</a>)</span> and <span class="citation" data-cites="matejkaRationalInattentionDiscrete2015">(<a href="#ref-matejkaRationalInattentionDiscrete2015" role="doc-biblioref">Matějka and McKay 2015</a>)</span>. Workers have prior knoledge of the value of moving to every location <span class="math inline">\(j'\)</span> <span class="math inline">\(\{u^{j\to j'}(x)\}_{j \in \mathcal{J}}\)</span>, note that this is dependent on the type of each worker and their location at the moment of decition making. Assume that this prior knolege is described by a joint distribution <span class="math inline">\(G\left(\{u^{j\to j'}(x)\}_{j \in \mathcal{J}} \right)\)</span>.</p>
+<p>To reﬁne this knowledge, workers can aquire information about the value of each location by searching. Workers are in escence acquiring informatin to reduce uncertainty (i.e.&nbsp;reduce entropy) associated with their prior knoledge. I make the siplyfing assumption that <span class="math inline">\(\phi^j_0(x)\)</span>, the unconditional distribution of of choosing each locaiton is uniform, this is:</p>
+<p><span class="math display">\[\phi^j_0(x, j') = \frac{1}{\mid \mathcal{J} \mid} \qquad
+\forall j' \in \mathcal{J}, x \in \mathcal{X}\]</span></p>
+<p>Thus type <span class="math inline">\(x\)</span> workers in location <span class="math inline">\(j\)</span> are faced with the problem:</p>
+<span class="math display">\[\begin{align*}
+\max_{\phi_i^j(x)} \left( \sum_{j' \in \mathcal{J}} \phi_i^j(x, j') u^{j\to j'}(x) - c(\phi_i^j(x), \phi^j_0(x))  \right)\\
+\text{s.t.} \quad \sum_{j'\in \mathcal{J}}\phi^j_i(x, j') = 1 \\
+\quad \text{and} \quad \phi^j_i(x, j') \geq 0 \quad \forall j' \in \mathcal{J}
+\end{align*}\]</span>
+<p>With <span class="math inline">\(c(\phi_i^j(x), \phi^j_0(x))\)</span> being the cost of reducing the entropy of the prior (in this case the assumption is the prior is no information). The cost is proportional to the Kullback–Leibler divergence (also called relative entropy and <span class="math inline">\(I\)</span>-divergence) between the selected distribution and the prior (uniform). More information on the Kullback–Leibler divergence <a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence">here</a>. For simplicity, denote $c(_i^j(x), ^j_0(x)) = <span class="math inline">\(c(\phi_i^j(x))\)</span>$</p>
+<span class="math display">\[\begin{equation}
+\label{eq-cost-search}
+c_s(\phi^j_i(x)) = c \sum_{j'\in \mathcal{J}}\phi^j_i(x, j')\log{(J\phi^i_j(x, j'))}
+\end{equation}\]</span>
+<p>If processing information where costless i.e.&nbsp;<span class="math inline">\(c = 0\)</span> the worker would be able to perfectly direct their search towards the highest value location. With costly information procesing (<span class="math inline">\(c &gt; 0\)</span>), the worker can still select to search randomly (i.e.&nbsp;uniform distribution) and pay the asociated cost of <span class="math inline">\(0\)</span>, when the worker starts directing their search towards a particular location (the asusmption is that this requieres, aquiring more information of one of the potential values relative to the others) then the cost grows unboundedly large as the strategy gets closer to perfectly directing search to a particular location.</p>
+<ul>
+<li>Besides <span class="citation" data-cites="matejkaRationalInattentionDiscrete2015">(<a href="#ref-matejkaRationalInattentionDiscrete2015" role="doc-biblioref">Matějka and McKay 2015</a>)</span> which formulates the problem in general terms, some works in the literature that use this cost structure are <span class="citation" data-cites="wuPartiallyDirectedSearch2020">(<a href="#ref-wuPartiallyDirectedSearch2020" role="doc-biblioref">Wu 2020</a>)</span> and <span class="citation" data-cites="cheremukhinTargetedSearchMatching2020">(<a href="#ref-cheremukhinTargetedSearchMatching2020" role="doc-biblioref">Cheremukhin, Restrepo-Echavarria, and Tutino 2020</a>)</span>.</li>
+</ul>
+<p>Solving the maximization problem we get the optimal strategy for each worker as:</p>
+<span class="math display">\[\begin{align*}
+\max_{\phi_i^j(x)} \left( \sum_{j' \in \mathcal{J}} \phi_i^j(x, j') u^{j\to j'}(x) - c \sum_{j'\in \mathcal{J}}\phi^j_i(x, j')\log{(J\phi^i_j(x, j'))} \right) \\
+\text{s.t.} \quad \sum_{j'\in \mathcal{J}}\phi^j_i(x, j') = 1 \\
+\quad \text{and} \quad \phi^j_i(x, j') \geq 0 \quad \forall j' \in \mathcal{J}
+\end{align*}\]</span>
+<p>I’ll ignore the non-negativity constraints and write the Lagrangean of the problem: <span class="math display">\[\mathcal{L}(\phi^j(x), \lambda) =  \sum_{j'\in\mathcal{J}} \phi^j(x, j') u^{j\to j'}(x) - c \sum_{j'\in \mathcal{J}}\phi^j(x, j')\log{(J\phi^j(x, j'))} + \lambda \left(\sum_{j'\in \mathcal{J}}\phi^j(x, j') - 1\right)\]</span></p>
+<p>First order conditions of the problem give us:</p>
+<span class="math display">\[\begin{align*}
+  [\phi^j(x, j')] &amp;:\quad u^{j\to j'}(x) - c - c \log[J \phi^j(x, j')] = \lambda \\
+  [\lambda] &amp;: \quad \sum_{j'\in \mathcal{J}}\phi^j(x, j') = 1
+\end{align*}\]</span>
+<p>Take any two <span class="math inline">\(j_1\)</span>, <span class="math inline">\(j_2\)</span> we have that <span class="math display">\[u^{j\to j_1}(x)  - c \log[J \phi^j(x, j_1)] =u^{j\to j_2}(x)  - c \log[J \phi^j(x, j_2)]\]</span></p>
+<p>thus</p>
+<span class="math display">\[\begin{align*}
+  \frac{u^{j\to j_1}(x) - u^{j\to j_2}(x) }{c} &amp;= \log\left(\frac{ \phi^j(x, j_1)}{ \phi^j(x, j_2)}\right) \\
+  &amp;\implies \quad \frac{ \phi^j(x, j_1)}{ \phi^j(x, j_2)} = \frac{
+    e^{
+       u^{j\to j_1}(x) / c
+        }
+        }{e^{
+u^{j\to j_2}(x) / c
+        }
+        }
+\end{align*}\]</span>
+<p>Fix any <span class="math inline">\(\hat{j}\)</span>, then we can write any other <span class="math inline">\(j'\in\mathcal{J}\)</span> in therms of <span class="math inline">\(\hat{j}\)</span> and plug into the constraint to get:</p>
+<span class="math display">\[\begin{align*}
+  \sum_{j'\in \mathcal{J}}\phi^j(x, j') &amp;= \sum_{j'\in \mathcal{J}}\frac{e^{u^{j\to j'}(x) }}{e^{u^{j\to \hat{j}}(x) }} \phi^j(x, \hat{j})\\  &amp;= \frac{\phi^j(x, \hat{j})}{e^{u^{j\to \hat{j}}(x) / c}} \sum_{j\in \mathcal{J}}e^{u^{j\to j'}(x) / c} = 1
+\end{align*}\]</span>
+<p>Which we can solve to obtain</p>
+<span class="math display">\[\begin{equation}
+\label{eq:optimal-search-strategy}
+    \phi^j(x,\hat{j}) = \frac{e^{u^{j\to \hat{j}}(x) / c}}{\sum_{ j' \in \mathcal{J}}e^{u^{j\to j'}(x) / c}}
+\end{equation}\]</span>
+<p>The non-negativity constraints are satisfied because the exponential function is always positive.</p>
+<p><strong>Note:</strong> I could have follow <span class="citation" data-cites="matejkaRationalInattentionDiscrete2015">(<a href="#ref-matejkaRationalInattentionDiscrete2015" role="doc-biblioref">Matějka and McKay 2015</a>)</span> and have more complex prior beliefs, the result of this would be that the optimal strategy would be biased by the prior attractivenes of each location. In terms of closed form solution I would get something like: <span class="math display">\[\phi^j(x,\hat{j}) = \frac{e^{(u^{j\to \hat{j}}(x) + \zeta^{j \to \hat{j}}(x) )/ c}}{\sum_{ j' \in \mathcal{J}}e^{(u^{j\to j'}(x) + \zeta^{j \to \hat{j}}(x)) / c}}\]</span></p>
+<p>where <span class="math inline">\(\zeta^{j \to j'}(x) = c \log(\phi^j_0(x))\)</span> is the prior attractiveness of moving from location <span class="math inline">\(j\)</span> to location <span class="math inline">\(\hat{j}\)</span>. Note that this have the implication: - When an option seems very attractive a priori, then it has a relatively high probability of being selected even if its true value is low. (verbatim quote from <span class="citation" data-cites="matejkaRationalInattentionDiscrete2015">(<a href="#ref-matejkaRationalInattentionDiscrete2015" role="doc-biblioref">Matějka and McKay 2015</a>)</span>).</p>
+<p>I choose to have a uniform prior to simplify the exposition and because I think it is a reasonable assumption. But I also can see how relaxing this assumption could have interesting implications for the model.</p>
+<p>We already stablished that with costless information the limit behavior is that the worker perfectly directs their search to the highest value location. Next, note that <span class="math inline">\(\lim_{c \to \infty} \exp(u^{j\to \hat{j}}(x) / c) = 1\)</span> thus the limit behavior as the cost of information rises is dissregard new information decide based on the prior</p>
+<ul>
+<li>With uniform prior: <span class="math inline">\(\lim_{c \to \infty} \phi^j(x,\hat{j}) = \frac{1}{\mid \mathcal{J} \mid}\)</span> which is random search.</li>
+<li>With some other prior: <span class="math inline">\(\lim_{c \to \infty} \phi^j(x,\hat{j}) = \phi^j_0(x)\)</span>.</li>
+</ul>
+<p>Here the scaling parameter <span class="math inline">\(c\)</span> plays a similar role to the noise parameter in the discrete choice model from <span class="citation" data-cites="lentzCompetitiveRandomSearch">(<a href="#ref-lentzCompetitiveRandomSearch" role="doc-biblioref">Lentz and Moen, n.d.</a>)</span>.</p>
+</section>
+<section id="unemployed-worker" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="unemployed-worker"><span class="header-section-number">2.2.2</span> Unemployed Worker</h3>
+<p>Unemployed workers receive instant utility from living in location <span class="math inline">\(j\)</span>, <span class="math inline">\(b(x,j)\)</span>, and anticipate the probability of getting an offer <span class="math inline">\(p^j\)</span> in each location. They will choose the strategy that maximizes their future expected value knowing that in each location they will receive an offer which can be from any firm with a likelihood proportional to the share of total vacancies posted by each firm in each market. The worker will accept only the offers that promise her a higher value than unemployment:</p>
+<span class="math display">\[\begin{align*}
+U^{j}(x) = \underbrace{b(x,j)}_{\text{instant utility}} + &amp;\beta\max_{\phi^j_u(x)}\left\{ \underbrace{-c(\phi^j_u(x))}_{\text{cost of search strategy}} \right.  + \\
+&amp; \sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'})U^{j'}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
+&amp; \left. \left. \hspace{0cm} + p^{j'} \underbrace{\int \max\left\{U^{j'}(x),W^{j\to j'}_{0}(x,y)\right\}\frac{v^{j'}(y)}{V^{j'}}dy}_{\text{if offer, pays cost,moves to } j \text{ and then is matched randomly with some firm}} \right] \right\}
+\end{align*}\]</span>
+<p>I use the same bargaining as in <span class="citation" data-cites="cahucWageBargainingOntheJob2006">(<a href="#ref-cahucWageBargainingOntheJob2006" role="doc-biblioref">Cahuc, Postel-Vinay, and Robin 2006</a>)</span> and <span class="citation" data-cites="baggerEmpiricalModelWage2019a">(<a href="#ref-baggerEmpiricalModelWage2019a" role="doc-biblioref">Bagger and Lentz 2019</a>)</span>. The Nash bargaining solution implies that the worker recieves a constant share <span class="math inline">\(\xi\)</span> of the match rent, where <span class="math inline">\(\xi\)</span> is the bargaining power of the worker:</p>
+<p><span class="math display">\[W^{j \to j'}_{0}(x,y) = U^{j}(x) + \xi S^{j\to j'}(x,y) =  (1 - \xi) U^{j}(x) + \xi [J^{j'}(x,y) - F^{j \to j'}]\]</span></p>
+<p>From <span class="math inline">\(\eqref{eq:optimal-search-strategy}\)</span> we know that the optimal strategy for each unemployed worker is:</p>
+<span class="math display">\[\begin{equation}\label{eq-optimal-search-unemployed}
+\phi_{u}^{j}(x,j')=\frac{\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j'}(x,y) \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \xi \int \max\left\{0, S^{j\to \tilde{j} }(x,y) \right\}\frac{v^{ \tilde{j} }(y)}{V^{\tilde{j}}}dy \right] / c\right)}}
+\end{equation}\]</span>
+<p>Substituting the optimal strategy in the Bellman equation we get:</p>
+<span class="math display">\[\begin{equation}\label{eq-bellman-unemployed}
+U^{j}(x) = b(x,j) + \beta\left[\left[U^j(x)\right]  + c\log\left(\frac{1}{\mid \mathcal{J} \mid }{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j' }(x,y) \right\}\frac{v^{ j' }(y)}{V^{j'}}dy \right] / c\right)}} \right)\right]  
+\end{equation}\]</span>
+<!-- Derivation is in [Appendix -@sec-appendix_bellman_unemp]. -->
+</section>
+<section id="joint-value-of-a-match" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="joint-value-of-a-match"><span class="header-section-number">2.2.3</span> Joint Value of a Match</h3>
+<ul>
+<li>If a match between a worker and a firm in location <span class="math inline">\(j\)</span> is destroyed the firm will get <span class="math inline">\(0\)</span> and the worker gets their unemployment value in that location <span class="math inline">\(U^{j}(x)\)</span>.</li>
+<li>Matches are destroyed for two reasons:
+<ul>
+<li><em>Exogenous destruction</em> with probability <span class="math inline">\(\delta\)</span></li>
+<li><em>Endogenous destruction</em>, if and only if <span class="math inline">\(J^j(x,y) &lt; U^j(x)\)</span>.</li>
+<li>Denote <span class="math inline">\(\lambda^j(x,y) = (1-\delta)\mathbb{1}_{\{J^j(x,y)&gt;U^{j\to j}(x,y)\}}\)</span> the probability that a match survives accounting for both exogenous and endogenous destruction.</li>
+</ul></li>
+</ul>
+<p>We can write the Bellman equation of a match value as:</p>
+<span class="math display">\[\begin{align*}
+J^j(x,y) = \underbrace{f(x,y,j)}_{\text{match value added}} &amp;+ \beta\left[  \overbrace{ (1-\lambda^j(x,y)) }^{\text{match is destroyed}}\underbrace{U^{j}(x)}_{\text{worker gets unemployment value}} \right. + \\
+  &amp; \underbrace{(\lambda^j(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'})}^{\text{no new offers}} \underbrace{J^j(x,y)}_{\text{stays with same firm}} \right. \right. +\\
+&amp; sp^{j'} \left. \underbrace{\int\max\{J^{j}(x,y),W^{j\to j'}_{1}(x,y',y)\}\frac{v^{j'}(x)}{V^{j'}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right]
+\end{align*}\]</span>
+<p>When a type <span class="math inline">\(x\)</span> worker employed at a type <span class="math inline">\(y\)</span> firm in location <span class="math inline">\(j\)</span> meet potencial type <span class="math inline">\(y'\)</span> poaching firm at location <span class="math inline">\(j'\)</span> (assume that <span class="math inline">\(y'&gt;y\)</span> is productive enough to poach the woker, I’ll show later what the poaching condition is), competition between the two employers over the worker’s services occurs as a second price auction. No employer will offer more that the entire match value <span class="math inline">\(J^j(x,y)\)</span>, thus this becomes the reservation value for the worker. Nash bargaining solution implies that the worker will obtain their outside option plus a share <span class="math inline">\(\xi\)</span> of the match surplus.</p>
+<p>Bargaining implies that a worker employed in location <span class="math inline">\(j\)</span> by firm <span class="math inline">\(y\)</span> when matched with firm <span class="math inline">\(y'\)</span> in location <span class="math inline">\(j'\)</span> gets: <span class="math display">\[W^{j \to j'}_{1}(x,y \to y') = J^{j}(x,y) + \xi [J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}]\]</span></p>
+<p>Note that this means that to be able to poach from different locations the firm must be at least <span class="math inline">\(F^{j\to j'}\)</span> more productive. In terms of joint surplus we can rewrite <span class="math display">\[W^{j \to j'}_{1}(x,y \to y') = J^{j'}(x,y') + \xi \left[S^{j\to j'}(x,y') - S^{j \to j(x,y)}\right]\]</span></p>
+<p>Focussing on the maximization problem in the Bellman equation we can write:</p>
+<span class="math display">\[\begin{align*}
+J^j(x,y) + \max_{\phi_s^j(x)} \left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ sp^j\int\max\{0,  \xi \left[S^{j\to j'}(x,y') - S^{j \to j(x,y)}\right] \}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}\]</span>
+<p>From <span class="math inline">\(\eqref{eq:optimal-search-strategy}\)</span> we know that the optimal strategy for each employed worker is:</p>
+<p><span class="math display">\[\phi_{s}^{j}(x,y,j')=\frac{\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y') - S^{j \to j}(x,y) \right\}\frac{v^{j'}(y')}{V^{j'}}dy' \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \mu \int \max\left\{0, S^{j\to \tilde{j} }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ \tilde{j} }(y')}{V^{\tilde{j}}}dy' \right] / c\right)}}\]</span></p>
+<p>Plug back into the value function:</p>
+<span class="math display">\[\begin{align*} \label{eq-bellman-match}
+J^j(x,y) = f(x,y,j) &amp; + \beta\left [ \left[  (1-\lambda^j(x,y))U^{j}(x)   +\lambda^j(x,y)J^j(x,y) \right] \right. \\ &amp; \left. +\log\left(\frac{1}{\mid \mathcal{J} \mid }\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right) \right]
+\end{align*}\]</span>
+</section>
+<section id="match-surplus" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="match-surplus"><span class="header-section-number">2.2.4</span> Match Surplus</h3>
+<p>Next I characterize the surplus function. First, define the instant surplus of a match between a type <span class="math inline">\(x\)</span> worker in location <span class="math inline">\(j\)</span> and a type <span class="math inline">\(y\)</span> firm in location <span class="math inline">\(j'\)</span> as: <span class="math display">\[s(x,y,j \to j) = f(x,y,j,z) - b(x,j')\]</span></p>
+<p>We can compute the surpluss of mathces in the same location as:</p>
+<span class="math display">\[\begin{align}\label{eq-surplus-same-location}
+S^{j \to j}(x,y) &amp;= J^j(x, y) - U^{j}(x) \\
+&amp; = s(x,y,j \to j) + \beta \lambda^j(x,y)\underbrace{\left[J^j(x,y) - U^j(x)\right]}_{S^{j\to j}(x,y)} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]\\
+&amp; = s(x,y,j \to j) + \beta \max\{0, S^{j\to j}(x,y)\} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]
+\end{align}\]</span>
+<p>Notice that <span class="math inline">\(\lambda^{j}(x,y) &gt; 0\)</span> if and only if <span class="math inline">\(S^{j\to j}(x,y) &gt; 0\)</span>, thus <span class="math display">\[\max\{0, S^{j\to j}(x,y)\} =\lambda^{j}(x,y) S^{j\to j}(x,y) \]</span></p>
+<p>The terms <span class="math inline">\(\Lambda_0(x)\)</span> and <span class="math inline">\(\Lambda_1(x,y)\)</span> come from the Bellmans of the worker and the match respectively and are defined as:</p>
+<span class="math display">\[\begin{align*}
+\Lambda_1(x, y) &amp;= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right)  \\
+\Lambda_0(x) &amp;= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y') \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)}\right) \\
+\end{align*}\]</span>
+<p>Finally we can use the expression in <span class="math inline">\(\eqref{eq-surplus-same-location}\)</span> to write the surplus of a match between a type <span class="math inline">\(x\)</span> worker in location <span class="math inline">\(j\)</span> and a type <span class="math inline">\(y\)</span> firm in location <span class="math inline">\(j'\)</span> as:</p>
+<span class="math display">\[\begin{align}\label{eq-surplus}
+S^{j \to j'}(x,y) &amp;= J^{j'}(x, y) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+&amp; = [J^{j'}(x, y) - U^{j'}(x)] + U^{j'}(x) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+&amp; = S^{j'\to j'}(x,y) - [U^{j}(x) - U^{j'}(x) + F^{j \to j'}]
+\end{align}\]</span>
+<p>Notice that in computational terms,</p>
+<p>From the expressions in <span class="math inline">\(\eqref{eq-surplus-same-location}\)</span> and <span class="math inline">\(\eqref{eq-surplus}\)</span> the following is evident:</p>
+<ul>
+<li>A worker in location <span class="math inline">\(j\)</span> can be hired from a firm in location <span class="math inline">\(j'\)</span> by firm <span class="math inline">\(y\)</span> if and only if the surplus of the match is positive: <span class="math display">\[S^{j\to j'}(x,y) \geq 0 \qquad \iff \quad = J^{j'}(x,y) - U^{j\to j'}(x) \geq 0\]</span></li>
+<li>A worker employed at location <span class="math inline">\(j\)</span> by firm <span class="math inline">\(y\)</span> can be poached by a firm <span class="math inline">\(y'\)</span> in location <span class="math inline">\(j'\)</span> if and only if the surplus of the match is higher than the surplus of staying at the same firm in the same location:</li>
+</ul>
+<span class="math display">\[\begin{align*}
+S^{j\to j'}(x,y') &gt; S^{j\to j}(x,y) &amp;\iff J^{j'}(x,y') - U^{j\to j'}(x) &gt; J^{j}(x,y) - U^{j\to j}(x) \\
+&amp;\iff J^{j'}(x,y') - [U^{j}(x) - F^{j\to j'}] &gt; J^{j}(x,y) - U^{j}(x) \\
+&amp;\iff J^{j'}(x,y') &gt; J^{j}(x,y) +  F^{j\to j'}
+\end{align*}\]</span>
+<p>The surplus function determines how does the stock of unemployed and employed workers change:</p>
+<span class="math display">\[\begin{equation}\label{eq-unemp-interim}
+u^{j}_{+}(x) = \underbrace{u^j(x)}_{\text{inherited from }t} + \overbrace{\int \Big(\underbrace{\mathbb{1}_{S^{j \to j}(x,y)&lt;0}}_{\text{endogenous destruction}} + \underbrace{\delta\mathbb{1}_{S^{j \to j}(x,y)\geq0}}_{\text{exogenous destruction}}\Big)h^j(x,y)dy}^{\text{new unemployment created by shock}}
+\end{equation}\]</span>
+<p>and</p>
+<span class="math display">\[\begin{equation}\label{eq-matches-interim}
+h_{+}^{j}(x,y) = (1-\delta)\mathbb{1}_{\left\{S^{j \to j}(x,y)\geq 0\right\}}h^j(x,y)
+\end{equation}\]</span>
+</section>
+<section id="vacancy-creation" class="level3" data-number="2.2.5">
+<h3 data-number="2.2.5" class="anchored" data-anchor-id="vacancy-creation"><span class="header-section-number">2.2.5</span> Vacancy Creation</h3>
+<ul>
+<li><span class="math inline">\(B^j(y)\)</span> is the expected value of a type <span class="math inline">\(y\)</span> vacancy making contact with a worker in location <span class="math inline">\(j\)</span>. Vacancies meet unemployed and employed type-<span class="math inline">\(x\)</span> workers at a rates <span class="math display">\[\frac{u_{+}^j(x)}{L^j} \qquad \text{and} \qquad s\frac{h_{+}^j(x,y)}{L^j}\]</span> The expected value of posting a vacancy is therefore, the surplus that the posting firm expects to add, potential matches with negative surplus are immediately destroyed therefore those add no surplus. In terms of the Bellman equation we can write:</li>
+</ul>
+<span class="math display">\[\begin{align}
+B^j(y) &amp;= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u_{+}^{j'}(x)}{L^{j'}}}_{\text{likelihhod of match}}\times\overbrace{ \max\{0, S^{j'\to j}(x,y)\} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} + \nonumber \\
+&amp; +\underbrace{\sum_{j'\in \mathcal{J}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,j)\frac{h_{+}^{j'}(x,y)}{L^{j'}}}_{\text{likelihood of match}}\times \overbrace{ \max\{0, S^{j' \to j}(x,y)-S^{j' \to j'}(x,y')\}}^{\text{poaching is succesfull}}dx\right)dy\right)}_{\text{expected value added from poaching other firms employees}}
+\end{align}\]</span>
+<p>Firms will post vacancies such that the marginal cost of the vacancies and the marginal expected benefit <span class="math inline">\(B^j\)</span> are equal: <span id="eq-vacancy-posting-clearing"><span class="math display">\[c_{j}'(v^{j}(y))=q^{j}B^{j}(y) \tag{2.1}\]</span></span></p>
+</section>
+</section>
+<section id="labor-market-flows" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="labor-market-flows"><span class="header-section-number">2.3</span> Labor Market Flows</h2>
+<p>Now we characterize the flows of workers in-to and out-of unemployment at each location :</p>
+<ul>
+<li>Let <span class="math display">\[\eta^{j' \to j}(x,y) = \mathbb{1}_{\{S^{j' \to j}(x,y)&gt;0\}} \qquad \eta^{j' \to j}(x,y'\to y) = \mathbb{1}_{\{S^{j' \to j}(x,y) &gt; S^{j' \to j'}(x,y')\}}\]</span></li>
+</ul>
+<!-- -   And $\hat{\phi}^j_u(x,j')$ the probability that a type $x$ unemployed worker from location $j$ search in location $j'$ (this the optimal search policy in \eqref{eq-optimal-search-unemployed}. -->
+<p>Then the law of motion of the unemployment and emplyment are:</p>
+<span class="math display">\[\begin{equation}
+\label{eq-law-of-motion-unemp}
+u^{j}(x) = \sum_{j'\in \mathcal{J}}\underbrace{\phi_u^{j'}(x,j) u_{+}^{j'}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
+\end{equation}\]</span>
+<p>To compute the mass of employed workers in the next period define:</p>
+<ul>
+<li>The mass of workers hired from unemployment:</li>
+</ul>
+<span class="math display">\[\begin{equation}
+h^j_{u}(x,y) = \sum_{j'\in \mathcal{J}}\phi_u^{j'}(x,j) u_{+}^{j'}(x)\eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}
+\end{equation}\]</span>
+<ul>
+<li>The mass of workers that are succesfully poached from other firms:</li>
+</ul>
+<span class="math display">\[\begin{equation}
+h^j_{p} = \sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h_{+}^{j'}(x,y')sp^j\frac{v^{j}(y)}{V^{j}}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right)
+\end{equation}\]</span>
+<ul>
+<li>The mass of workers that the firm is able to retain:</li>
+</ul>
+<span class="math display">\[\begin{equation}
+h^j_{r} = \underbrace{h_{+}(x,y)  \times }_{\text{employed at interim }} \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}\frac{v^{j'}(y')}{V^{j'}} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poached by any firm in location }j'} \right]}^{\text{probability of not being poached}}
+\end{equation}\]</span>
+<p>Finally the mass of employed workers in the next period is:</p>
+<span class="math display">\[\begin{equation}
+\label{eq-law-of-motion-emp}
+h^j(x,y) =  h^j_{u}(x,y) + h^j_{p}(x,y) + h^j_{r}(x,y)
+\end{equation}\]</span>
+<p>Then I can compute the distribution of skill in each location as: <span class="math display">\[\ell^j(x) = u^j(x) + \int h^j(x,y)dy\]</span> and the total population in each location as: <span class="math display">\[\mu^j = \int \ell^j(x)dx\]</span></p>
+
+
+</section>
+<section id="bibliography" class="level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-baggerEmpiricalModelWage2019a" class="csl-entry" role="listitem">
+Bagger, Jesper, and Rasmus Lentz. 2019. <span>“An <span>Empirical Model</span> of <span>Wage Dispersion</span> with <span>Sorting</span>.”</span> <em>The Review of Economic Studies</em> 86 (1): 153–90. <a href="https://doi.org/10.1093/restud/rdy022">https://doi.org/10.1093/restud/rdy022</a>.
+</div>
+<div id="ref-cahucWageBargainingOntheJob2006" class="csl-entry" role="listitem">
+Cahuc, Pierre, Fabien Postel-Vinay, and Jean-Marc Robin. 2006. <span>“Wage <span>Bargaining</span> with <span class="nocase">On-the-Job Search</span>: <span>Theory</span> and <span>Evidence</span>.”</span> <em>Econometrica</em> 74 (2): 323–64. <a href="https://doi.org/10.1111/j.1468-0262.2006.00665.x">https://doi.org/10.1111/j.1468-0262.2006.00665.x</a>.
+</div>
+<div id="ref-cheremukhinTargetedSearchMatching2020" class="csl-entry" role="listitem">
+Cheremukhin, Anton, Paulina Restrepo-Echavarria, and Antonella Tutino. 2020. <span>“Targeted Search in Matching Markets.”</span> <em>Journal of Economic Theory</em> 185 (January): 104956. <a href="https://doi.org/10.1016/j.jet.2019.104956">https://doi.org/10.1016/j.jet.2019.104956</a>.
+</div>
+<div id="ref-lentzCompetitiveRandomSearch" class="csl-entry" role="listitem">
+Lentz, Rasmus, and Espen Rasmus Moen. n.d. <span>“Competitive or <span>Random Search</span>?”</span>
+</div>
+<div id="ref-liseMacrodynamicsSortingWorkers2017" class="csl-entry" role="listitem">
+Lise, Jeremy, and Jean-Marc Robin. 2017. <span>“The <span>Macrodynamics</span> of <span>Sorting</span> Between <span>Workers</span> and <span>Firms</span>.”</span> <em>American Economic Review</em> 107 (4): 1104–35. <a href="https://doi.org/10.1257/aer.20131118">https://doi.org/10.1257/aer.20131118</a>.
+</div>
+<div id="ref-matejkaRationalInattentionDiscrete2015" class="csl-entry" role="listitem">
+Matějka, Filip, and Alisdair McKay. 2015. <span>“Rational <span>Inattention</span> to <span>Discrete Choices</span>: <span>A New Foundation</span> for the <span>Multinomial Logit Model</span>.”</span> <em>American Economic Review</em> 105 (1): 272–98. <a href="https://doi.org/10.1257/aer.20130047">https://doi.org/10.1257/aer.20130047</a>.
+</div>
+<div id="ref-simsRationalInattentionLinearQuadratic2006" class="csl-entry" role="listitem">
+Sims, Christopher A. 2006. <span>“Rational <span>Inattention</span>: <span>Beyond</span> the <span>Linear-Quadratic Case</span>.”</span> <em>American Economic Review</em> 96 (2): 158–63. <a href="https://doi.org/10.1257/000282806777212431">https://doi.org/10.1257/000282806777212431</a>.
+</div>
+<div id="ref-simsImplicationsRationalInattention2003" class="csl-entry" role="listitem">
+Sims, Christopher A. 2003. <span>“Implications of Rational Inattention.”</span> <em>Journal of Monetary Economics</em> 50 (3): 665–90. <a href="https://doi.org/10.1016/S0304-3932(03)00029-1">https://doi.org/10.1016/S0304-3932(03)00029-1</a>.
+</div>
+<div id="ref-wuPartiallyDirectedSearch2020" class="csl-entry" role="listitem">
+Wu, Liangjie. 2020. <span>“Partially <span>Directed Search</span> in the <span>Labor Market</span>.”</span> PhD thesis, University of Chicago.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>In <span class="citation" data-cites="liseMacrodynamicsSortingWorkers2017">(<a href="#ref-liseMacrodynamicsSortingWorkers2017" role="doc-biblioref">Lise and Robin 2017</a>)</span>, <span class="math inline">\(b(x)\)</span> represents unemployment benefits. However, I adopt a more general approach to account for differences in the cost of living across locations.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'alternate';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./endogenizing_location_productivity.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Endogenizing Location Productivity and Cost of Living</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
