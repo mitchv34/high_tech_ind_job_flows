@@ -5,11 +5,11 @@ title: Computation of the Equilibrium
 ```{python}
 #| echo : false
 #| output : false
-parameters_path = "/Users/mitchv34/Work/high_tech_ind_job_flows/src/Sorting between Workers and Firms (and Locations)/parameters/params.yml"
+parameters_path = "../../../src/Sorting between Workers and Firms (and Locations)/parameters/params.yml"
 # Coppy the yaml file in parametets_path to the root root directory of quarto project and rename it to _variables.yml
 import shutil
 
-path_project = "/Users/mitchv34/Work/high_tech_ind_job_flows/docs/reports/Sorting Between Workers Firms and Locations/"
+path_project = "."
 name_new = "_variables.yml"
 
 shutil.copy(parameters_path, path_project + "/" + name_new)
