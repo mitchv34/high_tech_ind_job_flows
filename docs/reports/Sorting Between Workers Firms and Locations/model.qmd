@@ -1,0 +1,394 @@
+---
+title: Model
+---
+
+## Model Setup
+
+### Demographics
+
+- There exists a discrete and finite set of locations denoted as $\mathcal{J} = \{1, \ldots, |\mathcal{J}|\}$, with each location indexed by $j \in \mathcal{J}$.
+- A continuum of workers is characterized by their abilities, which are denoted as $x \in \mathcal{X}$.
+  - The total measure of workers is normalized to 1.
+  - Workers follow an exogenous distribution $\ell(x)$.
+  - Within each location, there is an endogenous distribution of workers denoted as $\ell^{j}(x)$.
+  - I represent the total population in location $j$ as $\mu_j$.
+- A continuum of firms is characterized by their technology, which is denoted as $y \in \mathcal{Y}$.
+  - The total measure of firms is normalized to 1.
+  - Firms follow an exogenous distribution $\gamma(y)$.
+
+### Technology
+
+- There is an exogenous cost associated with posting $v$ job opportunities in location $j$, denoted as $c_{j}(v)$, where $c_{j}(v) \geq 0$.
+  - I assume this cost function is increasing, convex, and potentially dependent on the location.
+- Both workers and firms discount the future at the rate $\beta$.
+- Workers have the ability to move across locations:
+  - Workers select a mixed strategy for their job search, denoted as $\phi^j_i(x)$, where $\phi^j_i(x) = \{\phi^j_i(x, j')\}_{j' \in \mathcal{J}}$ represents the probability that a worker of type $x$ from location $j$ searches in location $j'$, and $i \in \{u,s\}$ refers to the employment status of the worker.
+  - Each search strategy incurs an associated cost denoted as $c_s(\phi_i^j(x))$.
+  - When a worker moves from one location to another (from $j$ to $j'$), they must pay a relocation cost denoted as $F^{j \to j'} \geq 0$, with $F^{j \to j} = 0$ for movements within the same location.
+- Unemployed workers receive instant utility in each location denoted as $b(x,j)$.[^2]
+- Firms have access to a production technology that operates at the match level and depends on the location and the aggregate state of the economy, represented as $f(x, y, j)$.
+  - Worker productivity is influenced by the distribution of skills within each location (see Chapter -@sec-agglomeration_effect for more details).
+
+[^2]: In [@liseMacrodynamicsSortingWorkers2017], $b(x)$ represents unemployment benefits. However, I adopt a more general approach to account for differences in the cost of living across locations.
+
+Certainly, I'll review and refine this section for you:
+
+### Job Search
+
+Both unemployed and employed workers engage in job search activities. Let's denote $s$ as the search intensity of an employed worker, $s < 1$ is normalized such that an unemployed worker has a search intensity of $1$. To compute the total search intensity in location $j$, we need to consider the following expression:
+
+$$
+L^j = \sum_{j'\in\mathcal{J}}\left[\int \phi_u^{j'}(x,j)u^{j'}(x) dx + s\int\int \phi_s^{j'}(x,j)h^{j'}(x,y)dx dy\right]
+$$
+
+Total search intensity ($L^j$) in location $j$ accounts for the search behaviors of both employed and unemployed workers from all other locations ($j'$) in the model. It takes into account the probabilities of workers from everywhere else searching for jobs in location $j$, capturing the spatial dynamics of the labor market.
+
+Now, let's introduce some additional definitions:
+
+- Let $v^j(y)$ represent the number of job opportunities posted by a firm $y$ in location $j$.
+
+- $V^j = \int v^j(y) dy$ represents the total number of job opportunities posted location $j$.
+
+Now, let's define $M^j = M(L^j, V^j)$ as the number of job matches in location $j$. With these definitions in place, we can calculate the following probabilities:
+
+- The probability that an unemployed worker contacts a vacancy in location $j$ is given by:
+  $$p^j = \frac{M^j}{L^j}$$
+  Here, $sp^j$ represents the probability that an employed worker contacts a vacancy.
+
+- The probability that a firm contacts any searching worker is defined as:
+  $$q^j = \frac{M^j}{V^j}$$
+
+Additionally, let $\theta^j = V^j / L^j$, represent the market tightness in location $j'$.
+
+## Dynamic Programming Problem
+
+Consider the following notation:
+
+- $U^{j}(x)$ represents the value for an unemployed worker of type $x$ in location $j'$.
+- The value of receiving a job offer depends on the employment status of the worker:
+    - $W^{j\to j'}_{0}(x,y)$ denotes the value of a type-$x$ unemployed worker in location $j$ who is hired by a firm of type $y$ in location $j'$.
+    - $W^{j\to j'}_{1}(x,y \to y')$ represents the value offered by a type $y'$ firm in location $j'$ to a type $x$ worker currently employed at a type $y$ firm in location $j$.
+- $J^j(x,y)$ denotes the value of a match between a type $x$ worker and a type $y$ firm inlocation $j$.
+
+Now, let's define the joint surplus of a match between a type $x$ unemployed worker in location $j$ and a type $y$ firm in location $j'$ as:
+
+$$S^{j\to j'}(x,y) = J^{j'}(x,y) - [U^{j}(x) + F^{j\to j'}]$$
+
+$S^{j\to j'}(x,y)$ represent much better off (or worse off) the worker and the firm are when they are matched compared to when the worker is unemployed in location $j$ and considering the cost of moving from $j$ to $j'$. If $S^{j\to j'}(x,y)$ is positive, it indicates a positive gain from the match; if it's negative, it represents a net loss.
+
+
+### Search Strategy
+
+In this section I describe the search strategy of workers. I specify what do I mean by a search strategy and how do workers choose their search strategy. I also describe the cost of search and how it is related to the search strategy. Finally I derive the optimal search strategy for each worker type and location. Throughout this section I abstract from the employment status of the worker.
+
+I assume that workers are *rational inattentive* in the style of [@simsImplicationsRationalInattention2003], [@simsRationalInattentionLinearQuadratic2006] and [@matejkaRationalInattentionDiscrete2015]. Workers have prior knoledge of the value of moving to every location $j'$ $\{u^{j\to j'}(x)\}_{j \in \mathcal{J}}$, note that this is dependent on the type of each worker and their location at the moment of decition making. Assume that this prior knolege is described by a joint distribution $G\left(\{u^{j\to j'}(x)\}_{j \in \mathcal{J}} \right)$.
+
+
+To reﬁne this knowledge, workers can aquire information about the value of each location by searching. Workers are in escence acquiring informatin to reduce uncertainty (i.e. reduce entropy) associated with their prior knoledge. I make the siplyfing assumption that $\phi^j_0(x)$, the unconditional distribution of of choosing each locaiton is uniform, this is:
+
+$$\phi^j_0(x, j') = \frac{1}{\mid \mathcal{J} \mid} \qquad 
+\forall j' \in \mathcal{J}, x \in \mathcal{X}$$
+
+Thus type $x$ workers in location $j$ are faced with the problem:
+
+```{=latex}
+\begin{align*}
+\max_{\phi_i^j(x)} \left( \sum_{j' \in \mathcal{J}} \phi_i^j(x, j') u^{j\to j'}(x) - c(\phi_i^j(x), \phi^j_0(x))  \right)\\
+\text{s.t.} \quad \sum_{j'\in \mathcal{J}}\phi^j_i(x, j') = 1 \\
+\quad \text{and} \quad \phi^j_i(x, j') \geq 0 \quad \forall j' \in \mathcal{J}
+\end{align*}
+```
+
+
+With $c(\phi_i^j(x), \phi^j_0(x))$ being the cost of reducing the entropy of the prior (in this case the assumption is the prior is no information). The cost is proportional to the  Kullback–Leibler divergence (also called relative entropy and $I$-divergence) between the selected distribution and the prior (uniform). More information on the Kullback--Leibler divergence [here](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence). For simplicity, denote $c(\phi_i^j(x), \phi^j_0(x)) = $c(\phi_i^j(x))$$
+
+
+```{=latex}
+\begin{equation}
+\label{eq-cost-search}
+c_s(\phi^j_i(x)) = c \sum_{j'\in \mathcal{J}}\phi^j_i(x, j')\log{(J\phi^i_j(x, j'))}
+\end{equation}
+```
+
+If processing information where costless i.e. $c = 0$ the worker would be able to perfectly direct their search towards the highest value location. With costly information procesing ($c > 0$), the worker can still select to search randomly (i.e. uniform distribution) and pay the asociated cost of $0$, when the worker starts directing their search towards a particular location (the asusmption is that this requieres, aquiring more information of one of the potential values relative to the others) then the cost grows unboundedly large as the strategy gets closer to perfectly directing search to a particular location. 
+
+-  Besides [@matejkaRationalInattentionDiscrete2015] which formulates the problem in general terms, some works in the literature that use this cost structure are [@wuPartiallyDirectedSearch2020] and [@cheremukhinTargetedSearchMatching2020].
+
+
+Solving the maximization problem we get the optimal strategy for each worker as:
+
+```{=latex}
+\begin{align*}
+\max_{\phi_i^j(x)} \left( \sum_{j' \in \mathcal{J}} \phi_i^j(x, j') u^{j\to j'}(x) - c \sum_{j'\in \mathcal{J}}\phi^j_i(x, j')\log{(J\phi^i_j(x, j'))} \right) \\
+\text{s.t.} \quad \sum_{j'\in \mathcal{J}}\phi^j_i(x, j') = 1 \\
+\quad \text{and} \quad \phi^j_i(x, j') \geq 0 \quad \forall j' \in \mathcal{J}
+\end{align*}
+```
+
+I'll ignore the non-negativity constraints and write the Lagrangean of the problem:
+$$\mathcal{L}(\phi^j(x), \lambda) =  \sum_{j'\in\mathcal{J}} \phi^j(x, j') u^{j\to j'}(x) - c \sum_{j'\in \mathcal{J}}\phi^j(x, j')\log{(J\phi^j(x, j'))} + \lambda \left(\sum_{j'\in \mathcal{J}}\phi^j(x, j') - 1\right)$$
+
+First order conditions of the problem give us:
+```{=latex}
+\begin{align*}
+  [\phi^j(x, j')] &:\quad u^{j\to j'}(x) - c - c \log[J \phi^j(x, j')] = \lambda \\
+  [\lambda] &: \quad \sum_{j'\in \mathcal{J}}\phi^j(x, j') = 1
+\end{align*}
+```
+
+Take any two $j_1$, $j_2$ we have that 
+$$u^{j\to j_1}(x)  - c \log[J \phi^j(x, j_1)] =u^{j\to j_2}(x)  - c \log[J \phi^j(x, j_2)]$$
+
+thus 
+```{=latex}
+\begin{align*}
+  \frac{u^{j\to j_1}(x) - u^{j\to j_2}(x) }{c} &= \log\left(\frac{ \phi^j(x, j_1)}{ \phi^j(x, j_2)}\right) \\ 
+  &\implies \quad \frac{ \phi^j(x, j_1)}{ \phi^j(x, j_2)} = \frac{
+    e^{
+       u^{j\to j_1}(x) / c 
+        }
+        }{e^{
+u^{j\to j_2}(x) / c
+        }
+        }
+\end{align*}
+```
+
+Fix any $\hat{j}$, then we can write any other $j'\in\mathcal{J}$ in therms of $\hat{j}$ and plug into the constraint to get:
+
+```{=latex}
+\begin{align*}
+  \sum_{j'\in \mathcal{J}}\phi^j(x, j') &= \sum_{j'\in \mathcal{J}}\frac{e^{u^{j\to j'}(x) }}{e^{u^{j\to \hat{j}}(x) }} \phi^j(x, \hat{j})\\  &= \frac{\phi^j(x, \hat{j})}{e^{u^{j\to \hat{j}}(x) / c}} \sum_{j\in \mathcal{J}}e^{u^{j\to j'}(x) / c} = 1
+\end{align*}
+```
+
+Which we can solve to obtain
+
+```{=latex}
+\begin{equation}
+\label{eq:optimal-search-strategy}
+    \phi^j(x,\hat{j}) = \frac{e^{u^{j\to \hat{j}}(x) / c}}{\sum_{ j' \in \mathcal{J}}e^{u^{j\to j'}(x) / c}}
+\end{equation}
+```
+
+The non-negativity constraints are satisfied because the exponential function is always positive. 
+
+**Note:** I could have follow [@matejkaRationalInattentionDiscrete2015] and have more complex prior beliefs, the result of this would be that the optimal strategy would be biased by the prior attractivenes of each location. In terms of closed form solution I would get something like:
+$$\phi^j(x,\hat{j}) = \frac{e^{(u^{j\to \hat{j}}(x) + \zeta^{j \to \hat{j}}(x) )/ c}}{\sum_{ j' \in \mathcal{J}}e^{(u^{j\to j'}(x) + \zeta^{j \to \hat{j}}(x)) / c}}$$
+
+where $\zeta^{j \to j'}(x) = c \log(\phi^j_0(x))$ is the prior attractiveness of moving from location $j$ to location $\hat{j}$. Note that this have the implication:
+- When an option seems very attractive a priori, then it has a relatively high probability of being selected even if its true value is low. (verbatim quote from [@matejkaRationalInattentionDiscrete2015]).
+
+I choose to have a uniform prior to simplify the exposition and because I think it is a reasonable assumption. But I also can see how relaxing this assumption could have interesting implications for the model.
+
+We already stablished that with costless information the limit behavior is that the worker perfectly directs their search to the highest value location. Next, note that $\lim_{c \to \infty} \exp(u^{j\to \hat{j}}(x) / c) = 1$ thus the limit behavior as the cost of information rises is dissregard new information decide based on the prior
+
+- With uniform prior: $\lim_{c \to \infty} \phi^j(x,\hat{j}) = \frac{1}{\mid \mathcal{J} \mid}$  which is random search.
+- With some other prior: $\lim_{c \to \infty} \phi^j(x,\hat{j}) = \phi^j_0(x)$.
+
+Here the scaling parameter $c$ plays a similar role to the noise parameter in the discrete choice model from [@lentzCompetitiveRandomSearch].
+
+### Unemployed Worker
+
+Unemployed workers receive instant utility from living in location $j$, $b(x,j)$, and anticipate the probability of getting an offer $p^j$ in each location. They will choose the strategy that maximizes their future expected value knowing that in each location they will receive an offer which can be from any firm with a likelihood proportional to the share of total vacancies posted by each firm in each market. The worker will accept only the offers that promise her a higher value than unemployment:
+
+```{=latex}
+\begin{align*}
+U^{j}(x) = \underbrace{b(x,j)}_{\text{instant utility}} + &\beta\max_{\phi^j_u(x)}\left\{ \underbrace{-c(\phi^j_u(x))}_{\text{cost of search strategy}} \right.  + \\
+& \sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'})U^{j'}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
+& \left. \left. \hspace{0cm} + p^{j'} \underbrace{\int \max\left\{U^{j'}(x),W^{j\to j'}_{0}(x,y)\right\}\frac{v^{j'}(y)}{V^{j'}}dy}_{\text{if offer, pays cost,moves to } j \text{ and then is matched randomly with some firm}} \right] \right\} 
+\end{align*}
+```
+
+
+I use the same bargaining as in [@cahucWageBargainingOntheJob2006] and [@baggerEmpiricalModelWage2019a]. The Nash bargaining solution implies that the worker recieves a constant share $\xi$ of the match rent, where $\xi$ is the bargaining power of the worker:
+
+$$W^{j \to j'}_{0}(x,y) = U^{j}(x) + \xi S^{j\to j'}(x,y) =  (1 - \xi) U^{j}(x) + \xi [J^{j'}(x,y) - F^{j \to j'}]$$ 
+
+From \eqref{eq:optimal-search-strategy} we know that the optimal strategy for each unemployed worker is:
+
+```{=latex}
+\begin{equation}\label{eq-optimal-search-unemployed}
+\phi_{u}^{j}(x,j')=\frac{\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j'}(x,y) \right\}\frac{v^{j'}(y)}{V^{j'}}dy \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \xi \int \max\left\{0, S^{j\to \tilde{j} }(x,y) \right\}\frac{v^{ \tilde{j} }(y)}{V^{\tilde{j}}}dy \right] / c\right)}}
+\end{equation}
+```
+
+Substituting the optimal strategy in the Bellman equation we get:
+
+```{=latex}
+\begin{equation}\label{eq-bellman-unemployed}
+U^{j}(x) = b(x,j) + \beta\left[\left[U^j(x)\right]  + c\log\left(\frac{1}{\mid \mathcal{J} \mid }{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j' }(x,y) \right\}\frac{v^{ j' }(y)}{V^{j'}}dy \right] / c\right)}} \right)\right]  
+\end{equation}
+```
+
+<!-- Derivation is in [Appendix -@sec-appendix_bellman_unemp]. -->
+
+### Joint Value of a Match
+
+-   If a match between a worker and a firm in location $j$ is destroyed the firm will get $0$ and the worker gets their unemployment value in that location $U^{j}(x)$.
+-   Matches are destroyed for two reasons:
+    -   *Exogenous destruction* with probability $\delta$
+    -   *Endogenous destruction*, if and only if $J^j(x,y) < U^j(x)$.
+    -   Denote $\lambda^j(x,y) = (1-\delta)\mathbb{1}_{\{J^j(x,y)>U^{j\to j}(x,y)\}}$ the probability that a match survives accounting for both exogenous and endogenous destruction.
+
+We can write the Bellman equation of a match value as:
+
+```{=latex}
+\begin{align*}
+J^j(x,y) = \underbrace{f(x,y,j)}_{\text{match value added}} &+ \beta\left[  \overbrace{ (1-\lambda^j(x,y)) }^{\text{match is destroyed}}\underbrace{U^{j}(x)}_{\text{worker gets unemployment value}} \right. + \\
+  & \underbrace{(\lambda^j(x,y)}_{\text{match survives}} \max_{\phi_s^j(x)}\left\{-c(\phi_s^j(x)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j')\left[ \overbrace{(1-sp^{j'})}^{\text{no new offers}} \underbrace{J^j(x,y)}_{\text{stays with same firm}} \right. \right. +\\
+& sp^{j'} \left. \underbrace{\int\max\{J^{j}(x,y),W^{j\to j'}_{1}(x,y',y)\}\frac{v^{j'}(x)}{V^{j'}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right]
+\end{align*}
+```
+
+When a type $x$ worker employed at a type $y$ firm in location $j$ meet potencial type $y'$ poaching firm at location $j'$ (assume that $y'>y$ is productive enough to poach the woker, I'll show later what the poaching condition is), competition between the two employers over the worker's services occurs as a second price auction. No employer will offer more that the entire match value $J^j(x,y)$, thus this becomes the reservation value for the worker. Nash bargaining solution implies that the worker will obtain their outside option plus a share $\xi$ of the match surplus.
+
+Bargaining implies that a worker employed in location $j$ by firm $y$ when matched with firm $y'$ in location $j'$ gets: $$W^{j \to j'}_{1}(x,y \to y') = J^{j}(x,y) + \xi [J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}]$$
+
+Note that this means that to be able to poach from different locations the firm must be at least $F^{j\to j'}$ more productive. In terms of joint surplus we can rewrite $$W^{j \to j'}_{1}(x,y \to y') = J^{j'}(x,y') + \xi \left[S^{j\to j'}(x,y') - S^{j \to j(x,y)}\right]$$
+
+Focussing on the maximization problem in the Bellman equation we can write:
+
+```{=tex}
+\begin{align*}
+J^j(x,y) + \max_{\phi_s^j(x)} \left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,j') \left[ sp^j\int\max\{0,  \xi \left[S^{j\to j'}(x,y') - S^{j \to j(x,y)}\right] \}\frac{v^{j'}(x)}{V^{j'}}dy' \right] \right\}
+\end{align*}
+```
+
+From \eqref{eq:optimal-search-strategy} we know that the optimal strategy for each employed worker is:
+
+$$\phi_{s}^{j}(x,y,j')=\frac{\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j'}(x,y') - S^{j \to j}(x,y) \right\}\frac{v^{j'}(y')}{V^{j'}}dy' \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \mu \int \max\left\{0, S^{j\to \tilde{j} }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ \tilde{j} }(y')}{V^{\tilde{j}}}dy' \right] / c\right)}}$$
+
+Plug back into the value function:
+
+```{=tex}
+\begin{align*} \label{eq-bellman-match}
+J^j(x,y) = f(x,y,j) & + \beta\left [ \left[  (1-\lambda^j(x,y))U^{j}(x)   +\lambda^j(x,y)J^j(x,y) \right] \right. \\ & \left. +\log\left(\frac{1}{\mid \mathcal{J} \mid }\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right) \right]
+\end{align*}
+```
+
+### Match Surplus
+
+Next I characterize the surplus function. First, define the instant surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as: $$s(x,y,j \to j) = f(x,y,j,z) - b(x,j')$$
+
+We can compute the surpluss of mathces in the same location as:
+
+```{=tex}
+\begin{align}\label{eq-surplus-same-location}
+S^{j \to j}(x,y) &= J^j(x, y) - U^{j}(x) \\
+& = s(x,y,j \to j) + \beta \lambda^j(x,y)\underbrace{\left[J^j(x,y) - U^j(x)\right]}_{S^{j\to j}(x,y)} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]\\
+& = s(x,y,j \to j) + \beta \max\{0, S^{j\to j}(x,y)\} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right]
+\end{align}
+```
+
+Notice that $\lambda^{j}(x,y) > 0$ if and only if $S^{j\to j}(x,y) > 0$, thus $$\max\{0, S^{j\to j}(x,y)\} =\lambda^{j}(x,y) S^{j\to j}(x,y) $$
+
+The terms $\Lambda_0(x)$ and $\Lambda_1(x,y)$ come from the Bellmans of the worker and the match respectively and are defined as:
+
+```{=tex}
+\begin{align*}
+\Lambda_1(x, y) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)} \right)  \\
+\Lambda_0(x) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y') \right\}\frac{v^{ j' }(y')}{V^{j'}}dy' \right] / c\right)}\right) \\
+\end{align*}
+```
+Finally we can use the expression in \eqref{eq-surplus-same-location} to write the surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as:
+
+```{=tex}
+\begin{align}\label{eq-surplus}
+S^{j \to j'}(x,y) &= J^{j'}(x, y) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+& = [J^{j'}(x, y) - U^{j'}(x)] + U^{j'}(x) - \left[U^{j}(x) + F^{j \to j'}\right] \\
+& = S^{j'\to j'}(x,y) - [U^{j}(x) - U^{j'}(x) + F^{j \to j'}]
+\end{align}
+```
+
+Notice that in computational terms, 
+
+From the expressions in \eqref{eq-surplus-same-location} and \eqref{eq-surplus} the following is evident:
+
+-   A worker in location $j$ can be hired from a firm in location $j'$ by firm $y$ if and only if the surplus of the match is positive: $$S^{j\to j'}(x,y) \geq 0 \qquad \iff \quad = J^{j'}(x,y) - U^{j\to j'}(x) \geq 0$$
+-   A worker employed at location $j$ by firm $y$ can be poached by a firm $y'$ in location $j'$ if and only if the surplus of the match is higher than the surplus of staying at the same firm in the same location:
+
+```{=latex}
+\begin{align*}
+S^{j\to j'}(x,y') > S^{j\to j}(x,y) &\iff J^{j'}(x,y') - U^{j\to j'}(x) > J^{j}(x,y) - U^{j\to j}(x) \\
+&\iff J^{j'}(x,y') - [U^{j}(x) - F^{j\to j'}] > J^{j}(x,y) - U^{j}(x) \\
+&\iff J^{j'}(x,y') > J^{j}(x,y) +  F^{j\to j'}
+\end{align*}
+```
+
+
+The surplus function determines how does the stock of unemployed and employed workers change: 
+```{=latex}
+\begin{equation}\label{eq-unemp-interim}
+u^{j}_{+}(x) = \underbrace{u^j(x)}_{\text{inherited from }t} + \overbrace{\int \Big(\underbrace{\mathbb{1}_{S^{j \to j}(x,y)<0}}_{\text{endogenous destruction}} + \underbrace{\delta\mathbb{1}_{S^{j \to j}(x,y)\geq0}}_{\text{exogenous destruction}}\Big)h^j(x,y)dy}^{\text{new unemployment created by shock}}
+\end{equation}
+```
+and 
+```{=latex}
+\begin{equation}\label{eq-matches-interim}
+h_{+}^{j}(x,y) = (1-\delta)\mathbb{1}_{\left\{S^{j \to j}(x,y)\geq 0\right\}}h^j(x,y)
+\end{equation}
+```
+
+### Vacancy Creation
+
+-   $B^j(y)$ is the expected value of a type $y$ vacancy making contact with a worker in location $j$. Vacancies meet unemployed and employed type-$x$ workers at a rates $$\frac{u_{+}^j(x)}{L^j} \qquad \text{and} \qquad s\frac{h_{+}^j(x,y)}{L^j}$$ The expected value of posting a vacancy is therefore, the surplus that the posting firm expects to add, potential matches with negative surplus are immediately destroyed therefore those add no surplus. In terms of the Bellman equation we can write:
+
+```{=tex}
+\begin{align}
+B^j(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u_{+}^{j'}(x)}{L^{j'}}}_{\text{likelihhod of match}}\times\overbrace{ \max\{0, S^{j'\to j}(x,y)\} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} + \nonumber \\
+& +\underbrace{\sum_{j'\in \mathcal{J}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,j)\frac{h_{+}^{j'}(x,y)}{L^{j'}}}_{\text{likelihood of match}}\times \overbrace{ \max\{0, S^{j' \to j}(x,y)-S^{j' \to j'}(x,y')\}}^{\text{poaching is succesfull}}dx\right)dy\right)}_{\text{expected value added from poaching other firms employees}}
+\end{align}
+```
+
+
+Firms will post vacancies such that the marginal cost of the vacancies and the marginal expected benefit $B^j$ are equal: $$c_{j}'(v^{j}(y))=q^{j}B^{j}(y)$$ {#eq-vacancy-posting-clearing}
+
+## Labor Market Flows
+
+Now we characterize the flows of workers in-to and out-of unemployment at each location :
+
+-   Let $$\eta^{j' \to j}(x,y) = \mathbb{1}_{\{S^{j' \to j}(x,y)>0\}} \qquad \eta^{j' \to j}(x,y'\to y) = \mathbb{1}_{\{S^{j' \to j}(x,y) > S^{j' \to j'}(x,y')\}}$$
+
+<!-- -   And $\hat{\phi}^j_u(x,j')$ the probability that a type $x$ unemployed worker from location $j$ search in location $j'$ (this the optimal search policy in \eqref{eq-optimal-search-unemployed}. -->
+
+Then the law of motion of the unemployment and emplyment are:
+
+```{=latex}
+\begin{equation}
+\label{eq-law-of-motion-unemp}
+u^{j}(x) = \sum_{j'\in \mathcal{J}}\underbrace{\phi_u^{j'}(x,j) u_{+}^{j'}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
+\end{equation}
+```
+To compute the mass of employed workers in the next period define:
+
+-   The mass of workers hired from unemployment:
+
+```{=latex}
+\begin{equation}
+h^j_{u}(x,y) = \sum_{j'\in \mathcal{J}}\phi_u^{j'}(x,j) u_{+}^{j'}(x)\eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}
+\end{equation}
+```
+-   The mass of workers that are succesfully poached from other firms:
+
+```{=latex}
+\begin{equation}
+h^j_{p} = \sum_{j'\in \mathcal{J}}\left(\overbrace{\int\underbrace{ h_{+}^{j'}(x,y')sp^j\frac{v^{j}(y)}{V^{j}}\eta^{j'\to j}(x,y'\to y)}_{\text{mass of workers poached from } y' \text{ firms in location } j'}dy'}^{\text{mass of workers that } y \text{ succesfully poach from location} j'} \right)
+\end{equation}
+```
+-   The mass of workers that the firm is able to retain:
+
+```{=tex}
+\begin{equation}
+h^j_{r} = \underbrace{h_{+}(x,y)  \times }_{\text{employed at interim }} \overbrace{\prod_{j'\in\mathcal{J}}\left[ \underbrace{1 - \frac{s}{\mid \mathcal{J} \mid}\int\left( p^{j'}\frac{v^{j'}(y')}{V^{j'}} \eta^{j\to j'}(x,y\to y')\right)dy'}_{\text{no poached by any firm in location }j'} \right]}^{\text{probability of not being poached}}
+\end{equation}
+```
+Finally the mass of employed workers in the next period is:
+
+```{=tex}
+\begin{equation}
+\label{eq-law-of-motion-emp}
+h^j(x,y) =  h^j_{u}(x,y) + h^j_{p}(x,y) + h^j_{r}(x,y) 
+\end{equation}
+```
+Then I can compute the distribution of skill in each location as: $$\ell^j(x) = u^j(x) + \int h^j(x,y)dy$$ and the total population in each location as: $$\mu^j = \int \ell^j(x)dx$$

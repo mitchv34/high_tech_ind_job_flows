@@ -6,15 +6,15 @@ primitives:
   mu    : 0.5       # Worker's bargaining power
   # Cost of living parameters
   theta : 1.0       # Scale parameter of cost of living function
-  gamma : 2.0       # Curvature of cost of living function
+  gamma : 0.1       # Curvature of cost of living function
   # Production function parameters
   function:
     params : [0.5]  # Parameters of production function (Worker's share of output)
     functional_form : "x.^params[1] .* y'.^(1-params[1])" # Functional form of production function  
     # params : [0.5, 0.75]  # Parameters of production function (Worker's share of output)
     # functional_form : "(params[1] .* x.^((1-params[2])/params[2]) .+ (1-params[1]) .* (y').^((1-params[2])/params[2])).^(params[2]/(1-params[2]))" # Functional form of production function  
-  A     : 10         # Gains from idea exchange
-  nu    : 10        # Idea exchange parameter
+  A     : 3         # Gains from idea exchange
+  nu    : 50        # Idea exchange parameter
   b_hat : 0.1       # Home production parameter
   # Vacancy creation cost function
   c_0   : 0.028     # 

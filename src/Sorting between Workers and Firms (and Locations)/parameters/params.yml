@@ -1,0 +1,49 @@
+primitives:
+  c     : 1.0       # Cost of search for workers
+  beta  : 0.952381  # Discount factor (consisten with 5% annual discount rate)
+  delta : 0.012     # Probability of match destruction 
+  s     : 0.027     # Search intensity employed workers
+  mu    : 0.5       # Worker's bargaining power
+  # Cost of living parameters
+  theta : 1.0       # Scale parameter of cost of living function
+  gamma : 0.1       # Curvature of cost of living function
+  # Production function parameters
+  function:
+    params : [0.5]  # Parameters of production function (Worker's share of output)
+    functional_form : "x.^params[1] .* y'.^(1-params[1])" # Functional form of production function  
+    # params : [0.5, 0.75]  # Parameters of production function (Worker's share of output)
+    # functional_form : "(params[1] .* x.^((1-params[2])/params[2]) .+ (1-params[1]) .* (y').^((1-params[2])/params[2])).^(params[2]/(1-params[2]))" # Functional form of production function  
+  A     : 3         # Gains from idea exchange
+  nu    : 50        # Idea exchange parameter
+  b_hat : 0.1       # Home production parameter
+  # Vacancy creation cost function
+  c_0   : 0.028     # 
+  c_1   : 0.584     # 
+  # Matching function
+  omega_1 : 0.0497  
+  omega_2 : 0.5
+  # Cost of moving location
+  F_bar   : 3.1     # Fixed cost of moving
+
+grids:
+  n_x : 21          # Number of skills levels workers
+  n_y : 20          # Number of prductivity levels firms
+  n_j : 5           # Number of locations  
+  n_z : 51          # Number of aggregate productivity levels
+  x_min  : 0.01     # Minimum skill level
+  x_max  : 0.99     # Maximum skill level
+  y_min  : 0.01     # Minimum productivity level
+  y_max  : 0.99     # Maximum productivity level
+
+distributions: # Parameters that govern the initial distributions
+  skill:
+    name : beta # Name of distribution
+    params : [2.15, 12.0] # Parameters of the distribution
+  productivity:
+    name : beta # Name of distribution
+    params : [5.0, 5.0] # Parameters of the distribution
+# Parallelization parameters
+parallel:
+  nprocs : 10 # Number of workers
+
+

@@ -1,0 +1,37 @@
+/*-- scss:defaults --*/
+// Base document colors
+$body-bg: #181818;
+$body-color: white;
+$link-color: #75AADB;
+
+// Code blocks
+$code-block-bg-alpha: -.8;
+
+// Define your dark mode variables
+$dark-background-color: #121212; // Dark gray or black
+$dark-text-color: #ffffff; // White text
+
+// Override the body background and text color for dark mode
+body {
+  background-color: $dark-background-color;
+  color: $dark-text-color;
+}
+
+// Override sidebar styles for dark mode
+.sidebar {
+  background-color: $dark-background-color; // Background color of the sidebar
+  color: $dark-text-color; // Text color within the sidebar
+
+  // If you have specific sidebar links, you can override their styles too
+  .sidebar-link {
+    color: $dark-text-color;
+  }
+}
+
+// Override any other elements or classes specific to dark mode
+// For example, if you have a dark mode button, you might do something like this:
+.button-dark-mode {
+  background-color: $dark-background-color;
+  color: $dark-text-color;
+  border: 2px solid $dark-text-color;
+}

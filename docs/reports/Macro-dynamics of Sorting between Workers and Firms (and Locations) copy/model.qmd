@@ -5,7 +5,7 @@ title: Model
 ## Model Setup
 
 ### Demographics
-
+****
 -   There is a discrete and finite set of locations $\mathcal{J}=\{1,\dots,|\mathcal{J}|\}$ locations indexed by $j\in\mathcal{J}$.
 -   Continuum of workers indexed by their ability $x\in \mathcal{X}$.
     -   The total measure is normalized to $1$.

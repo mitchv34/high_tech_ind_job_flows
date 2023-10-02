@@ -1,0 +1,50 @@
+# Optimal Search Strategy Unemployed Workers {#sec-appendix_search_unemp}
+
+<!-- Fix this derivation to reflext the changes to the model -->
+<!-- ! I dont think i need this anymore but keeping it just in case -->
+
+Unemployed agents solve the following maximization problem:
+```{=latex}
+\begin{align*}
+    \max_{\phi^j_u(x)}&\left\{ \sum_{j'\in\mathcal{J}}\phi^j_u(x, j')\mathbb{E}_t\Big[U^{j'}_{t+1}(x) - F^{j \to j'}  \Big] -c(\phi^j_u(x)) \right\} \\ \\
+    \text{subject to: } & \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') = 1 \\
+    & \hspace{1.1 cm} \phi^j_u(x, j') \geq 0 \qquad \forall j'\in \mathcal{J}
+\end{align*}
+```
+
+I'll ignore the non-negativity constraints and write the Lagrangean of the problem:
+$$\mathcal{L}(\phi^j_u(x), \lambda) =  \sum_{j'\in\mathcal{J}} \phi^j_u(x, j')\mathbb{E}_t\Big[U^{j'}_{t+1}(x) - F^{j \to j'}  \Big] -c(\phi^j_u(x)) - \lambda \left(\sum_{j'\in \mathcal{J}}\phi^j_u(x, j') - 1\right)$$
+
+First order conditions of the problem give us:
+```{=latex}
+\begin{align*}
+  [\phi^j_u(x, j')] &:\quad \mathbb{E}_t\Big[U^{j'}_{t+1}(x) - F^{j \to j'}  \Big] - c_1 - c_1 \log[J \phi^j_u(x, j')] = \lambda \\
+  [\lambda] &: \quad \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') = 1
+\end{align*}
+```
+
+Take any two $j_1$, $j_2$ we have that 
+$$\mathbb{E}_t\left[U^{j_1}_{t+1}(x) - F^{j \to j_1}  \right] - c_1 \log[J \phi^j_u(x, j_1)] = \mathbb{E}_t\left[U^{j_2}_{t+1}(x) - F^{j \to j_2}  \right] - c_1 \log[J \phi^j_u(x, j_2)]$$
+
+thus 
+```{=latex}
+\begin{align*}
+  \frac{\mathbb{E}_t\left[U^{j_1}_{t+1}(x) - F^{j \to j_1}\right] - \mathbb{E}_t\left[U^{j_2}_{t+1}(x) - F^{j \to j_2}\right]}{c_1} &= \log\left(\frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)}\right) \\ 
+  &\implies \quad \frac{ \phi^j_u(x, j_1)}{ \phi^j_u(x, j_2)} = \frac{e^{\left(\mathbb{E}_t\left[U^{j_1}_{t+1}(x) - F^{j \to j_1}\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{j_2}_{t+1}(x) - F^{j \to j_2}\right] /c_1\right)}}
+\end{align*}
+```
+
+Fix any $\hat{j}$, then we can write any other $j'\in\mathcal{J}$ in therms of $\hat{j}$ and plug into the constraint to get:
+
+```{=latex}
+\begin{align*}
+  \sum_{j'\in \mathcal{J}}\phi^j_u(x, j') &= \sum_{j'\in \mathcal{J}}\frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{e^{\left(\mathbb{E}_t\left[U^{ \hat{j}}_{t+1}(x) - F^{j \to \hat{j}}\right] /c_1\right)}} \phi^j_u(x, \hat{j})\\  &= \frac{\phi^j_u(x, \hat{j})}{e^{\left(\mathbb{E}_t\left[U^{ \hat{j}}_{t+1}(x) - F^{j \to \hat{j}}\right] /c_1\right)}} \sum_{j\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)} = 1
+\end{align*}
+```
+
+Which we can solve to obtain
+
+$$
+  \phi^j_u(x,j') = \frac{e^{\left(\mathbb{E}_t\left[U^{j'}_{t+1}(x) - F^{j \to j'}\right] /c_1\right)}}{\sum_{\tilde{j}\in \mathcal{J}}e^{\left(\mathbb{E}_t\left[U^{j \to \tilde{j}}_{t+1}(x)\right] /c_1\right)}}$${#eq-phi-u-almost-final}
+
+Note that the non-negativity constraints are satisfied because the exponential function is always positive.

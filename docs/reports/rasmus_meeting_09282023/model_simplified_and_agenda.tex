@@ -177,7 +177,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, borderline west={3pt}{0pt}{shadecolor}, breakable, enhanced, sharp corners, boxrule=0pt, frame hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, enhanced, sharp corners, breakable, frame hidden, interior hidden, borderline west={3pt}{0pt}{shadecolor}]}{\end{tcolorbox}}\fi
 
 \hypertarget{agenda}{%
 \section{Agenda}\label{agenda}}
@@ -223,7 +223,7 @@
   \item
     Endogenous distribution in each location \(\ell^{j}(x)\)
   \item
-    Denote \(\mu_j\) the total population in location \(j\).
+    Denote \(\zeta_j\) the total population in location \(j\).
   \end{itemize}
 \item
   Continuum of firms indexed by technology \(y\in \mathcal{Y}\).
@@ -317,7 +317,22 @@ Let \(M^j = M(L^j, V^j)\) be the number of job matches in the location
 \subsubsection{Dynamic Programming
 Problem}\label{dynamic-programming-problem}}
 
-\textbf{ADD DEFINITION OF OBJECTS HERE}
+\begin{itemize}
+\tightlist
+\item
+  \(U^{j}(x)\) is the value of being unemployed in location \(j\) with
+  type \(x\).
+\item
+  \(J^{j}(x,y)\) is the match value in location \(j\) with type \(x\)
+  and firm \(y\).
+\item
+  \(W^{j \to j'}_{0}(x,y)\) is the value of a worker in location \(j\)
+  when matched with firm \(y\) in location \(j'\).
+\item
+  \(W^{j \to j'}_{1}(x,y\to y')\) is the value of a worker in location
+  \(j\) when matched with firm \(y\) in location \(j'\) and then matched
+  with firm \(y'\) in location \(j'\).
+\end{itemize}
 
 \hypertarget{worker}{%
 \subsubsection{Worker}\label{worker}}
@@ -359,7 +374,7 @@ the value that a worker gets from a match:
 \item
   Worker employed in location \(j\) by firm \(y\) when matched with firm
   \(y'\) in location \(j'\) gets:
-  \[W^{j \to j'}_{1}(x,y) = (1 - \mu) J^{j}(x,y) + \mu [J^{j'}(x,y') - F^{j' \to j}] = J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\]
+  \[W^{j \to j'}_{1}(x,y \to y') = (1 - \mu) J^{j}(x,y) + \mu [J^{j'}(x,y') - F^{j' \to j}] = J^{j}(x,y) + \mu \left(J^{j'}(x,y') - J^{j}(x,y) - F^{j' \to j}\right)\]
 \end{itemize}
 
 Plugging this into the Bellman equations we get:
@@ -390,7 +405,7 @@ Plug back into the value function to get:
 \[U^{j}(x) = b(x,j) + \beta\left[\left[U^j(x)\right]  + c\log\left({\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{j'} \mu \int \max\left\{0, S^{j\to j' }(x,y) \right\}\frac{v^{ j' }(y)}{V^{j'}}dy \right] / c\right)}} + c\log(\mid \mathcal{J} \mid ) \right)\right]\]
 
 \hypertarget{value-of-a-match-1}{%
-\subsection{Value of a match}\label{value-of-a-match-1}}
+\subsubsection{Value of a match}\label{value-of-a-match-1}}
 
 Note tha if the match survives the employed worker chooses their optimal
 search strategy \(\phi_s^j(x)\) search in each of the locations \(j'\)
@@ -455,17 +470,175 @@ S^{j \to j'}(x,y) &= J^{j'}(x, y) - \left[U^{j}(x) + F^{j \to j'}\right] \\
 & = S^{j'\to j'}(x,y) - [U^{j}(x) - U^{j'}(x) + F^{j \to j'}]
 \end{align*}
 
+\hypertarget{aglomeration-effects}{%
+\section{Aglomeration Effects}\label{aglomeration-effects}}
+
+This section focus on how the distribution of workers (skils) affect
+both the productivity of matches \(f(x,y,j)\) and the instant utility of
+unemployed workers \(b(x,j)\).
+
+\textbf{Location Productivity}
+
+I borrow from
+(\protect\hyperlink{ref-davisSpatialKnowledgeEconomy2019}{Davis and
+Dingel 2019}) in assuming that the productivity of workers in a location
+\(j\) is a result of idea exchange process within each location.
+
+\begin{itemize}
+\item
+  Assume that a type \(x\) worker in location \(j\) has a
+  \(\Omega(x, \overline{X}^j)\) where \(\overline{X}^j\) is the value of
+  idea exchange in location \(j\). Thus:
+  \[f(x,y,j) = f\left(\Omega(x, \overline{X}^j), y\right)\]
+\item
+  Assume that the value of idea exchange in location \(j\) is a function
+  of the distribution of skills in location \(j\):
+
+  \[ \overline{X}^j = \overline{X}\left(\left\{\ell^j(x)\right\}\right) \]
+\end{itemize}
+
+It's natural to make the following assumptions on
+\(\Omega(x, \overline{X}^j)\) and \(\overline{X}^j\):
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Assumption 1}: \(\Omega(x, \overline{X}^j)\) should be
+  increasing in \(x\) and \(\overline{X}^j\) and in the absence of idea
+  exchange, worker productivity is just their type:
+  \(\Omega(x, 0) = x\).
+\item
+  \textbf{Assumption 2}: Worker type \(x\) and idea exchange environment
+  are complements i.e.~\(\Omega(x, \overline{X}^j)\) supermodular in
+  (\(x\) , \(\overline{X}^j\)).
+\item
+  \textbf{Assumption 3}: The value of idea exchange in location \(j\) is
+  increasing in the number of potential exchange partners \(\mu^j\) and
+  on the distribution of skills in location \(j\) \(\ell^j(x)\).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    With the \emph{FOSD} order of distributions.
+  \end{itemize}
+\end{itemize}
+
+I will focus on the following functional forms for
+\(\Omega(x, \overline{X}^j)\) and \(\overline{X}^j\):
+
+\[\Omega(x, \overline{X}^j) = x(1 + A \overline{X}^j x)\] where \(A\) is
+a parameter that captures the scope of gains from idea exchange.
+
+\[
+    \overline{X}\left(\left\{\ell^j(x)\right\}\right) = \left(1 - e^{-\nu \int \ell^j(x) dx}\right)\hat{x}^j =\left(1 - e^{-\nu \mu^j} \right)\hat{x}^j
+\]
+
+The probability of encountering someone during each moment of time
+seeking is given by \(1 - \exp(-ν \mu^j)\), note that as the number of
+potential exchange partners (\(\mu^j\)) increases, the probability of
+encountering someone also increases, which makes intuitive sense.
+
+The average ability of the individuals you encounter in these exchanges
+is denoted as \(\hat{x}^j\). This is a weighted average of the abilities
+of the people you meet
+\[\hat{x}^j = \frac{1}{\mu^j}\int{x\ell^j(x)dx}=\frac{\mathbb{E}^j[x]}{\mu^j}\]
+where \(\mathbb{E}^j[x]\) is the average ability of workers in location
+\(j\).
+
+\begin{equation}\protect\hypertarget{eq-prod_funct}{}{
+f(x,y,j,z_t) = \Omega(x,\overline{X}^j)^\alpha y^{1-\alpha}
+}\label{eq-prod_funct}\end{equation}
+
+\textbf{Cost of living}
+
+\begin{itemize}
+\tightlist
+\item
+  As in (\protect\hyperlink{ref-davisSpatialKnowledgeEconomy2019}{Davis
+  and Dingel 2019}) and
+  (\protect\hyperlink{ref-behrensProductiveCitiesSorting2014a}{Behrens,
+  Duranton, and Robert-Nicoud 2014}) every individual in location \(j\)
+  pays the congestion cost :
+\end{itemize}
+
+\[c_j = c(\zeta_j) = \theta\zeta_j^{\gamma}\]
+
+\hypertarget{computation-of-equilibrium}{%
+\section{Computation of Equilibrium}\label{computation-of-equilibrium}}
+
+Right now I'm brute forcing the computation of the equilibrium, I'm
+using the following algorithm:
+
+Take \(\ell(x)\) as a primitive. Make initial guesses for \(\ell^j(x)\).
+Initialize \(S^{j \to j'}(x,y) \equiv 0\) for all \(j\), \(j'\), \(x\)
+and \(y\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Using \(S^{j \to j'}(x,y)\) update the distribution of employed and
+  unemployed workers in each location \(j\).
+\item
+  Compute the value \(B^j(y)\) of vacancy creation.
+\item
+  Compute:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(v^j(y)\) the number of vacancies posted by a firm \(y\) in
+    location \(j\).
+  \item
+    \(V^j= \int v^j(y) dy\) the total number of job opportunities posted
+    location \(j\).
+  \item
+    \(L^j\) the total search intensity in location \(j\).
+  \item
+    \(\theta^j = V^j / L^j\) the market tightness in location \(j\).
+  \end{itemize}
+\item
+  Compute \(S^{j \to j'}(x,y)\), and \(U^{j}\).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Obtain wokers optimal strategies \(\phi^j_u(x)\) and
+    \(\phi^j_s(x)\).
+  \end{itemize}
+\item
+  Update the distribution of workers in each location \(j\).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If the distribution of workers in each location \(j\) has converged
+    stop, otherwise update worker productivity in each location and cost
+    of living and go back to Step 1.
+  \end{itemize}
+\end{enumerate}
+
 \hypertarget{bibliography}{%
 \section*{References}\label{bibliography}}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-behrensProductiveCitiesSorting2014a}{}}%
+Behrens, Kristian, Gilles Duranton, and Frédéric Robert-Nicoud. 2014.
+{``Productive {Cities}: {Sorting}, {Selection}, and {Agglomeration}.''}
+\emph{Journal of Political Economy} 122 (3): 507--53.
+\url{https://doi.org/10.1086/675534}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-cahucWageBargainingOntheJob2006}{}}%
 Cahuc, Pierre, Fabien Postel-Vinay, and Jean-Marc Robin. 2006. {``Wage
 {Bargaining} with {On-the-Job Search}: {Theory} and {Evidence}.''}
 \emph{Econometrica} 74 (2): 323--64.
 \url{https://doi.org/10.1111/j.1468-0262.2006.00665.x}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-davisSpatialKnowledgeEconomy2019}{}}%
+Davis, Donald R., and Jonathan I. Dingel. 2019. {``A {Spatial Knowledge
+Economy}.''} \emph{American Economic Review} 109 (1): 153--70.
+\url{https://doi.org/10.1257/aer.20130249}.
 
 \end{CSLReferences}
 
