@@ -13,7 +13,7 @@ book:
   - name: Mitchell Valdes-Bobes
     affiliation: University of Wisconsin-Madison
   abstract: |
-    Lorem ipsum dolor sit amet.
+    This document introduces a spatial sorting model that explores interactions between heterogenous workers and firms in a frictional labor market.  Workers' "partially" direct their search to specific locations using a mixed strategy. This strategy, derived as an optimal solution under cognitive constraints (known as "rational inattention"), assigns probabilities to locations based on expected surpluses. Agglomeration effects, influenced by skill distribution, play a vital role in this framework. The document outlines the model's components without delving into equilibrium or solution methods.
   date: last-modified
   date-format: long
   
@@ -21,7 +21,8 @@ book:
     - index.qmd
     - model.qmd
     - endogenizing_location_productivity.qmd
-    - computation.qmd
+    - equilibrium.qmd
+    # - computation.qmd
 
   # appendices: 
   #   - appendix_search_unemp.qmd
@@ -51,7 +52,17 @@ format:
     include-in-header:
       - text: |
           \usepackage{algorithm2e}
+          \usepackage{bbm}
+          \newcommand{\qiq}{\qquad \implies \qquad}
+          \newcommand{\qiffq}{\qquad \iff \qquad}
+          \newcommand{\qaq}{\qquad \textbf{and} \qquad}
+          \newcommand{\qoq}{\qquad \textbf{or} \qquad}
+          \newcommand{\settf}{\text{ \emph{:} }}
+
     reference-section-title: "References"
+    geometry:
+      - top = 2cm
+      - margin = 1in
     render-on-save: true
     latex-auto-mk : true
     link-citations: true

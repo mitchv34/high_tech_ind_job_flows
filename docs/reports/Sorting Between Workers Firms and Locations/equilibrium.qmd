@@ -1,0 +1,81 @@
+---
+title: Equilibrium
+---
+
+## Equilibrum Definition
+
+**Concept**:
+
+- Steady state equilibrium.
+
+**Elements**:
+
+- Set of parameters $\Xi = \{ \ldots \}$.
+- Distribution of unemployed workers and matches $\left\{u(x), h(x,y) \right\}_{j \in \mathcal{J}}$.
+- Set of workers serach strategies $\left\{ \phi^{j}_{u}(x, \phi^{j}_{s}(x,y)) \right\}_{j \in \mathcal{J}}$.
+- A distribution of vacancies $\left\{ \Gamma^{j}(y) \right\}_{j \in \mathcal{J}}$.
+- Surplus function $S^{j\to j'}(x,y)$.
+- Unemployment value function $U^j(x)$.
+- Value of vacancy posting $B^j(y)$.
+
+Such that:
+
+**Conditions**:
+
+1. Search strategies solve the maximization problem of employed and unemployed workers.
+2. $S^{j \to j'}(x,y)$ and $U^j(x)$ solve \eqref{eq-bellman-unemployed}, \eqref{eq-surplus-same-location} and \eqref{eq-surplus}.
+3. Value of vacancy posting $B^j(y)$ is determined by \eqref{eq-vacancy-posting}.
+4. Distribution of unemployed workers and matches satisfy \eqref{eq-law-of-motion-unemp-long} and \eqref{eq-law-of-motion-emp-long}.
+
+## Existence of Value Functions and Distribution of Vacancies
+
+In this section I will show that the value functions $S^{j\to j'}$ and $U^j(x)$ and the distribution of vacancies $\Gamma^j(y)$ exist and are unique for a given set of parameters $\Xi$ and distribution of unemployed workers and matches $\left\{u(x), h(x,y) \right\}_{j \in \mathcal{J}}$.
+
+### Defininig the Space of Functions
+
+Let $$\mathcal{S} = \left\{ S: \mathcal{J}^2 \times \mathcal{X} \times \mathcal{Y} \to \mathbb{R} \right\}$$
+
+and $$\mathcal{G} = \left\{ \Gamma: \mathcal{J} \times \mathcal{Y} \to \mathbb{R} \right\}$$
+
+Note a distributions of unemployed workers $u$ and matched $h$ there is a one to one mapping from $\mathcal{S}$ to $\mathcal{G}$ given by:
+
+$$\Gamma^{j}(y \mid S) = \frac{M\left(L(u, h), \int_{0}^{1} v^{j}(y' \mid S)d\Phi(y')\right)}{L(u, h)}\frac{\int_{0}^{y}v^j(y' \mid S)d\Gamma^{j}(y')}{ \int_{0}^{1} v^{j}(y' \mid S)d\Phi(y')}$$
+
+where $v^{j}(y \mid S)$ is the total number of vacancies posted by firms of type $y$ at location $j$ given the surplus function $S$.
+
+Define the operator $T: \mathcal{S} \to \mathcal{S}$ as:
+
+```{=latex}
+\begin{equation}
+\label{eq-operator-T}
+TS = \begin{cases}
+s(x,y,j \to j) + \beta (1-\delta)\max\{0, S^{j\to j}(x,y)\} + \beta c \left[ \Lambda^j_1(x, y) - \Lambda^j_0(x)\right] & \text{if } j = j' \\
+TS^{j'\to j'}(x,y) - [U^{j}(x) - U^{j'}(x) + F^{j \to j'}] 
+& \text{if } j \neq j'
+\end{cases}
+\end{equation}
+```
+with 
+$$
+U^{j}(x) = \frac{1}{1-\beta}\left[b(x,j) + \beta c \Lambda^j_0(x) - \beta c \log(\mid \mathcal{J}\mid)\right]
+$$
+and 
+```{=tex}
+\begin{align*}
+\Lambda^j_1(x, y) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\Gamma^{j'}(y'\mid S) \right] / c\right)} \right)  \\
+\Lambda^j_0(x) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to j' }(x,y') \right\}d\Gamma^{j'}(y'\mid S) \right] / c\right)}\right)
+\end{align*}
+```
+
+Since the 
+
+
+
+Let $S_1, S_2 \in \mathcal{S}$ such that $S_{1}^{j\to j'}(x,y) > S_{2}^{j\to j'}(x,y)$ for all $j, j' \in \mathcal{J}$, $x \in \mathcal{X}$ and $y \in \mathcal{Y}$. Then for $j = j'$ we have:
+
+```{=latex}
+\begin{align*}
+TS_{1}^{j\to j'}(x,y) - TS_{2}^{j\to j'}(x,y) & \leq \beta c \left[ \Lambda^j_{1,1}(x, y) - \Lambda^j_{0,1}(x) - \Lambda^j_{1,2}(x, y) + \Lambda^j_{0,1}(x) \right]\\
+& \leq \beta c \left[\frac{\xi}{c} S_{1}^{j \to j'}(x,y) - \Lambda^j_{1,2}(x, y) + \Lambda^j_{0,1}(x) \right]
+\end{align*}
+```

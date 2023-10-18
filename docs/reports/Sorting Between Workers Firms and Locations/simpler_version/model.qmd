@@ -1,20 +1,39 @@
 ---
-title: Model
+format:
+  pdf:
+    include-in-header:
+      - text: |
+          \usepackage{algorithm2e}
+          \usepackage{bbm}
+          \newcommand{\qiq}{\qquad \implies \qquad}
+          \newcommand{\qiffq}{\qquad \iff \qquad}
+          \newcommand{\qaq}{\qquad \text{and} \qquad}
+          \newcommand{\qoq}{\qquad \text{or} \qquad}
+          \newcommand{\settf}{\text{ \emph{:} }}
+    colorlinks: true
+    keep-tex: true
+    reference-section-title: "References"
+    render-on-save: true
+    latex-auto-mk : true
+    link-citations: true
+
+bibliography: /Users/mitchv34/Work/Labor_Market Search_Sorting.bib
+  
 ---
 
 ## Model Setup
 
 ### Demographics
 
-- There exists a discrete and finite set of locations denoted as $\mathcal{J} = \{1, \ldots, |\mathcal{J}|\}$, with each location indexed by $j \in \mathcal{J}$.
+- There are two locations $j\in\{1,2\}$.
 - A continuum of workers is characterized by their abilities, which are denoted as $x \in \mathcal{X}$.
   - The total measure of workers is normalized to 1.
-  - Workers follow an exogenous distribution $\ell(x)$.
+  - Workers types follow an exogenous distribution $\ell(x)$.
   - Within each location, there is an endogenous distribution of workers denoted as $\ell^{j}(x)$.
-  - I represent the total population in location $j$ as $\mu_j$.
+  - Let the total population at location $j=1$ be $\mu$ and at location $j=2$ be $1-\mu$.
 - A continuum of firms is characterized by their technology, which is denoted as $y \in \mathcal{Y}$.
   - The total measure of firms is normalized to 1.
-  - Firms follow an exogenous distribution $\Phi)$.
+  - Firms follow an exogenous distribution $\Phi$.
 
 ### Technology
 
@@ -26,8 +45,10 @@ title: Model
   - Each search strategy incurs an associated cost denoted as $c_s(\phi_i^j(x))$.
   - When a worker moves from one location to another (from $j$ to $j'$), they must pay a relocation cost denoted as $F^{j \to j'} \geq 0$, with $F^{j \to j} = 0$ for movements within the same location.
 - Unemployed workers receive instant utility in each location denoted as $b(x,j)$.[^2]
-- Firms have access to a production technology that operates at the match level and depends on the location and the aggregate state of the economy, represented as $f(x, y, j)$.
-  - Worker productivity is influenced by the distribution of skills within each location (see  @sec-agglomeration_effect for more details).
+- Firms have access to a production technology that operates at the match level and depends on the location, represented as $f_j(x, y)$:
+  <!-- - Worker productivity is influenced by the distribution of skills within each location (see  @sec-agglomeration_effect for more details). -->
+  $$f_1(x,y) = f(\Omega(x,\mu), y) \qaq  f_2(x,y) = f(\Omega(x, 1-\mu), y)$$ 
+  - Where $\Omega(x, \mu)$ captures agglomeration effects: $$\Omega(x, \mu) = x(1+ A(1-e^{\nu \mu})x)$$ 
 
 [^2]: In [@liseMacrodynamicsSortingWorkers2017], $b(x)$ represents unemployment benefits. However, I adopt a more general approach to account for differences in the cost of living across locations.
 
@@ -36,7 +57,7 @@ title: Model
 Both unemployed and employed workers engage in job search activities. Let's denote $s$ as the search intensity of an employed worker, $s < 1$ is normalized such that an unemployed worker has a search intensity of $1$. To compute the total search intensity in location $j$, we need to consider the following expression:
 
 $$
-L^j = \sum_{j'\in\mathcal{J}}\left[\int \phi_u^{j'}(x,j)u^{j'}(x) dx + s\int\int \phi_s^{j'}(x,j)h^{j'}(x,y)dx dy\right]
+L^j = \sum_{j'\in\{1,2\}}\left[\int \phi_u^{j'}(x,j)u^{j'}(x) dx + s\int\int \phi_s^{j'}(x,j)h^{j'}(x,y)dx dy\right]
 $$
 
 Total search intensity ($L^j$) in location $j$ accounts for the search behaviors of both employed and unemployed workers from all other locations ($j'$) in the model. It takes into account the probabilities of workers from everywhere else searching for jobs in location $j$, capturing the spatial dynamics of the labor market.
@@ -196,7 +217,7 @@ Unemployed workers receive instant utility from living in location $j$, $b(x,j)$
 ```{=latex}
 \begin{align*}
 U^{j}(x) = \underbrace{b(x,j)}_{\text{instant utility}} + &\beta\max_{\phi^j_u(x)}\left\{ \underbrace{-c(\phi^j_u(x))}_{\text{cost of search strategy}} \right.  + \\
-& \sum_{j'\in \mathcal{J}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'})U^{j}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
+& \sum_{j'\in\{1,2\}} \underbrace{\phi^j_u(x, j')}_{\text{weight by probability of search in} j'}\left[ \overbrace{(1-p^{j'})U^{j}(x)}^{\text{no offer, stays unemployed now in} j'} \right.  \\
 & \left. \left. \hspace{0cm} + p^{j'} \underbrace{\int \max\left\{U^{j}(x),W^{j\to j'}_{0}(x,y)\right\}\frac{v^{j'}(y)}{V^{j'}}dy}_{\text{if offer, pays cost,moves to } j \text{ and then is matched randomly with some firm}} \right] \right\} 
 \end{align*}
 ```
@@ -209,7 +230,7 @@ From \eqref{eq:optimal-search-strategy} we know that the optimal strategy for ea
 
 ```{=latex}
 \begin{equation}\label{eq-optimal-search-unemployed}
-\phi_{u}^{j}(x,j')=\frac{\exp{\left(\left[  \xi \int \max\left\{0, S^{j\to j'}(x,y) \right\} d\Gamma^{j'}(y) \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to \tilde{j} }(x,y) \right\} d\Gamma^{\tilde{j}}(y) \right] / c\right)}}
+\phi_{u}^{j}(x,j')=\frac{\exp{\left(\left[  \xi \int \max\left\{0, S^{j\to j'}(x,y) \right\} d\Gamma^{j'}(y) \right] / c\right)}}{\sum_{j'\in\{1,2\}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to \tilde{j} }(x,y) \right\} d\Gamma^{\tilde{j}}(y) \right] / c\right)}}
 \end{equation}
 ```
 
@@ -219,7 +240,7 @@ Substituting the optimal strategy in the Bellman equation we get:
 
 ```{=latex}
 \begin{equation}\label{eq-bellman-unemployed}
-U^{j}(x) = b(x,j) + \beta\left[U^j(x)  + c\log\left(\frac{1}{\mid \mathcal{J} \mid }{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[ \xi \int \max\left\{0, S^{j\to j' }(x,y) \right\} d\Gamma^{j'}(y) \right] / c\right)}} \right)\right]  
+U^{j}(x) = b(x,j) + \beta\left[U^j(x)  + c\log\left(\frac{1}{2}{\sum_{j'\in\{1,2\}}\exp{\left(\left[ \xi \int \max\left\{0, S^{j\to j' }(x,y) \right\} d\Gamma^{j'}(y) \right] / c\right)}} \right)\right]  
 \end{equation}
 ```
 
@@ -238,7 +259,7 @@ We can write the Bellman equation of a match value as:
 ```{=latex}
 \begin{align*}
 J^j(x,y) = \underbrace{f(x,y,j)}_{\text{match value added}} &+ \beta\left[  \overbrace{ (1-\lambda^j(x,y)) }^{\text{match is destroyed}}\underbrace{U^{j}(x)}_{\text{worker gets unemployment value}} \right. + \\
-  & \underbrace{(\lambda^j(x,y)}_{\text{match survives}} \max_{\phi_s^j(x,y)}\left\{-c(\phi_s^j(x,y)) +  \sum_{j'\in\mathcal{J}}\phi^j_s(x,y,j')\left[ \overbrace{(1-sp^{j'})}^{\text{no new offers}} \underbrace{J^j(x,y)}_{\text{stays with same firm}} \right. \right. +\\
+  & \underbrace{(\lambda^j(x,y)}_{\text{match survives}} \max_{\phi_s^j(x,y)}\left\{-c(\phi_s^j(x,y)) +  \sum_{j'\in\{1,2\}}\phi^j_s(x,y,j')\left[ \overbrace{(1-sp^{j'})}^{\text{no new offers}} \underbrace{J^j(x,y)}_{\text{stays with same firm}} \right. \right. +\\
 & sp^{j'} \left. \underbrace{\int\max\{J^{j}(x,y),W^{j\to j'}_{1}(x,y',y)\}\frac{v^{j'}(x)}{V^{j'}}dy'}_{\text{worker only accepts new offers if value is greater than current match}}  \right]
 \end{align*}
 ```
@@ -253,19 +274,19 @@ Focussing on the maximization problem in the Bellman equation we can write:
 
 ```{=tex}
 \begin{align*}
-J^j(x,y) + \max_{\phi_s^j(x,y)} \left\{  \sum_{j'\in\mathcal{J}}\phi^j_s(x,y,j') \left[ sp^j\int\max\{0,  \xi \left[S^{j\to j'}(x,y') - S^{j \to j(x,y)}\right] \}d\Gamma^{j'}(y')\right] \right\}
+J^j(x,y) + \max_{\phi_s^j(x,y)} \left\{  \sum_{j'\in\{1,2\}}\phi^j_s(x,y,j') \left[ sp^j\int\max\{0,  \xi \left[S^{j\to j'}(x,y') - S^{j \to j(x,y)}\right] \}d\Gamma^{j'}(y')\right] \right\}
 \end{align*}
 ```
 
 From \eqref{eq:optimal-search-strategy} we know that the optimal strategy for each employed worker is:
 
-$$\phi_{s}^{j}(x,y,j')=\frac{\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j'}(x,y') - S^{j \to j}(x,y) \right\}d\Gamma^{j'}(y') \right] / c\right)}}{\sum_{\tilde{j}\in \mathcal{J}}\exp{\left(\left[p^{\tilde{j}} \xi \int \max\left\{0, S^{j\to \tilde{j} }(x,y')-S^{j \to j}(x,y) \right\}d\Gamma^{\tilde{j}}(y') \right] / c\right)}}$$
+$$\phi_{s}^{j}(x,y,j')=\frac{\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j'}(x,y') - S^{j \to j}(x,y) \right\}d\Gamma^{j'}(y') \right] / c\right)}}{\sum_{\tilde{j} \in\{1,2\}}\exp{\left(\left[p^{\tilde{j}} \xi \int \max\left\{0, S^{j\to \tilde{j} }(x,y')-S^{j \to j}(x,y) \right\}d\Gamma^{\tilde{j}}(y') \right] / c\right)}}$$
 
 Plug back into the value function:
 
 ```{=tex}
 \begin{align*} \label{eq-bellman-match}
-J^j(x,y) = f(x,y,j) & + \beta\left [ \left[  (1-\lambda^j(x,y))U^{j}(x)   +\lambda^j(x,y)J^j(x,y) \right] \right. \\ & \left. +\log\left(\frac{1}{\mid \mathcal{J} \mid }\sum_{j'\in \mathcal{J}}\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}d\Gamma^{j'}(y') \right] / c\right)} \right) \right]
+J^j(x,y) = f(x,y,j) & + \beta\left [ \left[  (1-\lambda^j(x,y))U^{j}(x)   +\lambda^j(x,y)J^j(x,y) \right] \right. \\ & \left. +\log\left(\frac{1}{2}\sum_{j'\in\{1,2\}}\exp{\left(\left[p^{j'} \xi \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}d\Gamma^{j'}(y') \right] / c\right)} \right) \right]
 \end{align*}
 ```
 
@@ -289,8 +310,8 @@ The terms $\Lambda_0(x)$ and $\Lambda_1(x,y)$ come from the Bellmans of the work
 
 ```{=tex}
 \begin{align*}
-\Lambda_1(x, y) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\Gamma^{j'}(y') \right] / c\right)} \right)  \\
-\Lambda_0(x) &= \log \left(\sum_{j'\in \mathcal{J}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to j' }(x,y') \right\}d\Gamma^{j'}(y') \right] / c\right)}\right)
+\Lambda_1(x, y) &= \log \left(\sum_{j'\in\{1,2\}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to j' }(x,y')-S^{j \to j}(x,y) \right\}\Gamma^{j'}(y') \right] / c\right)} \right)  \\
+\Lambda_0(x) &= \log \left(\sum_{j'\in\{1,2\}}\exp{\left(\left[\xi \int \max\left\{0, S^{j\to j' }(x,y') \right\}d\Gamma^{j'}(y') \right] / c\right)}\right)
 \end{align*}
 ```
 Finally we can use the expression in \eqref{eq-surplus-same-location} to write the surplus of a match between a type $x$ worker in location $j$ and a type $y$ firm in location $j'$ as:
@@ -337,8 +358,8 @@ h_{+}^{j}(x,y) = (1-\delta)\mathbb{1}_{\left\{S^{j \to j}(x,y)\geq 0\right\}}h^j
 
 ```{=tex}
 \begin{align}
-B^j(y) &= \underbrace{\sum_{j'\in \mathcal{J}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u_{+}^{j'}(x)}{L^{j}}}_{\text{likelihhod of match}}\times\overbrace{ \max\{0, S^{j'\to j}(x,y)\} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} \nonumber \\
-& +\underbrace{\sum_{j'\in \mathcal{J}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,y',j)\frac{h_{+}^{j'}(x,y)}{L^{j}}}_{\text{likelihood of match}}\times \overbrace{ \max\{0, S^{j' \to j}(x,y)-S^{j' \to j'}(x,y')\}}^{\text{poaching is succesfull}}dx\right)dy'\right)}_{\text{expected value added from poaching other firms employees}} \label{eq-vacancy-posting}
+B^j(y) &= \underbrace{\sum_{j'\in\{1,2\}}\left( \int\phi_u^{j'}(x,j)\underbrace{\frac{u_{+}^{j'}(x)}{L^{j}}}_{\text{likelihhod of match}}\times\overbrace{ \max\{0, S^{j'\to j}(x,y)\} }^{\text{match survives}}dx\right)}_{\text{expected value added from hiring unemployed workers}} \nonumber \\
+& +\underbrace{\sum_{j'\in\{1,2\}}\left(\int \left(\int\underbrace{s\phi_s^{j'}(x,y',j)\frac{h_{+}^{j'}(x,y)}{L^{j}}}_{\text{likelihood of match}}\times \overbrace{ \max\{0, S^{j' \to j}(x,y)-S^{j' \to j'}(x,y')\}}^{\text{poaching is succesfull}}dx\right)dy'\right)}_{\text{expected value added from poaching other firms employees}} \label{eq-vacancy-posting}
 \end{align}
 ```
 
@@ -383,7 +404,7 @@ Then the law of motion of the unemployment and emplyment are:
 ```{=latex}
 \begin{equation}
 \label{eq-law-of-motion-unemp}
-u^{j}(x) = \sum_{j'\in \mathcal{J}}\underbrace{\phi_u^{j'}(x,j) u_{+}^{j'}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
+u^{j}(x) = \sum_{j'\in\{1,2\}}\underbrace{\phi_u^{j'}(x,j) u_{+}^{j'}(x)\left( 1 - \int \eta^{j'\to j}(x,y) p^j\frac{v^j(y)}{V^j}dy \right)}_{\text{mass of incoming unemployed workers that are not hired by any firm}}
 ```
 \end{equation} -->
 
@@ -392,44 +413,45 @@ I split the mass of employed workers into three components:
 ```{=tex}
 \begin{equation}
 \label{eq-law-of-motion-emp}
-h^j(x,y) =  h^j_{U}(x,y) + h^j_{P}(x,y) - h^j_{L}(x,y)  \qiq h^j(x,y) +  h^j_{L}(x,y)  =  h^j_{U}(x,y) + h^j_{P}(x,y)
+h^j(x,y) =  h^j_{U}(x,y) + h^j_{P}(x,y) + h^j_{R}(x,y) 
 \end{equation}
 ```
-those workers that are hired from unemployment, those that are poached from other firms and those that are poached by other firms.
+those workers that are hired from unemployment, those that are poached from other firms and those that the firm is able to retain.
 
 -   The mass of workers hired from unemployment:
 
 ```{=latex}
 \begin{equation}
-h^j_{U}(x,y) = \gamma^{j}(y) \sum_{j'\in \mathcal{J}}u_{+}^{j'}(x)\hat{\phi}_{u}^{j'\to j}(x,y) 
+h^j_{U}(x,y) = \gamma^{j}(y)\left[u_{+}^{1}(x)\hat{\phi}_{u}^{1 \to j}(x,y) + u_{+}^{2}(x)\hat{\phi}_{u}^{2 \to j}(x,y) \right]
 \end{equation}
 ```
 -   The mass of workers that are succesfully poached from other firms:
 
 ```{=latex}
 \begin{equation}
-h^j_{P}(x,y) = s\gamma^{j}(y)\sum_{j'\in \mathcal{J}}\left[\int{ h_{+}^{j'}(x,y') \hat{\phi}_{s}^{j' \to j}(x,y'\to y) dy'} \right]
+h^j_{P}(x,y) = s\gamma^{j}(y)\left[\int{ h_{+}^{1}(x,y') \hat{\phi}_{s}^{1 \to j}(x,y'\to y) dy'} + \int{ h_{+}^{2}(x,y') \hat{\phi}_{s}^{2 \to j}(x,y'\to y) dy'} \right]
 \end{equation}
 ```
 -   The mass of workers that the firm loses to other firms:
 
 ```{=tex}
 \begin{equation}
-h^j_{L}(x,y) = sh^{j}_{+}(x,y)\sum_{j'\in \mathcal{J}}\left[ \int{ \hat{\phi}_{s}^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right]
+h^j_{R}(x,y) =  h_{+}^{j}(x,y)\left(1 - s \int \hat{\phi}_{s}^{j\to 1}(x,y\to y')d\Gamma^{1}(y')\right) \left(1 - s \int \hat{\phi}_{s}^{j\to 2}(x,y\to y')d\Gamma^{2}(y')\right)
 \end{equation}
 ```
-Take the the LHS in \eqref{eq-law-of-motion-emp} and substitute the expression for $h_{+}^j(x,y)$ from \eqref{eq-interim-h}:
+Note that $h^{j}(x,y) - h^{j}_{R}(x,y)$ substituting the expression for $h_{+}^j(x,y)$ from \eqref{eq-interim-h}:
 
 ```{=latex}
 \begin{equation}
-h(x,y)\left(1 + s (1-\delta)\eta^{j \to j}(x,y) \sum_{j'\in \mathcal{J}}\left[ \int{ \hat{\phi}_{s}^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right]\right)
+h(x,y)\left[1 - (1-\delta)\eta^{j \to j}(x,y) \prod_{j' \in \{1,2\}}\left(1 - s \int \hat{\phi}_{s}^{j\to j'}(x,y\to y')d\Gamma^{j'}(y')\right) \right]
 \end{equation}
 ```
+
 And the RHS in \eqref{eq-law-of-motion-emp}:
 
 ```{=latex}
 \begin{equation}
- \gamma^{j}(y) \left(\sum_{j'\in \mathcal{J}} \left( u_{+}^{j'}(x)\hat{\phi}_{u}^{j'\to j}(x,y) + s\int{ h_{+}^{j'}(x,y') \hat{\phi}_{s}^{j' \to j}(x,y'\to y) dy'} \right)\right)
+ \gamma^{j}(y) \left(\sum_{j'\in\{1,2\}} \left( u_{+}^{j'}(x)\hat{\phi}_{u}^{j'\to j}(x,y) + s\int{ h_{+}^{j'}(x,y') \hat{\phi}_{s}^{j' \to j}(x,y'\to y) dy'} \right)\right)
 \end{equation}
 ```
 This give us the following expression for the law of motion of the employment distribution:
@@ -437,8 +459,8 @@ This give us the following expression for the law of motion of the employment di
 ```{=latex}
 \begin{equation}
 \label{eq-law-of-motion-emp-long}
-h^{j}(x,y) = \frac{\gamma^{j}(y) \left(\sum_{j'\in \mathcal{J}} \left( u_{+}^{j'}(x)\hat{\phi}_{u}^{j'\to j}(x,y) + s\int{ h_{+}^{j'}(x,y') \hat{\phi}_{s}^{j' \to j}(x,y'\to y) dy'} \right)\right)}{
-  1 + s (1-\delta)\eta^{j \to j}(x,y) \sum_{j'\in \mathcal{J}}\left[ \int{ \hat{\phi}_{s}^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right]
+h^{j}(x,y) = \frac{\gamma^{j}(y) \left(\sum_{j'\in\{1,2\}} \left( u_{+}^{j'}(x)\hat{\phi}_{u}^{j'\to j}(x,y) + s\int{ h_{+}^{j'}(x,y') \hat{\phi}_{s}^{j' \to j}(x,y'\to y) dy'} \right)\right)}{
+  1 - (1-\delta)\eta^{j \to j}(x,y) \prod_{j' \in \{1,2\}}\left(1 - s \int \hat{\phi}_{s}^{j\to j'}(x,y\to y')d\Gamma^{j'}(y')\right) 
 }
 \end{equation}
 ```
@@ -459,7 +481,7 @@ Note that \eqref{eq-law-of-motion-unemp-long} is a standard steady-state conditi
 <!-- 
 ```{=latex}
 \begin{equation}
-\frac{h_{+}(x,y)}{(1-\delta)\eta^{j\to j}(x,y)} =  \frac{\gamma^{j}(y) \left( \sum_{j'\in \mathcal{J}}\left(\phi_u^{j'}(x,j) u_{+}^{j'}(x)\eta^{j'\to j}(x,y) + s\left[\int{ \phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y)h_{+}^{j'}(x,y') dy'} \right] \right) \right)}{ 1 + \sum_{j'\in \mathcal{J}}\left[s \int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right]}
+\frac{h_{+}(x,y)}{(1-\delta)\eta^{j\to j}(x,y)} =  \frac{\gamma^{j}(y) \left( \sum_{j'\in\{1,2\}}\left(\phi_u^{j'}(x,j) u_{+}^{j'}(x)\eta^{j'\to j}(x,y) + s\left[\int{ \phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y)h_{+}^{j'}(x,y') dy'} \right] \right) \right)}{ 1 + \sum_{j'\in\{1,2\}}\left[s \int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right]}
 \end{equation}
 ``` -->
 <!-- 
@@ -468,9 +490,9 @@ Note that \eqref{eq-law-of-motion-unemp-long} is a standard steady-state conditi
 ```{=latex}
 \begin{align}
 \label{eq-law-of-motion-emp-lhs}
-h^j(x,y) +  h^j_{L}(x,y) &=  h^j(x,y) + h^{j}_{+}(x,y)\sum_{j'\in \mathcal{J}}\left[s \int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right] \nonumber \\
-&=  h^j(x,y) + (1-\delta)\eta^{j \to j}(x,y)h^j(x,y)\sum_{j'\in \mathcal{J}}\left[s \int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right] \nonumber \\
-&=  h^j(x,y)\left(1 + s(1-\delta)\eta^{j \to j}(x,y)\sum_{j'\in \mathcal{J}}\left[\int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right]\right)
+h^j(x,y) +  h^j_{L}(x,y) &=  h^j(x,y) + h^{j}_{+}(x,y)\sum_{j'\in\{1,2\}}\left[s \int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right] \nonumber \\
+&=  h^j(x,y) + (1-\delta)\eta^{j \to j}(x,y)h^j(x,y)\sum_{j'\in\{1,2\}}\left[s \int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right] \nonumber \\
+&=  h^j(x,y)\left(1 + s(1-\delta)\eta^{j \to j}(x,y)\sum_{j'\in\{1,2\}}\left[\int{ \phi_{s}^{j}(x,y,j')\eta^{j \to j'}(x,y\to y')d\Gamma^{j'}(y')} \right]\right)
 \end{align}
 ```
 
@@ -479,7 +501,7 @@ And the RHS in \eqref{eq-law-of-motion-emp}:
 ```{=latex}
 \begin{align}
 \label{eq-law-of-motion-emp-rhs}
-h^j_{U}(x,y) + h^j_{P}(x,y) &=  \gamma^{j}(y)\left( \sum_{j'\in \mathcal{J}}\left(\phi_u^{j'}(x,j) u_{+}^{j'}(x)\eta^{j'\to j}(x,y) + s \left[\int{ \phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y)h_{+}^{j'}(x,y) dy'} \right] \right) \right)
+h^j_{U}(x,y) + h^j_{P}(x,y) &=  \gamma^{j}(y)\left( \sum_{j'\in\{1,2\}}\left(\phi_u^{j'}(x,j) u_{+}^{j'}(x)\eta^{j'\to j}(x,y) + s \left[\int{ \phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y)h_{+}^{j'}(x,y) dy'} \right] \right) \right)
 \end{align}
 ```
 
@@ -487,12 +509,12 @@ Note that we can plug the value of $u_{+}$ and $h_{+}$ from \eqref{eq-interim-u}
 
 ```{=latex}
 \begin{align*}
- \gamma^{j}(y)\left( \sum_{j'\in \mathcal{J}}\left(\phi_u^{j'}(x,j) \left(u^{j'}(x) + \int\left(1 - (1 - \delta)\eta^{j'\to j'}(x,y') \right)h^{j'}(x,y')dy'\right) \eta^{j'\to j}(x,y) \right.\right. \\ \left.\left. + s \left[\int{ \phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y)(1-\delta)\eta^{j' \to j'}(x,y')h^{j'}(x,y') dy'} \right] \right) \right)
+ \gamma^{j}(y)\left( \sum_{j'\in\{1,2\}}\left(\phi_u^{j'}(x,j) \left(u^{j'}(x) + \int\left(1 - (1 - \delta)\eta^{j'\to j'}(x,y') \right)h^{j'}(x,y')dy'\right) \eta^{j'\to j}(x,y) \right.\right. \\ \left.\left. + s \left[\int{ \phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y)(1-\delta)\eta^{j' \to j'}(x,y')h^{j'}(x,y') dy'} \right] \right) \right)
 \end{align*}
 ```
 ```{=latex}
 \begin{align*}
- \gamma^{j}(y) \sum_{j'\in \mathcal{J}} \left[\phi_u^{j'}(x,j)\left(u^{j'}(x) + \eta^{j'\to j}(x,y)  \int h^{j'}(x,y')dy' \right)+ \right.\\ \left. \int\left( s\phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y) - \phi_u^{j'}(x,j) \eta^{j'\to j}(x,y) \right) (1 - \delta)\eta^{j'\to j'}(x,y') h^{j'}(x,y') dy' \right]
+ \gamma^{j}(y) \sum_{j'\in\{1,2\}} \left[\phi_u^{j'}(x,j)\left(u^{j'}(x) + \eta^{j'\to j}(x,y)  \int h^{j'}(x,y')dy' \right)+ \right.\\ \left. \int\left( s\phi_{s}^{j'}(x,y,j)\eta^{j' \to j}(x,y'\to y) - \phi_u^{j'}(x,j) \eta^{j'\to j}(x,y) \right) (1 - \delta)\eta^{j'\to j'}(x,y') h^{j'}(x,y') dy' \right]
 \end{align*}
 ``` -->
 

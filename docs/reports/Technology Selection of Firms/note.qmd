@@ -1,0 +1,31 @@
+---
+title: "New Idea: Technology Selection of Firms"
+author: "Mitchell Valdes-Bobes"
+date: today
+output:
+    quarto::pdf_document:
+        latex_engine: xelatex
+---
+
+# Technology Selection of Firms
+
+In the end, my objective is to utilize my model to elucidate the impact of firms' technology selection choices and workers' mobility decisions on the geographical distribution of economic activity.
+
+I intend to introduce the firms' technology selection decisions as follows:
+
+- Firms exhibit variations in their productivity levels.
+- These firms assess their productivity and make decisions in each city regarding whether to adopt high or low technology.
+- The two technologies diverge in their characteristics, as high technology relies on the significance of agglomeration economies, whereas low technology does not.
+
+To keep it simple and consistent with my ideas in the main documents I am thinking of the following characterization of the output of a match between a type $x$ worker and a type $y$ firm in city $j$ (with skill distribution $\ell^j$) that uses technology $\tau$:
+
+```{=latex}
+\begin{equation}
+    f^{j}(x, y | \tau) = \begin{cases}
+    x^{\alpha_L} y^{1 - \alpha_L} & \text{if } \tau = L \\
+    \Omega(x, \ell^j)^{\alpha_H} y^{1 - \alpha_H} & \text{if } \tau = H
+    \end {cases}
+\end{equation}
+```
+
+where $\Omega(x, \ell^j)$ is the modified productivity of type $x$ worker accounting for the value of idea exchange in location $j$. All assumptions regarding $\Omega(x, \ell^j)$ remain the same as in the main document.

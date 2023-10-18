@@ -4,17 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "01a7f66e0ca7b320",
+        "id": "b9a797ac21f16b93",
         "type": "tabs",
         "children": [
           {
-            "id": "2cee507d9074889d",
+            "id": "38594722099064ec",
             "type": "leaf",
             "state": {
-              "type": "pdf",
-              "state": {
-                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf"
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -83,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -122,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf"
-              }
+              "state": {}
             }
           },
           {
@@ -156,16 +150,16 @@
   },
   "active": "7a6bb2f60db49308",
   "lastOpenFiles": [
-    "reports/Sorting Between Workers Firms and Locations/_book/site_libs/clipboard/clipboard.min.js",
-    "reports/Sorting Between Workers Firms and Locations/_book/site_libs/clipboard",
-    "reports/Sorting Between Workers Firms and Locations/_book/site_libs",
+    "reports/rasmus_meeting_09282023/model_simplified_and_agenda.pdf",
+    "Notes Espen Moen Lecture 10-13-2023.md",
     "reports/Sorting Between Workers Firms and Locations/_book/Sorting-between-Workers-and-Firms--and-Locations-.pdf",
     "reports/Sorting Between Workers Firms and Locations/index.pdf",
-    "reports/Sorting Between Workers Firms and Locations/index.log",
     "reports/Sorting Between Workers Firms and Locations/index.toc",
     "reports/Sorting Between Workers Firms and Locations/index.aux",
+    "reports/Sorting Between Workers Firms and Locations/index.log",
     "reports/Sorting Between Workers Firms and Locations/index.tex",
     "reports/Sorting Between Workers Firms and Locations/index_files/mediabag",
-    "reports/Sorting Between Workers Firms and Locations/index_files"
+    "reports/Sorting Between Workers Firms and Locations/index_files",
+    "reports/Sorting Between Workers Firms and Locations/_book/site_libs/clipboard/clipboard.min.js"
   ]
 }

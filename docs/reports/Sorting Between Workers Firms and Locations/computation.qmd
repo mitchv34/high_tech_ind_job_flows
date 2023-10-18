@@ -82,9 +82,9 @@ Type grids are defined as:
 
 ### Type Distributions
 
-<!-- TODO: Include the calibration of type distribution parameters from the data -->
 
-![](../../..//figures/fitt_national_skill_cdf.png)
+
+![](../../..//figures/fitt_national_skill_cdf.pdf)
 
 ## Algorithm
 
