@@ -5,141 +5,117 @@ using YAML
 using BenchmarkTools
 using StatsBase
 using StatsPlots
+using FixedEffectModels
+using RegressionTables
 # Load plot settings
 include("../plotconfig.jl")
-include("model1.jl")
-z = 1
-# Get number of processors from YAML file
-path_params = "./src/Sorting between Workers and Firms (and Locations)/parameters/params.yml";
-
-# Load YAML file
-params = YAML.load(open(path_params));
-
-function fit_distributiont_to_skill(data::DataFrame)
-    # Sample SKILL data using EMP_PCT column as weights
-    sample_size = 1000000
-    data_sample = sample(data.SKILL, Weights(data.EMP), sample_size, replace = true)
-    e_cdf = ecdf(data_sample)
-
-    dist_fit = fit( Beta, data_sample );
-
-    # Ecaluate and plot the CDF
-    x = 0:0.01:1;
-    y = e_cdf.(x);
-    p_cdf = plot(x, y, label = "Empirical CDF", lw = 2, legend = :topleft, xlabel = "Skill", ylabel = "CDF")
-    plot!(x, cdf(dist_fit, x), label = "Beta Fit", lw = 2);
-    
-    p_pdf = density(d, trim = true, bandwidth = 0.05, label = "Empirical PDF", lw = 2, xlabel = "Skill", ylabel = "PDF")
-    plot!(x, pdf.(dist_fit, x), label = "Beta Fit", lw = 2);
-
-    return dist_fit, p_cdf, p_pdf
-end
-
-# Load National data
-data_path_national = "./data/OEWS/estimated_skill_distributions/national_skill/national_skill_2019.csv"
-# For each year fit the distribution and save the parameters
-data_nat = CSV.read(data_path_national, DataFrame)
-fitted_dist, p_cdf, p_pdf = fit_distributiont_to_skill( data_nat )
-# Plot PDF of fitted distribution
-
-savefig(p_cdf, "./figures/fitt_national_skill_cdf.png")
+include("model.jl")
+z = 1.0
 
 # Load model
-@everywhere path_params = "src/Macro-dynamics of Sorting between Workers and Firms (and Locations)/parameters/params.yml";
-@everywhere include("model1.jl");
+@everywhere path_params = "src/Sorting between Workers and Firms (and Locations)/parameters/params.yml";
+@everywhere include("model.jl");
 @everywhere prim, res = init_model(path_params);
+# include("create_dist_form_data.jl")
 include("distribution_generation.jl")
-# Create distributions
-dist = split_skill_dist(prim);
+# # Create distributions
+μ = 0.9    
+dist = split_skill_dist(prim, weights = [μ ,  1 - μ]);
 
-# Distribution of skills in each city
-# plot(prim.x_grid, dist.ℓ', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
-# # Distriution of firm productivity
-# plot(prim.y_grid, dist.Φ, lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+# bthread = @elapsed convergence_path = iterate_distributions!(prim, res, dist; verbose=true, store_path=true, tol=1e-6);
 
-bthread = @elapsed convergence_path = iterate_distributions!(prim, res, dist; verbose=true, store_path=true, tol=1e-4);
-
-
-# Plot first and last distributions
-# plot(prim.x_grid, convergence_path[1], lw = 2, 
-#         label = reshape(["City $j (Initial)" for j ∈ 1:prim.n_j], 1, prim.n_j))
-# plot!(prim.x_grid, convergence_path[end], lw = 2, c = reshape([j for j ∈ 1:prim.n_j], 1, prim.n_j), linestyle = :dash,
-#         label = reshape(["City $j (Final)" for j ∈ 1:prim.n_j], 1, prim.n_j))
-# # Plot cumulative distributions
-# L_initial = cumsum(convergence_path[1], dims = 1)
-# L_final = cumsum(convergence_path[end], dims = 1)
-# plot(prim.x_grid, L_initial, lw = 2, 
-#         label = reshape(["City $j (Initial)" for j ∈ 1:prim.n_j], 1, prim.n_j))
-# plot!(prim.x_grid, L_final, lw = 2, c = reshape([j for j ∈ 1:prim.n_j], 1, prim.n_j), linestyle = :dash,
-#         label = reshape(["City $j (Final)" for j ∈ 1:prim.n_j], 1, prim.n_j))
-
-# sum(dist.u, dims = 2) ./ sum(dist.ℓ, dims = 2)
-
-# iter = 0
-# for i  = 1:50
-# Update Distribution at interim stage
-update_interim_distributions!(prim, res, dist);
-# Update value of vacancy creation
-get_vacancy_creation_value!(prim, res, dist);
-# Update Market tightness and vacancies
-update_market_tightness_and_vacancies!(prim, res, dist);
+# begin
 # Update surplus and unemployment
-b_threads = @benchmark compute_surplus_and_unemployment!(prim, res, dist, verbose=false);
-# Solve optimal strategies
-optimal_strategy!(prim, res); 
-# Store t - 1 distributions
+compute_surplus_and_unemployment!(prim, res, dist, verbose=true);
+
 u_initial = copy(dist.u);
 h_initial = copy(dist.h);
-# Update Distribution at next stage
-update_distrutions!(prim, res, dist);
-sum(dist.u .< 0)
-# Update iteration counter
-iter += 1
-# Compute error
-if iter % 1 == 0
-    err = maximum(abs.(dist.u - u_initial)) + maximum(abs.(dist.h - h_initial));
-    println(@bold @yellow "Error: $(round(err, digits=10))")
-    # Print city sizes
-    println(@bold @yellow "City sizes:  $(round.(sum(dist.ℓ, dims=2), digits=3))")
-end 
-# end
+ℓ_initial = copy(dist.ℓ);
+# # Update Distribution at next stage
+# update_distrutions!(prim, res, dist);
 
-
-
+# # Plot distribution of unemployment
 plot(prim.x_grid, dist.ℓ', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
+# # Plot distribution of unemployment previous period
+# plot!(prim.x_grid, ℓ_initial', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j), linestyle = :dash, c = reshape([j for j ∈ 1:prim.n_j], 1, prim.n_j))
 
-plot(prim.y_grid, res.B', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
-plot(prim.y_grid, res.v', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
-
-
-plot(prim.x_grid, res.U', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
-
-# Plot distribution of unemployment
-plot(prim.x_grid, dist.u', lw = 2, label = reshape(["City $j" for j ∈ 1:prim.n_j], 1, prim.n_j))
-
-avgskill(ℓ) = sum(ℓ .* prim.x_grid', dims = 2) ./ sum(ℓ, dims = 2)
-avgvacancy(v) = sum(v .* prim.y_grid', dims = 2) ./ sum(v, dims = 2)
-
-scatter(avgskill(dist.ℓ)', avgvacancy(res.v)', markersize = 5, label = "", xlabel = "Average skill level", ylabel = "Average vacancy level")
+# err = maximum(abs.(dist.u - u_initial))/maximum(abs.(dist.u)) + maximum(abs.(dist.h - h_initial))/maximum(abs.(dist.h));
+# println(@bold @yellow "Error: $(round(err, digits = 10))")
+# println(@bold @yellow "Sizes: $(sum(dist.ℓ, dims = 2))")
+# # end 
+# plot!()
 
 
-# # Compute average skill level in each city
-# #Scatter plot of average skill level in each city
-# scatter(sum(convergence_path[1], dims =1)', avgskill(convergence_path[1])',markersize = 5,
-#     label = "Average skill level (Initial)", legend = :topleft)
-# scatter!(sum(convergence_path[end], dims =1)', avgskill(convergence_path[end])',markersize = 5,
-#     label = "Average skill level (Final)", legend = :topleft)
+
+@unpack ω₁, ω₂, n_j, n_x, n_y, s, δ = prim
+@unpack L = res
+# Calculate total number of mathces in each location
+M = min.(ω₁ .* L.^ω₂ .* res.V.^(1-ω₂), L, res.V)
+p = M ./ L # Probability of a match being formed in each location
+# Replace NaN with zero
+p[isnan.(p)] .= 0
+# Compute indicator of possitive surplus 
+η = res.S_move .>= 0;
+# Compute indicator of possitive surplus of moving to a different location
+η_move = zeros(n_j, n_j, n_x, n_y, n_y);
+for j ∈ 1:n_j # Loop over locations
+    for x ∈ 1:n_x # Loop over skills
+        for y ∈ 1:n_y # Loop over firms
+            # η[j' → j, x, y'→y] = 1 if S[j' → j, x, y] > S[j' → j', x, y']
+            #? To be clear n_move[j,j',x,y,y'] = 1 if firm [j',y'] can poach a worker with skill x from firm [j,y] 
+            #? for example η_move[j, :, x, y, :] are all the firms that can poach a worker with skill x from firm [j,y]
+            η_move[j, :, x, y, :] = res.S_move[j, :, x, :] .> res.S_move[j, j, x, y] 
+        end # Loop over firms
+    end # Loop over skills
+end # Loop over locations
 
 
-j_dest = 1
-plot(legend = :outerleft)
-for j_orig ∈ 1:prim.n_j
-    plot!(prim.x_grid, res.ϕ_u[j_orig, j_dest, :], lw = 2, label = "City $j_orig → $j_dest")
+γ = p .* res.v./res.V
+ϕ_hat_s = res.ϕ_s .* η_move
+ϕ_hat_u = res.ϕ_u .* η
+
+new_h = zeros(n_j, n_x, n_y)
+new_u = zeros(n_j, n_x)
+h_u = zeros(n_j, n_x, n_y)
+h_p = zeros(n_j, n_x, n_y)
+h_r = zeros(n_j, n_x, n_y)
+
+
+for j ∈ 1 : n_j
+    for y ∈ 1 : n_y
+        h_u[j, :, y] = γ[j, y] .* sum( ϕ_hat_u[:,j,:,y] .* dist.u, dims = 1)[:]
+        h_p[j, :, y] = sum(s .* γ[j, y] .* dist.h_plus .* ϕ_hat_s[:,j,:,:,y], dims = [1,3])[:]
+        h_r[j, :, y] = dist.h_plus[j, :, y] .* prod(1 .- s .* sum(γ .* permutedims(dist.h_plus .* ϕ_hat_s[j,:,:,y,:], [1,3,2]), dims = 2), dims = 1)[:]
+    end
+    new_u[j, :] = dist.u_plus[j] .* (1 .- prod(sum(permutedims(ϕ_hat_u[j,:,:,:], [1,3,2]) .* γ, dims = 2), dims = 1)[:])
 end
-plot!()
-j_dest = 2
-plot(legend = :outerleft)
-for j_orig ∈ 1:prim.n_j
-    plot!(prim.x_grid, res.ϕ_u[j_orig, j_dest, :], lw = 2, label = "City $j_orig → $j_dest")
-end
-plot!()
+
+dist.u_plus[j] .* (1 .- prod(sum(permutedims(ϕ_hat_u[j,:,:,:], [1,3,2]) .* γ, dims = 2), dims = 1)[:])
+
+new_h = h_u + h_p + h_r
+
+sum(new_h) 
+sum(new_u)
+
+new_h
+
+sum(dist.u)
+sum(dist.h)
+
+emp_dist_old = dropdims(sum(dist.h, dims = 3), dims = 3) 
+emp_dist_new = dropdims(sum(new_h, dims = 3), dims = 3)
+
+plot(prim.x_grid, emp_dist_old', lw = 2, label ="")
+plot!(prim.x_grid, emp_dist_new', lw = 2, label ="", linestyle = :dash)
+# for j ∈ 1:n_j
+#         for x ∈ 1:n_x
+#                 u_p = dist.u_plus[j, x]
+#                 ϕ_hat_u_jx = ϕ_hat_u[j, :, x]
+#                 for y ∈ 1:n_y
+#                         γ_y = γ[j, y]
+#                         ϕ_hat_s_jy = ϕ_hat_s[j, :, x, y, :]
+
+
+[sum(res.ϕ_u[:,:,1], dims=2) for x  = 1:n_x]
+                        
+plot(prim.x_grid, res.ϕ_u[2, :, :]', lw = 2, label = reshape(["City 2 → $j" for j ∈ 1:prim.n_j], 1, prim.n_j))

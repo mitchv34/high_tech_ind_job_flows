@@ -8,6 +8,7 @@ Description: This file contains the code to generate the distributions used in t
 # * Packages 
 ==========================================================================================#
 using Distributions
+using Random
 # include("model.jl")
 #?=========================================================================================
 #? Functions
@@ -50,19 +51,21 @@ end
     This will be used to generate the mixture distribution. 
     In the model this represent different initial sizes and skill distributions of locations.
 ==========================================================================================#
-function split_skill_dist(prim::Primitives, unemployment_rate::Float64 = 0.1)
+function split_skill_dist(prim::Primitives; unemployment_rate::Float64 = 0.1, weights::Array{Float64, 1} = [0.0])
+
+    # Set the seed for reproducibility
+    # Random.seed!(910205)
+
     # Generate the component parameters
     @unpack x_grid, x_dist_params, x_dist_name, y_grid, y_dist_params, y_dist_name = prim
     α, β = x_dist_params
     num_components = prim.n_j
     component_params = generate_component_parameters(α, β, num_components)
     # Generate the weights
-    weights = generate_decreasing_weights(num_components)
-    # Check that the weights and component parameters have the same length
-    if length(weights) != num_components || length(component_params) != num_components
-        throw(ArgumentError("Length of weights and component_params must match num_components."))
+    if length(weights) != num_components
+        weights = generate_decreasing_weights(num_components)
     end
-
+    
     # Initialize an empty array to store the component distributions
     location_dists = Vector{Beta}()
     
