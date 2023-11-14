@@ -1,0 +1,52 @@
+primitives:
+  c     : 1.0       # Cost of search for workers
+  beta  : 0.952381  # Discount factor (consisten with 5% annual discount rate)
+  delta : 0.012     # Probability of match destruction 
+  s     : 0.23     # Search intensity employed workers
+  xi    : 0.23       # Worker's bargaining power
+  # Agglomeration parameters
+  a_1 : 0.5       # Scale parameter of agglomeration function
+  b_1 : 1.2       # Curvature of agglomeration function
+  # Cost of living parameters
+  a_2 : 1.0       # Scale parameter of cost of living function
+  b_2 : 0.1       # Curvature of cost of living function
+  # Production function parameters
+  # function:
+    # params : [0.5]  # Parameters of production function (Worker's share of output)
+    # functional_form : "x.^params[1] .* y'.^(1-params[1])" # Functional form of production function  
+    # params : [0.5, 0.75]  # Parameters of production function (Worker's share of output)
+    # functional_form : "(params[1] .* x.^((1-params[2])/params[2]) .+ (1-params[1]) .* (y').^((1-params[2])/params[2])).^(params[2]/(1-params[2]))" # Functional form of production function  
+  A     : 3         # Gains from idea exchange
+  nu    : 50        # Idea exchange parameter
+  b_hat : 0.7      # Home production parameter
+  # Vacancy creation cost function
+  c_0   : 0.049     # 
+  c_1   : 2.007     # (1 + c_1)
+  # Matching function
+  omega_1 : 0.0497  
+  omega_2 : 0.5
+  # Cost of moving location
+  F_bar   : 1.0     # Fixed cost of moving
+
+grids:
+  n_x : 41          # Number of skills levels workers
+  n_y : 40          # Number of prductivity levels firms
+  n_j : 2           # Number of locations  
+  n_z : 51          # Number of aggregate productivity levels
+  x_min  : 0.01     # Minimum skill level
+  x_max  : 0.99     # Maximum skill level
+  y_min  : 0.01     # Minimum productivity level
+  y_max  : 0.99     # Maximum productivity level
+
+distributions: # Parameters that govern the initial distributions
+  skill:
+    name : beta # Name of distribution
+    # params : [2.329, 17.417] # Parameters of the distribution
+    params : [4.5, 10] # Parameters of the distribution
+    # params : [1, 1] # Parameters of the distribution
+  productivity:
+    name : beta # Name of distribution
+    params : [1.0, 1.0] # Parameters of the distribution
+    # params : [4.5, 10.0] # Parameters of the distribution
+
+
